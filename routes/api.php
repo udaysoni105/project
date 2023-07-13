@@ -27,6 +27,8 @@ Route::post('/users', [UserController::class,'store']);
 Route::put('/users/{id}', [UserController::class,'update']);
 Route::delete('/users/{id}', [UserController::class,'destroy']);
 
+Route::post('/me', [AuthController::class,'me']);
+Route::post('/refresh', [AuthController::class,'refresh']);
 Route::post('/login', [AuthController::class,'login']);
 Route::post('/logout', [AuthController::class,'logout']);
 Route::post('/forgot-password',[AuthController::class,'forgotPassword']);
