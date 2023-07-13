@@ -1,0 +1,183 @@
+
+    // Styles for the header
+    header {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+    }
+
+    // Styles for the navigation menu
+    nav ul {
+        list-style: none;
+        background-color: #f4f4f4;
+        padding: 10px;
+        margin: 0;
+    }
+
+    nav ul li {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    nav ul li a {
+        text-decoration: none;
+        color: #333;
+    }
+
+    // Styles for the hero section
+    .hero {
+        position: relative;
+        height: 300px; /* Adjust the height as per your requirements */
+        background-size: cover;
+        background-position: center;
+      }
+      
+      .hero-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+      
+      .hero-content h2 {
+        background-color: rgba(43, 43, 204, 0.5);
+        color: white;
+        display: inline-block;
+        white-space: nowrap;
+        padding: 10px 20px; /* Adjust the padding as per your requirements */
+        font-size: 24px; /* Adjust the font size as per your requirements */
+      }
+      
+      .hero-content p {
+        background-color: rgba(43, 43, 201, 0.5);
+        color: white;
+        display: inline-block;
+        white-space: nowrap;
+        padding: 10px 20px; /* Adjust the padding as per your requirements */
+        font-size: 18px; /* Adjust the font size as per your requirements */
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        cursor: pointer;
+      
+        &.btn-primary {
+          background-color: #007bff;
+        }
+        
+        &.btn-get-started {
+          background-color: #ff9800; /* Change the background color here */
+        }
+      }
+      
+      
+      .btn {
+        margin-top: 20px; /* Adjust the margin as per your requirements */
+        font-size: 18px; /* Adjust the font size as per your requirements */
+      }
+      
+      /* Media queries for responsiveness */
+      @media screen and (max-width: 767px) {
+        .hero-content h2,
+        .hero-content p {
+          font-size: 18px; /* Adjust the font size for smaller screens */
+        }
+      
+        .btn {
+          font-size: 16px; /* Adjust the font size for smaller screens */
+        }
+      }
+      
+      @media screen and (max-width: 479px) {
+        .hero-content h2,
+        .hero-content p {
+          font-size: 16px; /* Adjust the font size for even smaller screens */
+        }
+      
+        .btn {
+          font-size: 14px; /* Adjust the font size for even smaller screens */
+        }
+      }      
+
+    // Styles for the features section
+    .features {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 50px;
+
+        .feature {
+            text-align: center;
+            flex-basis: 30%;
+            max-width: 30%;
+
+            img {
+                width: 100%;
+                max-width: 200px;
+                height: auto;
+                margin-bottom: 20px;
+            }
+
+            h3 {
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+
+            p {
+                font-size: 16px;
+                color: #666;
+            }
+        }
+    }
+
+    // Styles for the footer
+    footer {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+
+        p {
+            margin: 0;
+        }
+    }
+
+    // Responsive Styles
+    @media screen and (max-width: 768px) {
+        .features {
+            flex-wrap: wrap;
+        }
+
+        .feature {
+            flex-basis: 100%;
+            max-width: 100%;
+            margin-bottom: 30px;
+        }
+    }
+
+/* app.component.scss */
+.features {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .swiper-container {
+    width: 100%;
+    max-width: 600px; /* Adjust this value to your desired width */
+  }
+  
+  .swiper-slide {
+    text-align: center;
+  }
+  
+  

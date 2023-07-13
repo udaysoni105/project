@@ -1,0 +1,40 @@
+<div *ngIf="!users; else userList">
+</div>
+
+<ng-template #userList>
+  <h2>user LIST</h2>
+
+  <div class="search-container">SEARCH:
+    <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" >
+  </div>
+  
+
+  <div *ngIf="!users" class="horizontal-loader"></div>
+  <div *ngIf="users">
+
+    <p-table #table [value]="users" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5" >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Email_Verified_AT</th>
+          <th>Country</th>
+          <th>State</th>
+          <th>Is_Verify</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-user>
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.email_verified_at }}</td>
+          <td>{{ user.country }}</td>
+          <td>{{ user.state }}</td>
+          <td>{{ user.isverify }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</ng-template>

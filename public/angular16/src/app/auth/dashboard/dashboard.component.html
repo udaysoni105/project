@@ -1,0 +1,69 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+  </head>
+  <body>
+    <header>
+      <h1>Project Management System</h1>
+    </header>
+    
+    <nav>
+      <ul>
+        <li><a routerLink="/">Home</a></li>
+        <li><a routerLink="/projects">Projects</a></li>
+        <li><a routerLink="/tasks">Tasks</a></li>
+        <li><a href="/users">Team</a></li>
+        <!-- <li><a href="/register">Register</a></li>
+        <li><a href="/login">login</a></li> -->
+        <li><a href="/login">logout</a></li>
+      </ul>
+    </nav>
+
+    <section class="hero" style="background-image: url('assets/images/download (2).jpg')">
+      <div class="hero-content">
+        <h2 style="background-color: rgba(43, 43, 204, 0.5); color: white; display: inline-block; white-space: nowrap;">Manage Your Projects with Ease</h2><br>
+        <p style="background-color: rgba(43, 43, 201, 0.5); color: white; display: inline-block; white-space: nowrap;">Efficiently plan, track, and collaborate on your projects.</p><br>
+        <a routerLink="/projects" class="btn btn-primary">Get Started</a>
+      </div>
+    </section>
+  
+    <section class="features">
+      <div class="feature">
+        <h3>Project Management</h3>
+        <p>Organize your projects, assign tasks, and set deadlines.</p>        
+        <p-carousel [value]="[1, 2, 3]" [numVisible]="1" [numScroll]="1" [circular]="true" >
+          <ng-template let-item pTemplate="carouselItem">
+            <img src="assets/images/downloade.jpeg" alt="Feature 1">
+          </ng-template>
+        </p-carousel>
+      </div>
+      <div class="feature">
+        <h3>Task Tracking</h3>
+        <p>Keep track of task progress, updates, and completion status.</p>
+        <p-carousel [value]="[1, 2, 3]" [numVisible]="1" [numScroll]="1" [circular]="true" >
+          <ng-template let-item pTemplate="carouselItem">
+            <img src="assets/images/download.png" alt="Feature 2">
+          </ng-template>
+        </p-carousel>
+      </div>
+      <div class="feature">
+        <h3>Team Collaboration</h3>
+        <p>Effortlessly collaborate with your team members in real-time.</p>
+        <p-carousel [value]="[1, 2, 3]" [numVisible]="1" [numScroll]="1" [circular]="true" >
+          <ng-template let-item pTemplate="carouselItem">
+            <img src="assets/images/download.jpeg" alt="Feature 3">
+          </ng-template>
+        </p-carousel>
+      </div>
+    </section>
+    
+    <footer>
+      <p>&copy; 2023 Project Management System. All rights reserved.</p>
+    </footer>
+    </body>
+  </html>
+  

@@ -1,0 +1,30 @@
+<h2>Edit Task</h2>
+
+<form class="task-form" (ngSubmit)="onUpdate()" [formGroup]="taskForm">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" pInputText formControlName="name" required>
+  </div>
+
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea id="description" name="description" pInputTextarea formControlName="description"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="start_date">Start Date</label>
+    <input type="date" id="start_date" name="start_date" pCalendar formControlName="start_date" required>
+  </div>
+
+  <div class="form-group">
+    <label for="end_date">End Date</label>
+    <input type="date" id="end_date" name="end_date" pCalendar formControlName="end_date" required>
+  </div>
+
+  <!-- <div class="form-group">
+    <label for="is_completed">Is Completed</label>
+    <p-checkbox id="is_completed" name="is_completed" formControlName="is_completed"></p-checkbox>
+  </div> -->
+
+  <button type="submit" [disabled]="!taskForm.valid">Update Task</button>
+</form>

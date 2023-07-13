@@ -1,0 +1,52 @@
+<div *ngIf="!tasks; else taskList">
+</div>
+
+<ng-template #taskList>
+  <h2>TASK LIST</h2>
+
+  <div class="search-container">SEARCH:
+    <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" >
+  </div>
+
+  <div class="container">
+    <button routerLink="/task-Create" class="btn btn-primary">Add</button>
+  </div>
+
+  <div *ngIf="!tasks" class="horizontal-loader"></div>
+  <div *ngIf="tasks">
+    <!-- style="background-image: url('assets/images/ab.jpg');" -->
+    <p-table #table [value]="tasks" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
+          <th>NAME</th>
+          <th>DESCRIPTION</th>
+          <th>START DATE</th>
+          <th>END DATE</th>
+          <th>IS COMPLETED</th>
+          <th>HARD DELETE</th>
+          <th>ACTIONS</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-task>
+        <tr>
+          <td>{{ task.id }}</td>
+          <td>{{ task.name }}</td>
+          <td>{{ task.description }}</td>
+          <td>{{ task.start_date }}</td>
+          <td>{{ task.end_date }}</td>
+          <td>{{ task.is_completed ? 'Yes' : 'No' }}</td>
+          <td>
+            <a (click)="deleteTask(task.id)">Delete</a>
+          </td>
+          <!-- <td>
+            <button *ngIf="checkPermission('edit')" (click)="editTask(task.id)">Edit</button>
+          </td> -->
+          <td>
+            <button routerLink="/task-edit" class="btn btn-primary">edit</button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</ng-template>

@@ -1,0 +1,49 @@
+<div *ngIf="!projects; else projectList">
+</div>
+
+<ng-template #projectList>
+  <h2>PROJECT LIST</h2>
+
+  <div class="search-container">SEARCH:
+    <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" >
+  </div>
+  <div class="container">
+    <button routerLink="/register-project" class="btn btn-primary">Add</button>
+  </div>
+  
+
+  <div *ngIf="!projects" class="horizontal-loader"></div>
+  <div *ngIf="projects">
+
+    <p-table #table [value]="projects" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
+          <th>NAME</th>
+          <th>DESCRIPTION</th>
+          <th>START DATE</th>
+          <th>END DATE</th>
+          <th>STATUS</th>
+          <th>ACTIONS</th>
+          <th>Edit</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-project>
+        <tr>
+          <td>{{ project.id }}</td>
+          <td>{{ project.name }}</td>
+          <td>{{ project.description }}</td>
+          <td>{{ project.start_date }}</td>
+          <td>{{ project.end_date }}</td>
+          <td>{{ project.status }}</td>
+          <td>
+            <button (click)="softDeleteProject(project.id)">Soft Delete</button>
+          </td> 
+          <td>
+            <button routerLink="/edit-project" class="btn btn-primary">edit</button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</ng-template>

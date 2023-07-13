@@ -1,0 +1,59 @@
+/* Define styles for the project table */
+h1 {
+    text-align: center;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  th, td {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  /* Add some additional styling */
+  h2 {
+    margin-bottom: 10px;
+  }
+  
+  div {
+    margin-top: 20px;
+  }
+  
+  /* Add responsiveness for smaller screens */
+  @media (max-width: 767px) {
+    table {
+      font-size: 14px;
+    }
+  }
+  // .search-container {
+  //   display: flex;
+  //   align-items: center;
+  //   margin-bottom: 1rem;
+  // }
+  
+  // .search-container input {
+  //   padding: 0.5rem;
+  //   font-size: 1rem;
+  //   border: 1px solid #ccc;
+  //   border-radius: 4px;
+  //   outline: none;
+  //   flex-grow: 1;
+  // }
+  
+  // .search-container input:focus {
+  //   border-color: blue;
+  // }
+  
