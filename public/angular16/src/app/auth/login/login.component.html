@@ -1,6 +1,14 @@
 <h1>Login Page</h1>
 
 <form [formGroup]="loginForm" (ngSubmit)="login()">
+  <!-- <p-toast [baseZIndex]="10000" [position]="'top-center'" *ngIf="error">
+    <ng-template let-message pTemplate="message">
+      <div class="p-toast-message p-toast-error">
+        {{ message.text }}
+      </div>
+    </ng-template>
+  </p-toast> -->
+  
   <div>
     <label for="email">Email</label>
     <input type="email" id="email" formControlName="email" required>

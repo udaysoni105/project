@@ -44,9 +44,7 @@ const routes: Routes = [
     // { path: 'register-project', component: ProjectCreateComponent, canActivate: [ProjectGuard] }
   { path: 'edit-project', component: ProjectEditComponent },
   { path: 'project-details', component: ProjectDetailsComponent },
-  // { path: 'projects/create', component: ProjectCreateComponent },
   { path: 'projects/:id', component: ProjectDetailsComponent },
-  // { path: 'projects/:id/edit', component: ProjectEditComponent },
 ];
 
 @NgModule({

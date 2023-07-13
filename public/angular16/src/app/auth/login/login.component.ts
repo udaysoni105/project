@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   user: any = {};
   // public formVali
   public isInValid !: boolean;
-
+  error: string | null = null;
   
   constructor(private router: Router,private formBuilder: FormBuilder, private authService: AuthService,private http: HttpClient){localStorage.clear()}
 
