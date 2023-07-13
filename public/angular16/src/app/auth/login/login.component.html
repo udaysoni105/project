@@ -11,11 +11,11 @@
   
   <div>
     <label for="email">Email</label>
-    <input type="email" id="email" formControlName="email" required>
+    <input type="email" id="email" formControlName="email"  [(ngModel)]="users.email" required>
   </div>
   <div>
     <label for="password">Password</label>
-    <input type="password" id="password" formControlName="password" required>
+    <input type="password" id="password" formControlName="password" [(ngModel)]="users.password" required>
   </div>
   <!-- <div (ngSubmit)="forgotPassword()">
     <input type="email" name="email" [(ngModel)]="user.email" required> -->

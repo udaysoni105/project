@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit {
   email!: string;
   password!: string;
   loginForm!: FormGroup;
-  user: any = {};
+  users: any = {};
   // public formVali
   public isInValid !: boolean;
   error: string | null = null;
@@ -39,14 +39,20 @@ export class LoginComponent implements OnInit {
     console.log(credentials);
     this.authService.login(credentials).subscribe(
       (response: any) => {
-        const token = response.token;
+        console.log(response);
+        const token = response.access_token;
+        localStorage.setItem('token', token);
+        this.router.navigate(['/dashboard']);
+        localStorage.setItem('email', this.users.email);
+        localStorage.setItem('password', this.users.password);
+        this.users = { email: '', password: '' };
 
         // Store the token in local storage
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('token', token);
+        // localStorage.setItem('token', response.token);
+        // localStorage.setItem('token', token);
 
         // Redirect or perform any necessary actions after successful login
-        this.router.navigate(['/dashboard']);
+        // this.router.navigate(['/dashboard']);
       },
       (error) => {
         console.error(error);
@@ -54,32 +60,6 @@ export class LoginComponent implements OnInit {
       }
     );
   }
-
-
-// login(): void {
-//   var isChecked = true;
-//   if (!this.loginForm.valid) {
-//     for (var a in this.loginForm.controls) {
-//       this.loginForm.controls[a].markAsDirty();
-//       this.loginForm.controls[a].updateValueAndValidity();
-//       isChecked = false;
-//     }
-//   }
-  
-//   if (this.loginForm.valid) {
-//     // alert('Logged in Successfully')
-//     console.log(this.loginForm.value);
-    
-//     localStorage.setItem('token', "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJod…Y3In0.IFUx35tPfvwyQ7LrYRZEfcdA-AzGPt1ldL-ujgxvZjA");
-//     this.loginForm.value.username == "admin@example.com" ? localStorage.setItem('userType', 'admin') : localStorage.setItem('userType', 'developer');
-    
-//     // Reset the form values only if it is not dirty (default values)
-//     if (!this.loginForm.dirty) {
-//       this.loginForm.reset();
-//     }
-//     this.router.navigate(['dashboard']);
-//   }
-// }
 
   forgotPassword() {
     const data = {

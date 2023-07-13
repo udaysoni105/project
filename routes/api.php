@@ -48,7 +48,7 @@ Route::group(['middleware'=>'api'], function ($router) {
 Route::get('/projects', [ProjectsController::class, 'index']);
 
 // Routes for admin
-Route::middleware(['auth', 'role_has_permissions:admin,add_project,edit_project,softDelete_project'])->group(function () {
+Route::middleware(['auth', 'CORS:add_project,edit_project,softDelete_project'])->group(function () {
     Route::post('/projects', [ProjectController::class, 'store']);
     Route::put('/projects/{id}', [ProjectController::class, 'update']);
     Route::delete('/projects/{id}', [ProjectController::class, 'destroy']);
@@ -73,19 +73,19 @@ Route::middleware(['auth', 'role_has_permissions:admin,add_project,edit_project,
 Route::get('/tasks', [TasksController::class, 'index']);
 
 // Routes for admin
-Route::middleware(['auth', 'role_has_permissions:admin,add_task'])->group(function () {
+Route::middleware(['auth', 'CORS:admin,add_task'])->group(function () {
     Route::post('/tasks', [TasksController::class, 'store']);
     Route::put('/tasks/{id}', [TasksController::class, 'update']);
     Route::delete('/tasks/{id}', [TasksController::class, 'destroy']);
 });
 
 // Routes for project manager
-Route::middleware(['auth', 'role_has_permissions:project_manager,edit_task'])->group(function () {
+Route::middleware(['auth', 'CORS:project_manager,edit_task'])->group(function () {
     Route::put('/tasks/{id}', [TasksController::class, 'update']);
 });
 
 // Routes for developer
-Route::middleware(['auth', 'role_has_permissions:developer,view_task'])->group(function () {
+Route::middleware(['auth', 'CORS:developer,view_task'])->group(function () {
     // Developers only have access to view tasks
     // They cannot add, edit, or delete tasks
 });
