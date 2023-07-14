@@ -56,5 +56,24 @@ export class AuthService {
   login(credentials: { email: string, password: string }) {
     return this.http.post<{ token: string }>(`${this.apiUrl}/login`, credentials);
   }
+  getCountries(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/countries`);
+  }
+
+  getStates(countryCode: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/states/${countryCode}`);
+  }
   
 }
+// login(credentials: { email: string, password: string }, token: string) {
+//   let headers = new HttpHeaders();
+//   headers = headers.append('Content-Type', 'application/json');
+//   headers = headers.append('permission', 'viewtask');
+//   headers = headers.append('authentication', `Bearer {$token}`);
+//   const httpOptions = { headers: headers };
+//   console.log(httpOptions);
+  
+//   const data = { ...credentials }; // Spread the credentials object
+
+//   return this.http.post(`${this.apiUrl}/login`, data, httpOptions);
+// }

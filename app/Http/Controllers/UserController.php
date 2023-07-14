@@ -106,9 +106,10 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'country' => $request->country,
-            'state' => $request->state,
+            'country' => $request->input('country'),
+            'state' => $request->input('state'),
         ]);
+        
 
         // Assign role to the user (if using Spatie)
         $user->assignRole('developer');

@@ -81,3 +81,33 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/registration']);
   }
 }
+
+
+// login(): void {
+//   if (this.loginForm.invalid) {
+//     return;
+//   }
+
+//   const credentials = {
+//     email: this.loginForm.value.email,
+//     password: this.loginForm.value.password,
+//   };
+//   const token = localStorage.getItem('token'); // Corrected code
+//   console.log(token);
+  
+//   this.authService.login(credentials, 'token').subscribe(
+//     (response: any) => {
+//       console.log(response);
+//       const token = response.access_token;
+//       localStorage.setItem('token', token);
+//       this.router.navigate(['/dashboard']);
+//       localStorage.setItem('email', this.users.email);
+//       localStorage.setItem('password', this.users.password);
+//       this.users = { email: '', password: '' };
+//     },
+//     (error) => {
+//       console.error(error);
+//       // Handle login error
+//     }
+//   );
+// }

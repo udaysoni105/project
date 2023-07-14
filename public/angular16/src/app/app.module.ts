@@ -40,6 +40,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { FieldsetModule } from 'primeng/fieldset';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
+import { DropdownModule } from 'primeng/dropdown';
 const routes: Routes = [
   {path: 'register', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
@@ -87,7 +88,8 @@ const routes: Routes = [
     InputTextareaModule,
     CalendarModule,
     MessageModule,
-    ToastModule
+    ToastModule,
+    DropdownModule
   ],
   providers: [AuthService,    ProjectService],
   bootstrap: [AppComponent]

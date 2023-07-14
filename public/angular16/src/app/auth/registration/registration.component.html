@@ -30,6 +30,18 @@
     <label for="state">State:</label>
     <input type="text" id="state" formControlName="state"  required [(ngModel)]="user.state"/>
   </div>
+
+    <!-- <br>
+  <div>
+    <label for="country">Country</label>
+    <p-dropdown [options]="countries" [(ngModel)]="selectedCountry" optionLabel="name" placeholder="Select Country" (onChange)="onCountryChange()"></p-dropdown>
+  </div>
+  <br>
+  <div>
+    <label for="state">State</label>
+    <p-dropdown [options]="states" [(ngModel)]="selectedState" optionLabel="name" placeholder="Select State"></p-dropdown>
+  </div> -->
+  
   </div>
   <!-- @role('developer') -->
   <button type="submit" [disabled]="registrationForm.invalid">Register</button>

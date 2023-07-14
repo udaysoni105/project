@@ -20,8 +20,8 @@ import { UserTableComponent } from './auth/user-table/user-table.component';
 import { MainComponent } from './auth/main/main.component';
 import { TaskDetailsComponent } from './core/task/task-details/task-details.component';
 const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
-  {path:'home',component:MainComponent},
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  // {path:'home',component:MainComponent},
   // { path: '',loadChildren:()=>import('./auth/dashboard/dashboard.module').then(a=>a.DashboardModule),canActivate:[authGuard]},
   { path: 'dashboard', component: DashboardComponent ,canActivate:[authGuard]},
   { path: 'register', component: RegistrationComponent },

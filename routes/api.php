@@ -16,8 +16,9 @@ use App\Http\Controllers\TasksController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::get('/states/{country}', 'RegistrationController@getStates');
 
-
+// Route::get('/states/{country}',[RegistrationController::class,'getStates']);
 info("password");
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -32,7 +33,7 @@ Route::post('/refresh', [AuthController::class,'refresh']);
 Route::post('/login', [AuthController::class,'login']);
 Route::post('/logout', [AuthController::class,'logout']);
 Route::post('/forgot-password',[AuthController::class,'forgotPassword']);
-Route::post('/reset-password',[ResetPasswordController::class,'resetPassword']);
+Route::post('/resetpassword',[ResetPasswordController::class,'resetPassword']);
 Route::group(['middleware'=>'api'], function ($router) {
     Route::post('/register', [AuthController::class,'register']);
     Route::get('/profile', [AuthController::class,'profile']);

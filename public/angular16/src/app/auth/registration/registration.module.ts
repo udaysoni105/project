@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { DropdownModule } from 'primeng/dropdown';
 @NgModule({
   declarations: [],
   imports: [
@@ -14,7 +14,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     // FormGroup,
     // FormBuilder,
     // Validators,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DropdownModule
   ]
 })
 export class RegistrationModule { }

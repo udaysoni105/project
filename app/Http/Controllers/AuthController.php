@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use Psy\Util\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use CountryState;
+
 
 class AuthController extends Controller
 {

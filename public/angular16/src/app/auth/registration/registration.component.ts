@@ -4,6 +4,16 @@ import { AuthService } from '../auth.service';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
+// interface Country {
+//   name: string;
+//   code: string;
+// }
+
+// interface State {
+//   name: string;
+//   code: string;
+// }
+
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
@@ -11,21 +21,18 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class RegistrationComponent implements OnInit {
   registrationForm!: FormGroup;
-  data: any = {};
   user: any = {};
-
-  confirmPassword: string = '';
+  // countries: Country[] = [];
+  // states: State[] = [];
+  // selectedCountry: Country | undefined;
+  // selectedState: State | undefined;
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private http: HttpClient
-  ) {
-    this.registrationForm = this.formBuilder.group({
-      // Define your form controls here
-    });
-  }
+  ) {}
 
   ngOnInit() {
     this.registrationForm = this.formBuilder.group({
@@ -36,6 +43,15 @@ export class RegistrationComponent implements OnInit {
       country: ['', Validators.required],
       state: ['', Validators.required]
     });
+
+    // this.authService.getCountries().subscribe(
+    //   (countries: Country[]) => {
+    //     this.countries = countries;
+    //   },
+    //   (error) => {
+    //     console.error('Failed to fetch countries:', error);
+    //   }
+    // );
   }
 
   register() {
@@ -57,4 +73,16 @@ export class RegistrationComponent implements OnInit {
       }
     );
   }
+
+  // onCountryChange() {
+  //   if (this.selectedCountry) {
+  //     // Make an HTTP request to fetch the states based on the selected country
+  //     this.http.get<State[]>(`/api/states/${this.selectedCountry.code}`).subscribe(states => {
+  //       this.states = states;
+  //     });
+  //   } else {
+  //     this.states = [];
+  //   }
+  // }
 }
+
