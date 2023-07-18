@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TaskService } from '../task.service';
 
 @Component({
   selector: 'app-task-create',
   templateUrl: './task-create.component.html',
-  styleUrls: ['./task-create.component.scss']
+  styleUrls: ['./task-create.component.scss'],
 })
-export class TaskCreateComponent {
-  // tasks: any[] = [];
+export class TaskCreateComponent implements OnInit {
   taskForm!: FormGroup; // Add "!" to indicate it will be assigned later
   tasks: any[] = [
     {
@@ -21,21 +19,41 @@ export class TaskCreateComponent {
     },
   ];
 
-  constructor(private formBuilder: FormBuilder,private taskService: TaskService) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private taskService: TaskService
+  ) {
     this.taskForm = this.formBuilder.group({
       name: ['', Validators.required],
       description: [''],
       start_date: ['', Validators.required],
       end_date: ['', Validators.required],
-      is_completed: [false]
+      is_completed: [false],
+    });
+  }
+
+  ngOnInit(): void {
+    this.taskForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      description: [''],
+      start_date: ['', Validators.required],
+      end_date: ['', Validators.required],
+      is_completed: [false],
+      project_id: ['', Validators.required],
     });
   }
 
   registerTask(): void {
+    if (this.taskForm.invalid) {
+      return;
+    }
+
     const task = this.taskForm.value;
     this.taskService.createTask(task).subscribe(
       (response) => {
         console.log('Task registered successfully', response);
+        // Reset the form
+        this.taskForm.reset();
       },
       (error) => {
         console.error('Failed to register task', error);

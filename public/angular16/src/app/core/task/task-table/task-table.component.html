@@ -26,6 +26,7 @@
           <th>IS COMPLETED</th>
           <th>HARD DELETE</th>
           <th>ACTIONS</th>
+          <th>ProjectId</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-task>
@@ -45,6 +46,7 @@
           <td>
             <button routerLink="/task-edit" class="btn btn-primary">edit</button>
           </td>
+          <td>{{ task.project?.id }}</td>
         </tr>
       </ng-template>
     </p-table>

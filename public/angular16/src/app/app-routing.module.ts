@@ -19,7 +19,11 @@ import { TaskCreateComponent } from './core/task/task-create/task-create.compone
 import { UserTableComponent } from './auth/user-table/user-table.component';
 import { MainComponent } from './auth/main/main.component';
 import { TaskDetailsComponent } from './core/task/task-details/task-details.component';
+import { projectEditResolver } from './core/project/project-edit/project-edit.resolver';
+// import { TaskEditResolver } from './core/auth/task-edit/task-edit.resolver';
 const routes: Routes = [
+  { path: 'project-create', component: ProjectCreateComponent },
+  // { path: 'project-edit/:id', component: ProjectEditComponent },
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   // {path:'home',component:MainComponent},
   // { path: '',loadChildren:()=>import('./auth/dashboard/dashboard.module').then(a=>a.DashboardModule),canActivate:[authGuard]},
@@ -41,12 +45,13 @@ const routes: Routes = [
   { path: 'registration', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register-project', component: ProjectCreateComponent},
-    // { path: 'register-project', component: ProjectCreateComponent, canActivate: [ProjectGuard] }
-  { path: 'edit-project', component: ProjectEditComponent },
+  // { path: 'register-project', component: ProjectCreateComponent, canActivate: [ProjectGuard] }
   { path: 'project-details', component: ProjectDetailsComponent },
-  { path: 'projects/:id', component: ProjectDetailsComponent },
+  // { path: 'projects/:id', component: ProjectEditComponent },
+  // { path: 'projects/:id',component: ProjectEditComponent,resolve: {project: ProjectEditComponent} },
+  { path: 'project-edit/:id',component: ProjectEditComponent,resolve: {project: projectEditResolver}}
+  // { path: 'task-edit/:id',component: TaskEditResolver,resolve: {project: TaskEditResolver}}
 ];
-
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TaskService } from '../task.service';
-
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-task-edit',
   templateUrl: './task-edit.component.html',
@@ -11,7 +11,7 @@ export class TaskEditComponent implements OnInit {
   taskForm!: FormGroup;
   tasks: any[] = []; // Array to store tasks
 
-  constructor(private formBuilder: FormBuilder, private taskService: TaskService) { }
+  constructor(private formBuilder: FormBuilder, private taskService: TaskService,private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.taskForm = this.formBuilder.group({
@@ -21,7 +21,20 @@ export class TaskEditComponent implements OnInit {
       end_date: ['', Validators.required],
       is_completed: [false]
     });
+  
+    // Retrieve the resolved task data from the route
+    const task = this.route.snapshot.data['task'];
+  
+    // Populate the form with the task data
+    this.taskForm.patchValue({
+      name: task.name,
+      description: task.description,
+      start_date: task.start_date,
+      end_date: task.end_date,
+      is_completed: task.is_completed
+    });
   }
+  
 
   onUpdate(): void {
     const task = this.taskForm.value;
@@ -37,3 +50,4 @@ export class TaskEditComponent implements OnInit {
     );
   }
 }
+

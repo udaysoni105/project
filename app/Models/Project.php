@@ -6,27 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Project extends Model
 {
-    use HasFactory,HasRoles,SoftDeletes;
+    use HasFactory, HasRoles, SoftDeletes;
     protected $gaurd_name = 'web';
     protected $dates = ['deleted_at'];
     protected $fillable = ['name', 'description', 'start_date', 'end_date', 'status'];
     public function softDelete($id)
-{
-    $project = Project::find($id);
+    {
+        $project = Project::find($id);
 
-    if (!$project) {
-        return response()->json(['message' => 'Project not found'], 404);
+        if (!$project) {
+            return response()->json(['message' => 'Project not found'], 404);
+        }
+
+        $project->delete();
+
+        return response()->json(['message' => 'Project soft deleted']);
     }
-
-    $project->delete();
-
-    return response()->json(['message' => 'Project soft deleted']);
 }
-}
-
-
-
-
-

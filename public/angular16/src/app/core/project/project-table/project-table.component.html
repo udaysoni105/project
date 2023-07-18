@@ -40,7 +40,7 @@
             <button (click)="softDeleteProject(project.id)">Soft Delete</button>
           </td> 
           <td>
-            <button routerLink="/edit-project" class="btn btn-primary">edit</button>
+            <button [routerLink]="['/project-edit', project.id]">Edit Project</button>
           </td>
         </tr>
       </ng-template>

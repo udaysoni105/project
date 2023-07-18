@@ -8,14 +8,14 @@ import { ProjectDetailsComponent } from './project-details/project-details.compo
 import { ProjectEditComponent } from './project-edit/project-edit.component';
 
 const routes: Routes = [
-  { path: 'projects', component: ProjectTableComponent },
-  { path: 'project-table', component: ProjectTableComponent },
-  { path: 'register-project', component: ProjectCreateComponent},
+  // { path: 'projects', component: ProjectTableComponent },
+  // { path: 'project-table', component: ProjectTableComponent },
+  // { path: 'register-project', component: ProjectCreateComponent},
     // { path: 'register-project', component: ProjectCreateComponent, canActivate: [ProjectGuard] }
-  { path: 'edit-project', component: ProjectEditComponent },
-  { path: 'project-details', component: ProjectDetailsComponent },
+  // { path: 'edit-project', component: ProjectEditComponent },
+  // { path: 'project-details', component: ProjectDetailsComponent },
   // { path: 'projects/create', component: ProjectCreateComponent },
-  { path: 'projects/:id', component: ProjectDetailsComponent },
+  // { path: 'projects/:id', component: ProjectDetailsComponent },
   // { path: 'projects/:id/edit', component: ProjectEditComponent }
   ]
 @NgModule({

@@ -3,9 +3,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Validator;
+// use Illuminate\Validation\Validator;
 use Laracasts\Flash\Flash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class ProjectsController extends Controller
 {
@@ -125,27 +126,27 @@ class ProjectsController extends Controller
         //         return response()->json(['message' => 'Project deleted successfully']);
     }
 
-    public function activate($id)
-    {
-        // Activate the project
-        $project = Project::onlyTrashed()->findOrFail($id);
-        $project->restore();
+    // public function activate($id)
+    // {
+    //     // Activate the project
+    //     $project = Project::onlyTrashed()->findOrFail($id);
+    //     $project->restore();
 
-        // Display flash message
-        Flash::success('Project activated successfully');
+    //     // Display flash message
+    //     Flash::success('Project activated successfully');
 
-        return redirect()->route('projects.index');
-    }
+    //     return redirect()->route('projects.index');
+    // }
 
-    public function deactivate($id)
-    {
-        // Deactivate the project
-        $project = Project::findOrFail($id);
-        $project->delete();
+    // public function deactivate($id)
+    // {
+    //     // Deactivate the project
+    //     $project = Project::findOrFail($id);
+    //     $project->delete();
 
-        // Display flash message
-        Flash::success('Project deactivated successfully');
+    //     // Display flash message
+    //     Flash::success('Project deactivated successfully');
 
-        return redirect()->route('projects.index');
-    }
+    //     return redirect()->route('projects.index');
+    // }
 }
