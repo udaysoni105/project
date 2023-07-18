@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectService } from '../project.service';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-project-edit',
   templateUrl: './project-edit.component.html',
@@ -15,7 +15,8 @@ export class ProjectEditComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private router:Router
   ) { }
 
   ngOnInit(): void {
@@ -50,11 +51,14 @@ export class ProjectEditComponent implements OnInit {
       this.projectService.updateProject(this.projectId, projectData).subscribe(
         response => {
           console.log('Project updated successfully', response);
+          this.router.navigate(['/projects']);
         },
         error => {
           console.error('Failed to update project', error);
         }
       );
+
+  console.log('Project ID:', this.projectId); // Add this line
     } else {
       console.error('Invalid form data');
     }

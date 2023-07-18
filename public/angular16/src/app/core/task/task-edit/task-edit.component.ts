@@ -55,6 +55,7 @@ export class TaskEditComponent implements OnInit {
           console.error('Failed to update task', error);
         }
       );
+      console.log('Task ID:', this.taskId); // Add this line
     } else {
       console.error('Invalid form data');
     }

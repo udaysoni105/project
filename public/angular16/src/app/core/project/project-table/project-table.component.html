@@ -37,10 +37,10 @@
           <td>{{ project.end_date }}</td>
           <td>{{ project.status }}</td>
           <td>
-            <button (click)="softDeleteProject(project.id)">Soft Delete</button>
+            <button (click)="softDeleteProject(project.id)" class="btn btn-primary">Soft Delete</button>
           </td> 
           <td>
-            <button [routerLink]="['/project-edit', project.id]">Edit Project</button>
+            <button [routerLink]="['/project-edit', project.id]" class="btn btn-primary">Edit Project</button>
           </td>
         </tr>
       </ng-template>

@@ -38,11 +38,13 @@ h1 {
       font-size: 14px;
     }
   }
-  // .search-container {
-  //   display: flex;
-  //   align-items: center;
-  //   margin-bottom: 1rem;
-  // }
+  .search-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    justify-content: flex-end;
+    margin-right: 20px;
+  }
   
   // .search-container input {
   //   padding: 0.5rem;

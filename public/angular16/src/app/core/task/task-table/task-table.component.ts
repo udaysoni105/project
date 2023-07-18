@@ -57,6 +57,7 @@ export class TaskTableComponent implements OnInit {
   onSearch(): void {
     this.table.filter(this.searchQuery, 'name', 'contains');
   }
+  
   checkPermission(permission: string): boolean {
     // Return true or false based on the permission check
     return true; // Replace with your implementation

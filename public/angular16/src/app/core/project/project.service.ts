@@ -25,9 +25,14 @@ export class ProjectService {
       .pipe(catchError(this.handleError));
   }
 
-  updateProject(id: string, projectData: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/${id}`, projectData);
+  // updateProject(id: string, projectData: any): Observable<any> {
+  //   return this.http.put(`${this.baseUrl}/${id}`, projectData);
+  // }
+  updateProject(projectId: string, projectData: any): Observable<any> {
+    const url = `http://localhost:8000/api/projects/${projectId}`;
+    return this.http.put(url, projectData);
   }
+  
 
   deleteProject(id: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);

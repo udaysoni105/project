@@ -18,11 +18,11 @@ use App\Http\Controllers\TasksController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
+info("Route");
 Route::get('/states/{country}', 'RegistrationController@getStates');
 
 // Route::get('/states/{country}',[RegistrationController::class,'getStates']);
-info("password");
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -53,7 +53,7 @@ Route::group(['middleware' => 'api'], function ($router) {
 // Public route accessible to all
 // Route::get('/projects', [ProjectsController::class, 'index']);
 Route::post('/projects', [ProjectsController::class, 'store']);
-Route::put('/projects/{id}', [ProjectsController::class, 'update']);
+Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
 // Route::delete('/projects/{id}', [ProjectsController::class, 'destroy']);
 Route::get('/projects', [ProjectsController::class, 'index'])->name('projects.index');
 Route::get('/projects/{id}', [ProjectsController::class, 'show'])->name('projects.show');

@@ -47,7 +47,8 @@ table {
   
       // Button padding and margin
       padding: 10px 20px;
-      margin-bottom: 10px;
+      margin-bottom: 3px;
+      margin-right: 20px;
   
       // Button hover effect
       &:hover {
@@ -62,5 +63,6 @@ table {
   .search-container{
     display: flex;
     justify-content: flex-end;
-    offset: 15;
+    margin-right: 20px;
+    padding: 20px 1px;
   }
