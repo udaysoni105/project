@@ -82,10 +82,12 @@ Route::delete('projects/{id}', [ProjectsController::class, 'destroy'])->name('pr
 
 
 // Public route accessible to all
-Route::get('/tasks', [TasksController::class, 'index']);
+Route::get('/tasks', [TasksController::class, 'index'])->name('tasks.index');
+Route::get('/tasks/{id}', [TasksController::class, 'show'])->name('tasks.show');
+// Route::get('/tasks', [TasksController::class, 'index'])->name('tasks.index');
 Route::post('/tasks', [TasksController::class, 'store']);
 Route::put('/tasks/{id}', [TasksController::class, 'update']);
-Route::delete('/tasks/{id}', [TasksController::class, 'destroy']);
+Route::delete('/tasks/{id}', [TasksController::class, 'destroy'])->name('tasks.destroy');
 
 // Routes for admin
 // Route::middleware(['auth', 'CORS:admin,add_task'])->group(function () {

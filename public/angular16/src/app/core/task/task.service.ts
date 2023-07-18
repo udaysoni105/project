@@ -14,31 +14,25 @@ export class TaskService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
-  // createTask(task: any): Observable<any> {
-  //   return this.http.post<any>(this.apiUrl, task);
-  // }
-
   createTask(task: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, task).pipe(
       catchError(this.handleError)
     );
   }
 
-  // updateTask(id: string, task: any): Observable<any> {
-  //   const url = `${this.apiUrl}/${id}`;
-  //   return this.http.put<any>(url, task);
-  // }
-
-  updateTask(id: string, task: any): Observable<any> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.put<any>(url, task).pipe(
-      catchError(this.handleError)
-    );
+  getTaskById(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
+  
+  updateTask(id: string, taskData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, taskData);
   }
 
-  // deleteTask(id: string): Observable<any> {
+  // updateTask(id: string, task: any): Observable<any> {
   //   const url = `${this.apiUrl}/${id}`;
-  //   return this.http.delete<any>(url);
+  //   return this.http.put<any>(url, task).pipe(
+  //     catchError(this.handleError)
+  //   );
   // }
 
   deleteTask(id: string): Observable<any> {
@@ -52,15 +46,34 @@ export class TaskService {
   //   return this.http.get<any>(this.apiUrl);
   // }
 
-  getTask(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
-      catchError(this.handleError)
-    );
-  }
+  // getTask(id: string): Observable<any> {
+  //   return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
+  //     catchError(this.handleError)
+  //   );
+  // }
+  // getTaskById(id: string): Observable<any> {
+  //   return this.http.get(`${this.apiUrl}/${id}`);
+  // }
+  // getTask(id: string): Observable<any> {
+  //   const url = `${this.apiUrl}/${id}`;
+  
+  //   return this.http.get<any>(url).pipe(
+  //     catchError((error: HttpErrorResponse) => {
+  //       if (error.status === 404) {
+  //         console.error('Task not found', error);
+  //       } else {
+  //         console.error('Failed to retrieve task', error);
+  //       }
+  
+  //       return throwError('Failed to retrieve task');
+  //     })
+  //   );
+  // }
 
   registertask(task: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, task);
-  }  
+  } 
+
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An error occurred';

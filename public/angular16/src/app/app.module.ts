@@ -41,6 +41,7 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
+import { TaskService } from './core/task/task.service';
 
 const routes: Routes = [
   {path: 'register', component: RegistrationComponent },
@@ -92,7 +93,7 @@ const routes: Routes = [
     ToastModule,
     DropdownModule
   ],
-  providers: [AuthService,    ProjectService],
+  providers: [AuthService, ProjectService,TaskService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

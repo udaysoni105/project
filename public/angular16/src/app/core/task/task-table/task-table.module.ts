@@ -5,10 +5,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppComponent } from 'src/app/app.component';
 import { DialogModule } from 'primeng/dialog';
-
+import { TaskTableComponent } from './task-table.component';
+import { TaskService } from '../task.service';
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TaskTableComponent
     // Other component declarations
   ],
   imports: [
@@ -18,7 +20,10 @@ import { DialogModule } from 'primeng/dialog';
     AppRoutingModule,
     DialogModule
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [TaskService],
+  bootstrap: [AppComponent],
+  exports:[
+    TaskTableComponent
+  ]
 })
 export class TaskTableModule { }

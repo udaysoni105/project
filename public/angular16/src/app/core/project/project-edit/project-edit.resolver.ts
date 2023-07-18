@@ -19,7 +19,7 @@ export class projectEditResolver implements Resolve<any> {
     const projectId = route.paramMap.get('id');
     if (projectId) {
         // Inside the resolve method in project-edit.resolver.ts
-console.log('Resolve: projectId', projectId);
+        console.log('Resolve: projectId', projectId);
       return this.projectService.getProjectById(projectId).pipe(
         catchError((error) => {
           console.error('Failed to fetch project details', error);

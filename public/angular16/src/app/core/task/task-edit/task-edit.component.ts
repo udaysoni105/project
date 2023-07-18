@@ -5,13 +5,17 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-task-edit',
   templateUrl: './task-edit.component.html',
-  styleUrls: ['./task-edit.component.scss']
+  styleUrls: ['./task-edit.component.scss'],
 })
 export class TaskEditComponent implements OnInit {
   taskForm!: FormGroup;
-  tasks: any[] = []; // Array to store tasks
+  taskId!: string;
 
-  constructor(private formBuilder: FormBuilder, private taskService: TaskService,private route: ActivatedRoute) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private taskService: TaskService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.taskForm = this.formBuilder.group({
@@ -19,35 +23,40 @@ export class TaskEditComponent implements OnInit {
       description: [''],
       start_date: ['', Validators.required],
       end_date: ['', Validators.required],
-      is_completed: [false]
+      is_completed: [false],
+      project_id: ['', Validators.required],
     });
-  
-    // Retrieve the resolved task data from the route
-    const task = this.route.snapshot.data['task'];
-  
-    // Populate the form with the task data
-    this.taskForm.patchValue({
-      name: task.name,
-      description: task.description,
-      start_date: task.start_date,
-      end_date: task.end_date,
-      is_completed: task.is_completed
+
+    this.route.params.subscribe((params) => {
+      this.taskId = params['id'];
+      this.loadTaskDetails();
     });
   }
-  
 
-  onUpdate(): void {
-    const task = this.taskForm.value;
-    const taskId = task.id; // Assuming you have an "id" field in your task object
-
-    this.taskService.updateTask(taskId, task).subscribe(
+  loadTaskDetails(): void {
+    this.taskService.getTaskById(this.taskId).subscribe(
       (response) => {
-        console.log('Task updated successfully', response);
+        this.taskForm.patchValue(response);
       },
       (error) => {
-        console.error('Failed to update task', error);
+        console.error('Failed to retrieve task details', error);
       }
     );
   }
-}
 
+  onUpdate(): void {
+    if (this.taskForm.valid) {
+      const taskData = this.taskForm.value;
+      this.taskService.updateTask(this.taskId, taskData).subscribe(
+        (response) => {
+          console.log('Task updated successfully', response);
+        },
+        (error) => {
+          console.error('Failed to update task', error);
+        }
+      );
+    } else {
+      console.error('Invalid form data');
+    }
+  }
+}
