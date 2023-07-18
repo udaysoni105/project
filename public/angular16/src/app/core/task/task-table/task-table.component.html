@@ -38,13 +38,13 @@
           <td>{{ task.end_date }}</td>
           <td>{{ task.is_completed ? 'Yes' : 'No' }}</td>
           <td>
-            <a (click)="deleteTask(task.id)">Delete</a>
+            <button (click)="deleteTask(task.id)" class="btn btn-primary">Delete</button>
           </td>
           <!-- <td>
             <button *ngIf="checkPermission('edit')" (click)="editTask(task.id)">Edit</button>
           </td> -->
           <td>
-            <button routerLink="/task-edit" class="btn btn-primary">edit</button>
+            <button [routerLink]="['/task-edit', task.id]" class="btn btn-primary">Edit Task</button>
           </td>
           <td>{{ task.project?.id }}</td>
         </tr>

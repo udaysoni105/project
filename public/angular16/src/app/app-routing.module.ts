@@ -50,7 +50,7 @@ const routes: Routes = [
   { path: 'task-Create', component: TaskCreateComponent },
   // { path: 'task-edit/:id',component: TaskEditComponent,resolve: {task: taskEditResolver}},
   // { path: 'task-edit/:id', component: TaskEditComponent, resolve: { task: taskEditResolver } },
-  { path: 'task-edit', component: TaskEditComponent, resolve: { task: taskEditResolver } },
+  { path: 'task-edit/:id', component: TaskEditComponent, resolve: { task: taskEditResolver } },
 
   { path: 'users', component: UserTableComponent }
 ];
