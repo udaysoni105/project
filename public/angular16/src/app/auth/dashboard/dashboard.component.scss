@@ -59,53 +59,53 @@
         font-size: 18px; /* Adjust the font size as per your requirements */
       }
 
-      .btn {
-        display: inline-block;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        background-color: #007bff;
-        color: #fff;
-        text-decoration: none;
-        cursor: pointer;
+      // .btn {
+      //   display: inline-block;
+      //   padding: 10px 20px;
+      //   border: none;
+      //   border-radius: 4px;
+      //   background-color: #007bff;
+      //   color: #fff;
+      //   text-decoration: none;
+      //   cursor: pointer;
       
-        &.btn-primary {
-          background-color: #007bff;
-        }
+      //   &.btn-primary {
+      //     background-color: #007bff;
+      //   }
         
-        &.btn-get-started {
-          background-color: #ff9800; /* Change the background color here */
-        }
-      }
+      //   &.btn-get-started {
+      //     background-color: #ff9800; /* Change the background color here */
+      //   }
+      // }
       
       
-      .btn {
-        margin-top: 20px; /* Adjust the margin as per your requirements */
-        font-size: 18px; /* Adjust the font size as per your requirements */
-      }
+      // .btn {
+      //   margin-top: 20px; /* Adjust the margin as per your requirements */
+      //   font-size: 18px; /* Adjust the font size as per your requirements */
+      // }
       
-      /* Media queries for responsiveness */
-      @media screen and (max-width: 767px) {
-        .hero-content h2,
-        .hero-content p {
-          font-size: 18px; /* Adjust the font size for smaller screens */
-        }
+      // /* Media queries for responsiveness */
+      // @media screen and (max-width: 767px) {
+      //   .hero-content h2,
+      //   .hero-content p {
+      //     font-size: 18px; /* Adjust the font size for smaller screens */
+      //   }
       
-        .btn {
-          font-size: 16px; /* Adjust the font size for smaller screens */
-        }
-      }
+      //   .btn {
+      //     font-size: 16px; /* Adjust the font size for smaller screens */
+      //   }
+      // }
       
-      @media screen and (max-width: 479px) {
-        .hero-content h2,
-        .hero-content p {
-          font-size: 16px; /* Adjust the font size for even smaller screens */
-        }
+      // @media screen and (max-width: 479px) {
+      //   .hero-content h2,
+      //   .hero-content p {
+      //     font-size: 16px; /* Adjust the font size for even smaller screens */
+      //   }
       
-        .btn {
-          font-size: 14px; /* Adjust the font size for even smaller screens */
-        }
-      }      
+      //   .btn {
+      //     font-size: 14px; /* Adjust the font size for even smaller screens */
+      //   }
+      // }      
 
     // Styles for the features section
     .features {

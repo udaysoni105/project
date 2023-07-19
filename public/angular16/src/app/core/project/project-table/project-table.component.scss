@@ -46,7 +46,7 @@ table {
   
       // Button padding and margin
       padding: 10px 20px;
-      margin-bottom: 3px;
+      margin-bottom: 3 px;
       margin-right: 20px;
   
       // Button hover effect
@@ -60,11 +60,22 @@ table {
     justify-content: flex-end;
     offset: 1;
   }
-  .search-container{
+  .search-container {
     display: flex;
+    align-items: center;
     justify-content: flex-end;
-    offset: 1;
-    margin-right: 20px;
+    margin-bottom: 10px;
   }
   
+  .search-container .label {
+    margin-right: 5px;
+  }
+  
+  .search-container .p-inputgroup-addon {
+    position: relative;
+  }
+  
+  .search-container input[type="text"] {
+    padding-right: 24px;
+  }
   

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ProjectService } from '../project.service';
 import { HttpClient } from '@angular/common/http';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-project-create',
   templateUrl: './project-create.component.html',
@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
 export class ProjectCreateComponent implements OnInit {
   projectForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private projectService: ProjectService, private http: HttpClient) {}
+  constructor(private formBuilder: FormBuilder, private projectService: ProjectService, private http: HttpClient,private router: Router) {}
 
   ngOnInit(): void {
     this.projectForm = this.formBuilder.group({
@@ -30,6 +30,7 @@ export class ProjectCreateComponent implements OnInit {
         .subscribe(
           (response) => {
             console.log('Project created successfully', response);
+            this.router.navigate(['/projects']);
             // Handle success, e.g., show a success message or redirect to another page
           },
           (error) => {

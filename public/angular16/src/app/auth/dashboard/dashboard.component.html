@@ -10,24 +10,29 @@
     <header>
       <h1>Project Management System</h1>
     </header>
+
+
+<div class="card">
+  <p-tabMenu [model]="items"></p-tabMenu>
+</div>
     
-    <nav>
+    <!-- <nav>
       <ul>
         <li><a routerLink="/">Home</a></li>
         <li><a routerLink="/projects">Projects</a></li>
         <li><a routerLink="/tasks">Tasks</a></li>
         <li><a routerLink="/users">Team</a></li>
-        <!-- <li><a routerLink="/register">Register</a></li>
-        <li><a routerLink="/login">login</a></li> -->
         <li><a routerLink="/login">logout</a></li>
+        <*<li><a routerLink="/register">Register</a></li>
+        <li><a routerLink="/login">login</a></li> *>
       </ul>
-    </nav>
+    </nav> -->
 
     <section class="hero" style="background-image: url('assets/images/download (2).jpg')">
       <div class="hero-content">
         <h2 style="background-color: rgba(43, 43, 204, 0.5); color: white; display: inline-block; white-space: nowrap;">Manage Your Projects with Ease</h2><br>
         <p style="background-color: rgba(43, 43, 201, 0.5); color: white; display: inline-block; white-space: nowrap;">Efficiently plan, track, and collaborate on your projects.</p><br>
-        <button (click)="handleGetStartedClick()" class="btn btn-primary">Get Started</button>
+        <p-button (click)="handleGetStartedClick()" class="btn btn-primary">Get Started</p-button>
       </div>
     </section>  
   

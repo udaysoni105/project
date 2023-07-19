@@ -35,12 +35,12 @@ export class TaskService {
   //   );
   // }
 
-  deleteTask(id: string): Observable<any> {
+  deletetask(id: string): Observable<any> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.delete<any>(url).pipe(
       catchError(this.handleError)
     );
-  }
+  }  
 
   // getTask(id: string): Observable<any> {
   //   return this.http.get<any>(this.apiUrl);

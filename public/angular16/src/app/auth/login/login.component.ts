@@ -35,6 +35,7 @@ export class LoginComponent implements OnInit {
     const credentials = {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
+      Login_As: this.loginForm.value.Login_As
     };
     console.log(credentials);
     this.authService.login(credentials).subscribe(
@@ -45,7 +46,8 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/dashboard']);
         localStorage.setItem('email', this.users.email);
         localStorage.setItem('password', this.users.password);
-        this.users = { email: '', password: '' };
+        localStorage.setItem('Login_As', this.users.Login_As);
+        this.users = { email: '', password: '' ,Login_As:''};
 
         // Store the token in local storage
         // localStorage.setItem('token', response.token);

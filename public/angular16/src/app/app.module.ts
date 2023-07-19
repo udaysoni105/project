@@ -42,6 +42,7 @@ import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
 import { TaskService } from './core/task/task.service';
+import { TabMenuModule } from 'primeng/tabmenu';
 
 const routes: Routes = [
   {path: 'register', component: RegistrationComponent },
@@ -91,7 +92,8 @@ const routes: Routes = [
     CalendarModule,
     MessageModule,
     ToastModule,
-    DropdownModule
+    DropdownModule,
+    TabMenuModule
   ],
   providers: [AuthService, ProjectService,TaskService],
   bootstrap: [AppComponent]

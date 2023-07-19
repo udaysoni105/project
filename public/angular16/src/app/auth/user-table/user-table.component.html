@@ -1,18 +1,23 @@
+<div  style="background-image: url('assets/images/ab.jpg');">
 <div *ngIf="!users; else userList">
 </div>
 
 <ng-template #userList>
-  <h2>USER LIST</h2>
+  <h2>USERS LIST</h2>
 
-  <div class="search-container">SEARCH:
-    <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" >
+  <div class="search-container">
+    <label class="label" for="search">SEARCH<span class="required-indicator"></span>:</label>
+    <span class="p-inputgroup-addon">
+      <i class="pi pi-search" style="font-weight: 1000;"></i>
+      <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()">
+    </span>
   </div>
   
   <div *ngIf="!users" class="horizontal-loader"></div>
   <div *ngIf="users">
 
     <p-table #table [value]="users" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5" >
-      <ng-template pTemplate="header">
+      <ng-template pTemplate="header" >
         <tr>
           <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
           <th>Name</th>
@@ -37,3 +42,4 @@
     </p-table>
   </div>
 </ng-template>
+</div>

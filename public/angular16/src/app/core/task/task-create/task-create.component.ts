@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TaskService } from '../task.service';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-task-create',
   templateUrl: './task-create.component.html',
@@ -21,7 +21,8 @@ export class TaskCreateComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private router: Router
   ) {
     this.taskForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -38,7 +39,7 @@ export class TaskCreateComponent implements OnInit {
       description: [''],
       start_date: ['', Validators.required],
       end_date: ['', Validators.required],
-      is_completed: [false],
+      is_completed: [true],
       project_id: ['', Validators.required],
     });
   }
@@ -54,6 +55,7 @@ export class TaskCreateComponent implements OnInit {
         console.log('Task registered successfully', response);
         // Reset the form
         this.taskForm.reset();
+        this.router.navigate(['/tasks']);
       },
       (error) => {
         console.error('Failed to register task', error);

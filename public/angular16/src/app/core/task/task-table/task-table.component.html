@@ -2,19 +2,23 @@
 </div>
 
 <ng-template #taskList>
-  <h2>TASK LIST</h2>
+  <h2>TASKS LIST</h2>
 
   <div class="container">
-    <button routerLink="/task-Create" class="btn btn-primary">Add</button>
+    <p-button routerLink="/task-Create" class="btn btn-primary">+Create New</p-button>
   </div>
 
-  <div class="search-container">SEARCH:
-    <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" >
+  <div class="search-container">
+    <label class="label" for="search">SEARCH<span class="required-indicator"></span>:</label>
+    <span class="p-inputgroup-addon">
+      <i class="pi pi-search" style="font-weight: 1000;"></i>
+      <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()">
+    </span>
   </div>
 
   <div *ngIf="!tasks" class="horizontal-loader"></div>
   <div *ngIf="tasks">
-    <!-- style="background-image: url('assets/images/ab.jpg');" -->
+
     <p-table #table [value]="tasks" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5">
       <ng-template pTemplate="header">
         <tr>
@@ -38,13 +42,13 @@
           <td>{{ task.end_date }}</td>
           <td>{{ task.is_completed ? 'Yes' : 'No' }}</td>
           <td>
-            <button (click)="deleteTask(task.id)" class="btn btn-primary">Delete</button>
-          </td>
+            <p-button (click)="deleteTask(task.id)" class="btn btn-primary">Delete</p-button>
+          </td>          
           <!-- <td>
-            <button *ngIf="checkPermission('edit')" (click)="editTask(task.id)">Edit</button>
+            <p-button *ngIf="checkPermission('edit')" (click)="editTask(task.id)">Edit</p-button>
           </td> -->
           <td>
-            <button [routerLink]="['/task-edit', task.id]" class="btn btn-primary">Edit Task</button>
+            <p-button [routerLink]="['/task-edit', task.id]" class="btn btn-primary">Edit Task</p-button>
           </td>
           <td>{{ task.project_id}}</td>
         </tr>

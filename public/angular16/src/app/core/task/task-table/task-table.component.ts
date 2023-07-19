@@ -44,7 +44,7 @@ export class TaskTableComponent implements OnInit {
   }
 
   deleteTask(id: string) {
-    this.taskService.deleteTask(id).subscribe(
+    this.taskService.deletetask(id).subscribe(
       () => {
         this.loadTasks();
       },
@@ -52,21 +52,21 @@ export class TaskTableComponent implements OnInit {
         console.log(error);
       }
     );
-  }
+  }  
 
   onSearch(): void {
     this.table.filter(this.searchQuery, 'name', 'contains');
   }
-  
-  checkPermission(permission: string): boolean {
-    // Return true or false based on the permission check
-    return true; // Replace with your implementation
-  }
 
-  editTask(taskId: number): void {
-    // Logic to edit the task with the given taskId
+  // checkPermission(permission: string): boolean {
+  //   // Return true or false based on the permission check
+  //   return true; // Replace with your implementation
+  // }
 
-    // Option 1: Navigate to a task editing page
-    this.router.navigate(['edit']);
-  }
+  // editTask(taskId: number): void {
+  //   // Logic to edit the task with the given taskId
+
+  //   // Option 1: Navigate to a task editing page
+  //   this.router.navigate(['edit']);
+  // }
 }

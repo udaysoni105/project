@@ -8,7 +8,7 @@ import { ButtonModule } from 'primeng/button';
 // Add other PrimeNG modules as needed
 import { CarouselModule } from 'primeng/carousel';
 import { AppComponent } from 'src/app/app.component';
-
+import { TabMenuModule } from 'primeng/tabmenu';
 @NgModule({
   declarations: [
     AppComponent,DashboardComponent
@@ -20,6 +20,7 @@ import { AppComponent } from 'src/app/app.component';
     CarouselModule,
     // Add imported PrimeNG modules to the 'imports' array
     ButtonModule,
+    TabMenuModule
     // Add other PrimeNG modules as needed
   ],
   providers: [],

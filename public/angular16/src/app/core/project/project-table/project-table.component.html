@@ -5,11 +5,15 @@
   <h2>PROJECT LIST</h2>
 
   <div class="container">
-    <button routerLink="/register-project" class="btn btn-primary">Add</button>
+    <p-button routerLink="/register-project" class="btn btn-primary">+Create New</p-button>
   </div>
-  
-  <div class="search-container">SEARCH:
-    <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" >
+
+  <div class="search-container">
+    <label class="label" for="search">SEARCH<span class="required-indicator"></span>:</label>
+    <span class="p-inputgroup-addon">
+      <i class="pi pi-search" style="font-stretch: expanded;"></i>
+      <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()">
+    </span>
   </div>
 
   <div *ngIf="!projects" class="horizontal-loader"></div>
@@ -37,10 +41,10 @@
           <td>{{ project.end_date }}</td>
           <td>{{ project.status }}</td>
           <td>
-            <button (click)="softDeleteProject(project.id)" class="btn btn-primary">Soft Delete</button>
+            <p-button (click)="softDeleteProject(project.id)" class="btn btn-primary">Soft Delete</p-button>
           </td> 
           <td>
-            <button [routerLink]="['/project-edit', project.id]" class="btn btn-primary">Edit Project</button>
+            <p-button [routerLink]="['/project-edit', project.id]" class="btn btn-primary">Edit Project</p-button>
           </td>
         </tr>
       </ng-template>

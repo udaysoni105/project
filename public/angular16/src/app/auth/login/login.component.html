@@ -17,6 +17,11 @@
     <label for="password">Password</label>
     <input type="password" id="password" formControlName="password" [(ngModel)]="users.password" required>
   </div>
+
+  <div>
+    <label for="Login_As">Login_As</label>
+    <input type="Login_As" id="Login_As" formControlName="Login_As" [(ngModel)]="users.Login_As" required>
+  </div>
   <!-- <div (ngSubmit)="forgotPassword()">
     <input type="email" name="email" [(ngModel)]="user.email" required> -->
     <a href="/email" (click)="forgotPassword()">Forgot Password?</a>

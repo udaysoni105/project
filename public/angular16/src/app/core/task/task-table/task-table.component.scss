@@ -6,6 +6,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
+    max-width: 400px;
   }
   
   th, td {
@@ -60,9 +61,23 @@ table {
     display: flex;
     justify-content: flex-end;
   }
-  .search-container{
+  .search-container {
     display: flex;
+    align-items: center;
     justify-content: flex-end;
-    margin-right: 20px;
-    padding: 20px 1px;
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
+  
+  .search-container .label {
+    margin-right: 5px;
+  }
+  
+  .search-container .p-inputgroup-addon {
+    position: relative;
+  }
+  
+  .search-container input[type="text"] {
+    padding-right: 24px;
+  }
+  
