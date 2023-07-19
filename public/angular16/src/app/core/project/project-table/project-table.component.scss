@@ -38,23 +38,23 @@ table {
       font-size: 14px;
     }
   }
-  button.btn {
-    &.btn-primary {
-      // Primary button styles
-      background-color: rgb(51, 51, 215);
-      color: white;
+  // button.btn {
+  //   &.btn-primary {
+  //     // Primary button styles
+  //     background-color: rgb(51, 51, 215);
+  //     color: white;
   
-      // Button padding and margin
-      padding: 10px 20px;
-      margin-bottom: 3 px;
-      margin-right: 20px;
+  //     // Button padding and margin
+  //     padding: 10px 20px;
+  //     margin-bottom: 3 px;
+  //     margin-right: 20px;
   
-      // Button hover effect
-      &:hover {
-        background-color: rgb(23, 23, 204);
-      }
-    }
-  }
+  //     // Button hover effect
+  //     &:hover {
+  //       background-color: rgb(23, 23, 204);
+  //     }
+  //   }
+  // }
   .container {
     display: flex;
     justify-content: flex-end;

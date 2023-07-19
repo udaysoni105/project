@@ -11,7 +11,7 @@
   <div class="search-container">
     <label class="label" for="search">SEARCH<span class="required-indicator"></span>:</label>
     <span class="p-inputgroup-addon">
-      <i class="pi pi-search" style="font-weight: 1000;"></i>
+      <i class="pi pi-search-plus" style="font-weight: 1000;"></i>
       <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()">
     </span>
   </div>
@@ -30,7 +30,7 @@
           <th>IS COMPLETED</th>
           <th>HARD DELETE</th>
           <th>EDIT</th>
-          <th>ProjectId</th>
+          <th>Projectid</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-task>

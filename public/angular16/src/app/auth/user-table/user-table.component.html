@@ -1,4 +1,4 @@
-<div  style="background-image: url('assets/images/ab.jpg');">
+
 <div *ngIf="!users; else userList">
 </div>
 
@@ -8,7 +8,7 @@
   <div class="search-container">
     <label class="label" for="search">SEARCH<span class="required-indicator"></span>:</label>
     <span class="p-inputgroup-addon">
-      <i class="pi pi-search" style="font-weight: 1000;"></i>
+      <i class="pi pi-search-plus" style="font-weight: 1000;"></i>
       <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()">
     </span>
   </div>
@@ -42,4 +42,3 @@
     </p-table>
   </div>
 </ng-template>
-</div>
