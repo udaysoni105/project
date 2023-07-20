@@ -156,4 +156,25 @@ class TasksController extends Controller
     //         $body = $response->body();
     //     }
     // }
+    public function search(Request $request)
+    {
+        $searchQuery = $request->input('q');
+        $tasks = Task::where('title', 'like', "%$searchQuery%")->get();
+        return response()->json($tasks);
+    }
+
+    public function sorted(Request $request)
+    {
+        $column = $request->input('column');
+        $direction = $request->input('direction', 'asc'); // Default to ascending order if not specified
+
+        $tasks = Task::orderBy($column, $direction)->get();
+        return response()->json($tasks);
+    }
+        // In your Laravel controller method
+        public function getTasks(Request $request)
+        {
+            $tasks = Task::paginate(10); // Adjust the pagination limit as needed
+            return response()->json($tasks);
+        }
 }

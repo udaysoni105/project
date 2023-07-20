@@ -49,6 +49,11 @@ Route::group(['middleware' => 'api'], function ($router) {
 // Route::apiResource('/tasks', TasksController::class);
 
 
+// Additional routes for searching, sorting, and pagination
+Route::get('/projects', [ProjectsController::class, 'getProjects']);
+Route::get('/projects/search', [ProjectsController::class, 'searchProjects']);
+Route::get('/projects/sorted', [ProjectsController::class, 'getSortedProjects']);
+
 
 // Public route accessible to all
 // Route::get('/projects', [ProjectsController::class, 'index']);
@@ -58,7 +63,7 @@ Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('proje
 Route::get('/projects', [ProjectsController::class, 'index'])->name('projects.index');
 Route::get('/projects/{id}', [ProjectsController::class, 'show'])->name('projects.show');
 // Route::get('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
-Route::delete('projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
+Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
 
 // Routes for admin
 // Route::middleware(['auth', 'CORS:add_project,edit_project,softDelete_project'])->group(function () {
@@ -79,6 +84,9 @@ Route::delete('projects/{id}', [ProjectsController::class, 'destroy'])->name('pr
 // });
 
 
+// Route::get('/tasks', 'TaskController@index')->name('tasks.index');
+Route::get('/tasks/search', 'TaskController@search')->name('tasks.search');
+Route::get('/tasks/sorted', 'TaskController@sorted')->name('tasks.sorted');
 
 
 // Public route accessible to all

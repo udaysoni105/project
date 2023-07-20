@@ -93,7 +93,8 @@ const routes: Routes = [
     MessageModule,
     ToastModule,
     DropdownModule,
-    TabMenuModule
+    TabMenuModule,
+    FieldsetModule
   ],
   providers: [AuthService, ProjectService,TaskService],
   bootstrap: [AppComponent]

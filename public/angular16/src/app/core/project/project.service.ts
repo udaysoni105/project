@@ -53,4 +53,15 @@ export class ProjectService {
     console.error('An error occurred:', error);
     return throwError(error);
   }
+  getProjects(): Observable<any> {
+    return this.http.get(`${this.baseUrl}`);
+  }
+
+  searchProjects(searchQuery: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/search?searchQuery=${searchQuery}`);
+  }
+
+  getSortedProjects(column: string, direction: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/sorted?column=${column}&direction=${direction}`);
+  }
 }

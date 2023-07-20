@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { ProjectService } from '../project.service';
 import { Table } from 'primeng/table';
 import { SortEvent } from 'primeng/api';
@@ -8,15 +8,22 @@ import { SortEvent } from 'primeng/api';
   templateUrl: './project-table.component.html',
   styleUrls: ['./project-table.component.scss'],
 })
-export class ProjectTableComponent implements OnInit {
+export class ProjectTableComponent {
+  // @Output() sort: EventEmitter<Event> = new EventEmitter<Event>();
+
+  // onSort(event: Event): void {
+  //   this.sort.emit(event);
+  // }
   projects: any[] = [];
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
+  
 
   constructor(private projectService: ProjectService) {}
 
   ngOnInit() {
     this.loadProjects();
+    this.getProjects();
   }
 
   loadProjects() {
@@ -41,11 +48,53 @@ export class ProjectTableComponent implements OnInit {
     );
   }
 
-  onSearch(): void {
-    this.table.filter(this.searchQuery, 'name', 'contains');
+  // onSearch(): void {
+  //   this.table.filter(this.searchQuery, 'name', 'contains');
+  // }
+
+  // onSort(event: SortEvent): void {
+  //   // Implement the sorting logic here
+  // }
+
+  getProjects(): void {
+    this.projectService.getProjects().subscribe(
+      (response) => {
+        this.projects = response;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 
-  onSort(event: SortEvent): void {
-    // Implement the sorting logic here
+onSearch(): void {
+  this.projectService.searchProjects(this.searchQuery).subscribe(
+    (response) => {
+      console.log('Search Response:', response);
+      this.projects = response.data; // Extract the 'data' array from the response
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+}
+
+  
+
+onSort(event: SortEvent): void {
+  const column: string | undefined = event.field;
+  const direction: string = event.order === 1 ? 'asc' : 'desc';
+
+  if (column) {
+    this.projectService.getSortedProjects(column, direction).subscribe(
+      (response) => {
+        this.projects = response;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
+}
+  
 }
