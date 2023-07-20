@@ -9,21 +9,14 @@ import { SortEvent } from 'primeng/api';
   styleUrls: ['./project-table.component.scss'],
 })
 export class ProjectTableComponent {
-  // @Output() sort: EventEmitter<Event> = new EventEmitter<Event>();
-
-  // onSort(event: Event): void {
-  //   this.sort.emit(event);
-  // }
   projects: any[] = [];
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
-  
 
   constructor(private projectService: ProjectService) {}
 
   ngOnInit() {
     this.loadProjects();
-    this.getProjects();
   }
 
   loadProjects() {
@@ -41,14 +34,14 @@ export class ProjectTableComponent {
     this.projectService.softDeleteProject(id).subscribe(
       (response) => {
         console.log('Project soft deleted successfully');
+        this.loadProjects(); // Reload the projects after successful soft delete
       },
       (error) => {
         console.log('Soft delete failed:', error);
       }
     );
   }
-
-  // onSearch(): void {
+    // onSearch(): void {
   //   this.table.filter(this.searchQuery, 'name', 'contains');
   // }
 
@@ -67,34 +60,32 @@ export class ProjectTableComponent {
     );
   }
 
-onSearch(): void {
-  this.projectService.searchProjects(this.searchQuery).subscribe(
-    (response) => {
-      console.log('Search Response:', response);
-      this.projects = response.data; // Extract the 'data' array from the response
-    },
-    (error) => {
-      console.log(error);
-    }
-  );
-}
-
-  
-
-onSort(event: SortEvent): void {
-  const column: string | undefined = event.field;
-  const direction: string = event.order === 1 ? 'asc' : 'desc';
-
-  if (column) {
-    this.projectService.getSortedProjects(column, direction).subscribe(
+  onSearch(): void {
+    this.projectService.searchProjects(this.searchQuery).subscribe(
       (response) => {
-        this.projects = response;
+        console.log('Search Response:', response);
+        this.projects = response.data; // Extract the 'data' array from the response
       },
       (error) => {
         console.log(error);
       }
     );
   }
+
+  onSort(event: SortEvent): void {
+    const column: string | undefined = event.field;
+    const direction: string = event.order === 1 ? 'asc' : 'desc';
+
+    if (column) {
+      this.projectService.getSortedProjects(column, direction).subscribe(
+        (response) => {
+          this.projects = response;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }
+  }
 }
-  
-}
+
