@@ -18,10 +18,9 @@ use App\Http\Controllers\TasksController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
 info("Route");
 Route::get('/states/{country}', 'RegistrationController@getStates');
-
-// Route::get('/states/{country}',[RegistrationController::class,'getStates']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -44,26 +43,48 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/profile', [AuthController::class, 'profile']);
 });
 
+
+
+Route::group(['middleware' => 'auth'], function ($router) {
+    // Additional routes for searching, sorting, and pagination
+    Route::get('/projects', [ProjectsController::class, 'getProjects']);
+    Route::get('/projects/search', [ProjectsController::class, 'searchProjects']);
+    Route::get('/projects/sorted', [ProjectsController::class, 'getSortedProjects']);
+
+
+    // Public route accessible to all
+    Route::post('/projects', [ProjectsController::class, 'store']);
+    Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
+    Route::get('/projects', [ProjectsController::class, 'index'])->name('projects.index');
+    Route::get('/projects/{id}', [ProjectsController::class, 'show'])->name('projects.show');
+    Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
+});
+
+Route::group(['middleware' => 'auth'], function ($router) {
+    // Route::get('/tasks', 'TaskController@index')->name('tasks.index');//pagination
+    Route::get('/tasks/search', 'TaskController@search')->name('tasks.search');
+    Route::get('/tasks/sorted', 'TaskController@sorted')->name('tasks.sorted');
+
+
+    // Public route accessible to all
+    Route::get('/tasks', [TasksController::class, 'index'])->name('tasks.index');
+    Route::get('/tasks/{id}', [TasksController::class, 'show'])->name('tasks.show');
+    Route::post('/tasks', [TasksController::class, 'store']);
+    Route::put('/tasks/{id}', [TasksController::class, 'update']);
+    Route::delete('/tasks/{id}', [TasksController::class, 'destroy'])->name('tasks.destroy');
+});
+
+
+
+
+
+
+
+// Route::get('/states/{country}',[RegistrationController::class,'getStates']);
+
 // Route::apiResource('/projects', ProjectsController::class);
 // Route::delete('/projects/{id}', [ProjectController::class, 'softDelete']);
 // Route::apiResource('/tasks', TasksController::class);
-
-
-// Additional routes for searching, sorting, and pagination
-Route::get('/projects', [ProjectsController::class, 'getProjects']);
-Route::get('/projects/search', [ProjectsController::class, 'searchProjects']);
-Route::get('/projects/sorted', [ProjectsController::class, 'getSortedProjects']);
-
-
-// Public route accessible to all
-// Route::get('/projects', [ProjectsController::class, 'index']);
-Route::post('/projects', [ProjectsController::class, 'store']);
-Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
-// Route::delete('/projects/{id}', [ProjectsController::class, 'destroy']);
-Route::get('/projects', [ProjectsController::class, 'index'])->name('projects.index');
-Route::get('/projects/{id}', [ProjectsController::class, 'show'])->name('projects.show');
-// Route::get('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
-Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
 
 // Routes for admin
 // Route::middleware(['auth', 'CORS:add_project,edit_project,softDelete_project'])->group(function () {
@@ -83,19 +104,6 @@ Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('p
 //     // They cannot add, edit, or delete projects
 // });
 
-
-// Route::get('/tasks', 'TaskController@index')->name('tasks.index');
-Route::get('/tasks/search', 'TaskController@search')->name('tasks.search');
-Route::get('/tasks/sorted', 'TaskController@sorted')->name('tasks.sorted');
-
-
-// Public route accessible to all
-Route::get('/tasks', [TasksController::class, 'index'])->name('tasks.index');
-Route::get('/tasks/{id}', [TasksController::class, 'show'])->name('tasks.show');
-// Route::get('/tasks', [TasksController::class, 'index'])->name('tasks.index');
-Route::post('/tasks', [TasksController::class, 'store']);
-Route::put('/tasks/{id}', [TasksController::class, 'update']);
-Route::delete('/tasks/{id}', [TasksController::class, 'destroy'])->name('tasks.destroy');
 
 // Routes for admin
 // Route::middleware(['auth', 'CORS:admin,add_task'])->group(function () {

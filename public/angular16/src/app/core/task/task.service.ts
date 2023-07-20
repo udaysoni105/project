@@ -10,8 +10,26 @@ export class TaskService {
 
   constructor(private http: HttpClient) { }
 
+  private createHeaders(): HttpHeaders {
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type', 'application/json');
+
+
+    const token = localStorage.getItem('token'); // Retrieve the JWT token from local storage
+    if (token) {
+      headers = headers.append('Authorization', `Bearer ${token}`);
+    }
+    headers = headers.append('permission', 'viewtask');
+
+    // Log the headers in the console to see if they are set correctly
+    console.log('Request Headers:', headers);
+
+    return headers;
+  }
+
   getAllTasks(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+    const headers = this.createHeaders();
+    return this.http.get<any[]>(this.apiUrl, { headers });
   }
 
   createTask(task: any): Observable<any> {

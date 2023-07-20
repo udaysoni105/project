@@ -82,10 +82,10 @@ export class ProjectService {
   private createHeaders(): HttpHeaders {
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');
-    headers = headers.append('permission', 'viewtask');
+
     const token = localStorage.getItem('token'); // Retrieve the token from local storage
     headers = headers.append('authentication', `Bearer ${token}`);
-
+    headers = headers.append('permission', 'viewproject');
     // Log the headers in the console to see if they are set correctly
     console.log('Request Headers:', headers);
 

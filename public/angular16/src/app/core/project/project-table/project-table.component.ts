@@ -30,17 +30,29 @@ export class ProjectTableComponent {
     );
   }
 
+  // softDeleteProject(id: number) {
+  //   this.projectService.softDeleteProject(id).subscribe(
+  //     (response) => {
+  //       console.log('Project soft deleted successfully');
+  //       this.loadProjects(); // Reload the projects after successful soft delete
+  //     },
+  //     (error) => {
+  //       console.log('Soft delete failed:', error);
+  //     }
+  //   );
+  // }
   softDeleteProject(id: number) {
     this.projectService.softDeleteProject(id).subscribe(
       (response) => {
         console.log('Project soft deleted successfully');
-        this.loadProjects(); // Reload the projects after successful soft delete
+        this.projects = this.projects.filter((project) => project.id !== id); // Filter out the soft-deleted task from the array
       },
       (error) => {
         console.log('Soft delete failed:', error);
       }
     );
   }
+  
     // onSearch(): void {
   //   this.table.filter(this.searchQuery, 'name', 'contains');
   // }

@@ -114,18 +114,34 @@ class ProjectsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        Project::findOrFail($id)->delete();
+    // public function destroy(string $id)
+    // {
+    //     Project::findOrFail($id)->delete();
 
-        // Display flash message
-        Flash::success('Project deleted successfully');
+    //     // Display flash message
+    //     Flash::success('Project deleted successfully');
 
-        return redirect()->route('projects.index');
+    //     return redirect()->route('projects.index');
 
-        return response()->json(null, 204);
-        //         return response()->json(['message' => 'Project deleted successfully']);
+    //     return response()->json(null, 204);
+    //     //         return response()->json(['message' => 'Project deleted successfully']);
+    // }
+    public function destroy($id)
+{
+    // Perform the soft delete logic here, using the $id parameter
+    // Example:
+    $project = Project::find($id);
+    if (!$project) {
+        return response()->json(['message' => 'Project not found'], 404);
     }
+
+    // Perform the soft delete
+    $project->delete();
+
+    // Optionally, return a success response or any additional data
+    return response()->json(['message' => 'Project soft deleted successfully']);
+}
+
 
     // public function activate($id)
     // {
