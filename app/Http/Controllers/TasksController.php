@@ -89,7 +89,7 @@ class TasksController extends Controller
             'description' => 'required',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'status'=> 'required'
+            'status' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -140,22 +140,6 @@ class TasksController extends Controller
         // return response()->json(null, 204);
     }
 
-    // public function makeHttpRequest()
-    // {
-    //     $response = Http::withHeaders([
-    //         'Content-Type' => 'application/json',
-    //         'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJod…Y3In0.IFUx35tPfvwyQ7LrYRZEfcdA-AzGPt1ldL-ujgxvZjA',
-    //         'Permission' => 'task-edit',
-    //     ])->get('http://127.0.0.1:8000/api/tasks');
-
-    //     {
-    //         $response = Http::get('http://127.0.0.1:8000/api/tasks');
-
-    //         $statusCode = $response->getStatusCode();
-    //         $contentType = $response->header('Content-Type');
-    //         $body = $response->body();
-    //     }
-    // }
     public function search(Request $request)
     {
         $searchQuery = $request->input('q');
@@ -171,10 +155,10 @@ class TasksController extends Controller
         $tasks = Task::orderBy($column, $direction)->get();
         return response()->json($tasks);
     }
-        // In your Laravel controller method
-        public function getTasks(Request $request)
-        {
-            $tasks = Task::paginate(10); // Adjust the pagination limit as needed
-            return response()->json($tasks);
-        }
+    // In your Laravel controller method
+    public function getTasks(Request $request)
+    {
+        $tasks = Task::paginate(5); // Adjust the pagination limit as needed
+        return response()->json($tasks);
+    }
 }

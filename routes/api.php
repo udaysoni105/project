@@ -60,7 +60,7 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
 });
 
-Route::group(['middleware' => 'auth'], function ($router) {
+// Route::group(['middleware' => 'auth'], function ($router) {
     // Route::get('/tasks', 'TaskController@index')->name('tasks.index');//pagination
     Route::get('/tasks/search', 'TaskController@search')->name('tasks.search');
     Route::get('/tasks/sorted', 'TaskController@sorted')->name('tasks.sorted');
@@ -72,7 +72,7 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::post('/tasks', [TasksController::class, 'store']);
     Route::put('/tasks/{id}', [TasksController::class, 'update']);
     Route::delete('/tasks/{id}', [TasksController::class, 'destroy'])->name('tasks.destroy');
-});
+// });
 
 
 

@@ -97,15 +97,10 @@ export class ProjectService {
 
   // Other methods remain unchanged...
 
-  // getAllProjects(): Observable<any> {
-  //   const headers = this.createHeaders();
-  //   return this.http.get(this.baseUrl, { headers });
-  // }
-
-    getAllProjects(): Observable<any> {
-    return this.http.get(this.baseUrl);
+  getAllProjects(): Observable<any> {
+    const headers = this.createHeaders();
+    return this.http.get(this.baseUrl, { headers });
   }
-
   getProjectById(id: string): Observable<any> {
     const headers = this.createHeaders();
     return this.http.get(`${this.baseUrl}/${id}`, { headers });

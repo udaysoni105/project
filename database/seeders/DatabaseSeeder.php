@@ -19,12 +19,13 @@ use Spatie\Permission\Traits\HasRoles;
 use \Illuminate\Support\Collection;
 use Exception;
 use Illuminate\Support\Facades\Log;
+
 class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
      */
-      public function run()
+    public function run()
     {
         $this->createUsers();
         $this->createRoles();
@@ -145,7 +146,7 @@ class DatabaseSeeder extends Seeder
     {
         $adminRole = Role::where('name', 'Admin')->first();
         $developerRole = Role::where('name', 'developer')->first();
-        $projectManagerRole=Role::where('name','projectManager')->first();
+        $projectManagerRole = Role::where('name', 'projectManager')->first();
 
         $createProjectPermission = Permission::where('name', 'create_project')->first();
         $updateProjectPermission = Permission::where('name', 'update_project')->first();
