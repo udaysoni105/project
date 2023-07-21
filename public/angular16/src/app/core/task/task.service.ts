@@ -14,12 +14,11 @@ export class TaskService {
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');
 
-
     const token = localStorage.getItem('token'); // Retrieve the JWT token from local storage
     if (token) {
       headers = headers.append('Authorization', `Bearer ${token}`);
     }
-    headers = headers.append('permission', 'viewtask');
+    headers = headers.append('permission', 'getAllTasks');
 
     // Log the headers in the console to see if they are set correctly
     console.log('Request Headers:', headers);
@@ -31,6 +30,7 @@ export class TaskService {
     const headers = this.createHeaders();
     return this.http.get<any[]>(this.apiUrl, { headers });
   }
+  
 
   createTask(task: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, task).pipe(
@@ -45,6 +45,10 @@ export class TaskService {
   updateTask(id: string, taskData: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, taskData);
   }
+  //   updateTask(id: string, taskData: any): Observable<any> {
+  //   const headers = this.createHeaders();
+  //   return this.http.put(`${this.apiUrl}/${id}`, taskData, { headers });
+  // }
 
   // updateTask(id: string, task: any): Observable<any> {
   //   const url = `${this.apiUrl}/${id}`;
@@ -53,12 +57,27 @@ export class TaskService {
   //   );
   // }
 
+  // deletetask(id: string): Observable<any> {
+  //   const url = `${this.apiUrl}/${id}`;
+  //   return this.http.delete<any>(url).pipe(
+  //     catchError(this.handleError)
+  //   );
+  // }  
+  // deletetask(id: string): Observable<any> {
+  //   const url = `${this.apiUrl}/${id}`;
+  //   return this.http.delete<any>(url).pipe(
+  //     catchError((error: HttpErrorResponse) => {
+  //       console.error('Failed to delete task:', error);
+  //       return throwError('Failed to delete task');
+  //     })
+  //   );
+  // }
+  
+
   deletetask(id: string): Observable<any> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.delete<any>(url).pipe(
-      catchError(this.handleError)
-    );
-  }  
+    const headers = this.createHeaders();
+    return this.http.delete(`${this.apiUrl}/${id}`, { headers });
+  }
 
   // getTask(id: string): Observable<any> {
   //   return this.http.get<any>(this.apiUrl);

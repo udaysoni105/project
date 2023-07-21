@@ -82,10 +82,13 @@ export class ProjectService {
   private createHeaders(): HttpHeaders {
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');
-
+    const email = localStorage.getItem('email');
+    headers = headers.append('email',`${email}`);
     const token = localStorage.getItem('token'); // Retrieve the token from local storage
     headers = headers.append('authentication', `Bearer ${token}`);
-    headers = headers.append('permission', 'viewproject');
+    headers = headers.append('permission', 'view_tasks');
+
+
     // Log the headers in the console to see if they are set correctly
     console.log('Request Headers:', headers);
 
@@ -94,10 +97,15 @@ export class ProjectService {
 
   // Other methods remain unchanged...
 
-  getAllProjects(): Observable<any> {
-    const headers = this.createHeaders();
-    return this.http.get(this.baseUrl, { headers });
+  // getAllProjects(): Observable<any> {
+  //   const headers = this.createHeaders();
+  //   return this.http.get(this.baseUrl, { headers });
+  // }
+
+    getAllProjects(): Observable<any> {
+    return this.http.get(this.baseUrl);
   }
+
   getProjectById(id: string): Observable<any> {
     const headers = this.createHeaders();
     return this.http.get(`${this.baseUrl}/${id}`, { headers });
@@ -108,11 +116,19 @@ export class ProjectService {
     return this.http.post(this.baseUrl, projectData, { headers }).pipe(catchError(this.handleError));
   }
 
-  updateProject(projectId: string, projectData: any): Observable<any> {
-    const headers = this.createHeaders();
-    const url = `${this.baseUrl}/${projectId}`;
-    return this.http.put(url, projectData, { headers });
+  // updateProject(projectId: string, projectData: any): Observable<any> {
+  //   const headers = this.createHeaders();
+  //   const url = `${this.baseUrl}/${projectId}`;
+  //   return this.http.put(url, projectData, { headers });
+  // }
+
+    updateProject(id: string, projectData: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}`, projectData);
   }
+//   updateProject(projectId: string, projectData: any): Observable<any> {
+//     const url = `http://localhost:8000/api/projects/${projectId}`;
+//     return this.http.put(url, projectData);
+//   }
 
   deleteProject(id: string): Observable<any> {
     const headers = this.createHeaders();

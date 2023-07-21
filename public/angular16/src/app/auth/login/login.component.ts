@@ -63,6 +63,8 @@ export class LoginComponent implements OnInit {
       },
       (error) => {
         console.error(error);
+        this.router.navigate(['/registration']);
+        console.log("user is not register");
         // Handle login error
       }
     );
