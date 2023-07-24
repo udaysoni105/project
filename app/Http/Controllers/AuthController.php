@@ -12,9 +12,10 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\VerificationEmail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
-use Psy\Util\Str;
+// use Psy\Util\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use CountryState;
+use Illuminate\Support\Str;
 
 
 class AuthController extends Controller

@@ -31,45 +31,27 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
-
-    const credentials = {
-      email: this.loginForm.value.email,
-      password: this.loginForm.value.password,
-      Login_As: this.loginForm.value.Login_As
-    };
-
-    //   const token = localStorage.getItem('token'); // Corrected code
-    //   console.log(token);
   
-    console.log(credentials);
-    // this.authService.login(credentials, 'token').subscribe(
-    this.authService.login(credentials).subscribe(
+    const email = this.loginForm.value.email;
+    const password = this.loginForm.value.password;
+  
+    this.authService.login(email, password).subscribe(
       (response: any) => {
         console.log(response);
         const token = response.access_token;
         localStorage.setItem('token', token);
         this.router.navigate(['/dashboard']);
-        localStorage.setItem('email', this.users.email);
-        localStorage.setItem('password', this.users.password);
-        localStorage.setItem('Login_As', this.users.Login_As);
-        this.users = { email: '', password: '' ,Login_As:''};
-
-        // Store the token in local storage
-        // localStorage.setItem('token', response.token);
-        // localStorage.setItem('token', token);
-
-        // Redirect or perform any necessary actions after successful login
-        // this.router.navigate(['/dashboard']);
+        localStorage.setItem('email', email);
+        localStorage.setItem('password', password);
+        this.users = { email: '', password: '' };
       },
       (error) => {
         console.error(error);
         this.router.navigate(['/registration']);
-        console.log("user is not register");
-        // Handle login error
+        console.log("user is not registered");
       }
     );
   }
-
   forgotPassword() {
     const data = {
       // email: this.email,

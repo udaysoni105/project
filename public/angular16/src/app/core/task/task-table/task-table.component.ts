@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { TaskService } from '../task.service';
 import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
-
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Component({
   selector: 'app-task-table',
   templateUrl: './task-table.component.html',
@@ -32,16 +32,44 @@ export class TaskTableComponent implements OnInit {
   //     // );
   //   }
 
-  loadTasks() {
-    this.taskService.getAllTasks().subscribe(
-      (data) => {
-        this.tasks = data;
-      },
-      (error) => {
-        console.log(error);
+  // loadTasks() {
+  //   this.taskService.getAllTasks().subscribe(
+  //     (data) => {
+  //       this.tasks = data;
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   );
+  // }
+      // Method to fetch projects from the API
+      loadTasks() {
+        const jwtToken = localStorage.getItem('token');
+        const email = localStorage.getItem('email');
+        if (!jwtToken) {
+          console.error('JWT token not found in local storage. Please log in.');
+          return;
+        }
+      
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${jwtToken}`,
+          email :'email',
+          Permission: 'view_project' // Add the Permission header with the desired value
+        });
+      
+        // Make the API call with the headers
+        this.taskService.getAllTasks(headers).subscribe(
+          (response) => {
+            // Handle the response here
+            console.log(response);
+            this.tasks = response; // Assuming the API returns an array of projects
+          },
+          (error) => {
+            // Handle the error here
+            console.error(error);
+          }
+        );
       }
-    );
-  }
 
   deleteTask(id: string) {
     this.taskService.deletetask(id).subscribe(

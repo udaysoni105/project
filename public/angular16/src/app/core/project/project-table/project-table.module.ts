@@ -23,11 +23,11 @@ import { ProjectTableComponent } from './project-table.component';
 import { ProjectService } from '../project.service';
 
 @NgModule({
-  declarations: [   
-    ProjectTableComponent 
-  // ProductCreateComponent,
-  // ProductEditComponent,
-  // ProductDeleteComponent],
+  declarations: [
+    ProjectTableComponent,
+    // ProductCreateComponent,
+    // ProductEditComponent,
+    // ProductDeleteComponent],
   ],
   imports: [
     CommonModule,
@@ -46,15 +46,9 @@ import { ProjectService } from '../project.service';
     ConfirmationService,
     ConfirmDialogModule,
     InputTextModule,
-    CalendarModule
+    CalendarModule,
   ],
-  providers: [
-    ProjectService
-  ],
-  exports:[
-    ButtonModule,
-    ProjectTableComponent
-  ]
+  providers: [ProjectService],
+  exports: [ButtonModule, ProjectTableComponent],
 })
-export class ProjectTableModule { }
-
+export class ProjectTableModule {}

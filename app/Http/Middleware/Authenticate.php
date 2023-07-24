@@ -33,12 +33,13 @@ class Authenticate extends Middleware
 
         //user
         $users = User::where('email', $email)->get();
-        info($users);
+        info(" user : " . $users);
 
         //userrole
         $user = $users->first();
         $userRole = UserRole::where('user_id', $user->id)->first();
-        info($userRole);
+        // info($userRole);
+        info(" userRole : " . $userRole);
 
         //rolehaspermission
         $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
@@ -49,6 +50,6 @@ class Authenticate extends Middleware
         info(" role permission : " . $rolePermissions);
 
         $rolehasPermission = Permission::where('name', $Permission)->get();
-        info($rolehasPermission);
+        info(" header and database : " .$rolehasPermission);
     }
 }

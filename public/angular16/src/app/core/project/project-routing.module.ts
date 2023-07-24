@@ -6,22 +6,28 @@ import { ProjectCreateComponent } from './project-create/project-create.componen
 import { ProjectTableComponent } from './project-table/project-table.component';
 import { ProjectDetailsComponent } from './project-details/project-details.component';
 import { ProjectEditComponent } from './project-edit/project-edit.component';
+import { ProjectDeleteComponent } from './project-delete/project-delete.component';
+import { projectEditResolver } from './project-edit/project-edit.resolver';
 
 const routes: Routes = [
-  // { path: 'projects', component: ProjectTableComponent },
-  // { path: 'project-table', component: ProjectTableComponent },
-  // { path: 'register-project', component: ProjectCreateComponent},
-    // { path: 'register-project', component: ProjectCreateComponent, canActivate: [ProjectGuard] }
-  // { path: 'edit-project', component: ProjectEditComponent },
-  // { path: 'project-details', component: ProjectDetailsComponent },
-  // { path: 'projects/create', component: ProjectCreateComponent },
-  // { path: 'projects/:id', component: ProjectDetailsComponent },
-  // { path: 'projects/:id/edit', component: ProjectEditComponent }
-  ]
+  { path: 'projects', component: ProjectTableComponent },
+  { path: 'register-project', component: ProjectCreateComponent },
+  // { path: 'register-project', component: ProjectCreateComponent, canActivate: [ProjectGuard] }
+  {
+    path: 'project-edit/:id',
+    component: ProjectEditComponent,
+    resolve: { project: projectEditResolver },
+  },
+  { path: 'project-details', component: ProjectDetailsComponent },
+];
 @NgModule({
-  declarations: [],
-  imports: [
-    CommonModule
-  ]
+  declarations: [
+    ProjectCreateComponent,
+    ProjectDeleteComponent,
+    ProjectDetailsComponent,
+    ProjectEditComponent,
+    ProjectTableComponent,
+  ],
+  imports: [CommonModule],
 })
-export class ProjectRoutingModule { }
+export class ProjectRoutingModule {}

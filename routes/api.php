@@ -47,20 +47,22 @@ Route::group(['middleware' => 'api'], function ($router) {
 
 Route::group(['middleware' => 'auth'], function ($router) {
     // Additional routes for searching, sorting, and pagination
-    Route::get('/projects', [ProjectsController::class, 'getProjects']);
+    // Route::get('/projects', [ProjectsController::class, 'getProjects']);
     Route::get('/projects/search', [ProjectsController::class, 'searchProjects']);
     Route::get('/projects/sorted', [ProjectsController::class, 'getSortedProjects']);
 
 
     // Public route accessible to all
-    Route::post('/projects', [ProjectsController::class, 'store']);
+    // Route::post('/projects', [ProjectsController::class, 'store']);
     Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
     Route::get('/projects', [ProjectsController::class, 'index'])->name('projects.index');
     Route::get('/projects/{id}', [ProjectsController::class, 'show'])->name('projects.show');
     Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
+    Route::post('/projects', 'ProjectsController@store')->name('projects.store');
+
 });
 
-// Route::group(['middleware' => 'auth'], function ($router) {
+Route::group(['middleware' => 'auth'], function ($router) {
     // Route::get('/tasks', 'TaskController@index')->name('tasks.index');//pagination
     Route::get('/tasks/search', 'TaskController@search')->name('tasks.search');
     Route::get('/tasks/sorted', 'TaskController@sorted')->name('tasks.sorted');
@@ -72,7 +74,8 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::post('/tasks', [TasksController::class, 'store']);
     Route::put('/tasks/{id}', [TasksController::class, 'update']);
     Route::delete('/tasks/{id}', [TasksController::class, 'destroy'])->name('tasks.destroy');
-// });
+    Route::post('/tasks', 'TasksController@store')->name('tasks.store');
+});
 
 
 

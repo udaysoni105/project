@@ -53,9 +53,11 @@ export class AuthService {
   IsLoggedIn(){
     return !!localStorage.getItem('token');
   }
-  login(credentials: { email: string, password: string }) {
-    return this.http.post<{ token: string }>(`${this.apiUrl}/login`, credentials);
+  login(email: string, password: string): Observable<any> {
+    // Make the HTTP POST request with the provided email and password
+    return this.http.post<{ access_token: string }>(`${this.apiUrl}/login`, { email, password });
   }
+  
   getCountries(): Observable<any> {
     return this.http.get(`${this.apiUrl}/countries`);
   }

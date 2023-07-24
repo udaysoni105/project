@@ -6,7 +6,7 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class TaskService {
-  private apiUrl = 'http://localhost:8000/api/tasks'; // Update with your API endpoint
+  private baseUrl = 'http://localhost:8000/api/tasks'; // Update with your API endpoint
 
   constructor(private http: HttpClient) { }
 
@@ -14,11 +14,11 @@ export class TaskService {
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');
 
-    const token = localStorage.getItem('token'); // Retrieve the JWT token from local storage
-    if (token) {
-      headers = headers.append('Authorization', `Bearer ${token}`);
-    }
-    headers = headers.append('permission', 'getAllTasks');
+    const email = localStorage.getItem('email');
+    headers = headers.append('email',`${email}`);
+    const token = localStorage.getItem('token'); // Retrieve the token from local storage
+    headers = headers.append('authentication', `Bearer ${token}`);
+    headers = headers.append('permission', 'view_tasks');
 
     // Log the headers in the console to see if they are set correctly
     console.log('Request Headers:', headers);
@@ -26,89 +26,51 @@ export class TaskService {
     return headers;
   }
 
-  getAllTasks(): Observable<any[]> {
-    const headers = this.createHeaders();
-    return this.http.get<any[]>(this.apiUrl, { headers });
+  // getAllTasks(): Observable<any[]> {
+  //   const headers = this.createHeaders();
+  //   return this.http.get<any[]>(this.baseUrl, { headers });
+  // }
+  getAllTasks(headers: HttpHeaders) {
+    const url = `${this.baseUrl}`;
+    return this.http.get<any[]>(url, { headers });
   }
   
 
-  createTask(task: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, task).pipe(
-      catchError(this.handleError)
-    );
-  }
+  // createTask(task: any): Observable<any> {
+  //   return this.http.post<any>(this.baseUrl, task).pipe(
+  //     catchError(this.handleError)
+  //   );
+  // }
+  createTask(taskData: any, token: string,email:string): Observable<any> {
+      
+
+    let headers = new HttpHeaders()
+    headers = headers.append('Content-Type','application/json');
+    headers = headers.append('Permission', 'create_product');
+    headers = headers.append('Authorization', `Bearer ${token}`);
+    headers = headers.append('email', `${email}`);
+
+    const options = { headers: headers};
+    console.log(options);
+    return this.http.post<any>( this. baseUrl, taskData, options);
+
+}
 
   getTaskById(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`);
+    return this.http.get(`${this.baseUrl}/${id}`);
   }
   
   updateTask(id: string, taskData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, taskData);
-  }
-  //   updateTask(id: string, taskData: any): Observable<any> {
-  //   const headers = this.createHeaders();
-  //   return this.http.put(`${this.apiUrl}/${id}`, taskData, { headers });
-  // }
-
-  // updateTask(id: string, task: any): Observable<any> {
-  //   const url = `${this.apiUrl}/${id}`;
-  //   return this.http.put<any>(url, task).pipe(
-  //     catchError(this.handleError)
-  //   );
-  // }
-
-  // deletetask(id: string): Observable<any> {
-  //   const url = `${this.apiUrl}/${id}`;
-  //   return this.http.delete<any>(url).pipe(
-  //     catchError(this.handleError)
-  //   );
-  // }  
-  // deletetask(id: string): Observable<any> {
-  //   const url = `${this.apiUrl}/${id}`;
-  //   return this.http.delete<any>(url).pipe(
-  //     catchError((error: HttpErrorResponse) => {
-  //       console.error('Failed to delete task:', error);
-  //       return throwError('Failed to delete task');
-  //     })
-  //   );
-  // }
-  
+    return this.http.put(`${this.baseUrl}/${id}`, taskData);
+  }  
 
   deletetask(id: string): Observable<any> {
     const headers = this.createHeaders();
-    return this.http.delete(`${this.apiUrl}/${id}`, { headers });
+    return this.http.delete(`${this.baseUrl}/${id}`, { headers });
   }
 
-  // getTask(id: string): Observable<any> {
-  //   return this.http.get<any>(this.apiUrl);
-  // }
-
-  // getTask(id: string): Observable<any> {
-  //   return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
-  //     catchError(this.handleError)
-  //   );
-  // }
-  // getTaskById(id: string): Observable<any> {
-  //   return this.http.get(`${this.apiUrl}/${id}`);
-  // }
-  // getTask(id: string): Observable<any> {
-  //   const url = `${this.apiUrl}/${id}`;
-  
-  //   return this.http.get<any>(url).pipe(
-  //     catchError((error: HttpErrorResponse) => {
-  //       if (error.status === 404) {
-  //         console.error('Task not found', error);
-  //       } else {
-  //         console.error('Failed to retrieve task', error);
-  //       }
-  
-  //       return throwError('Failed to retrieve task');
-  //     })
-  //   );
-  // }
-
   registertask(task: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, task);
+    return this.http.post<any>(this.baseUrl, task);
   } 
 
 

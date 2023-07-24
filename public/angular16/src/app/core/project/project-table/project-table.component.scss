@@ -4,78 +4,78 @@ h1 {
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Add some additional styling */
+h2 {
+  margin-bottom: 10px;
+}
+
+div {
+  margin-top: 20px;
+}
+
+/* Add responsiveness for smaller screens */
+@media (max-width: 767px) {
+  table {
+    font-size: 14px;
   }
-  
-  th, td {
-    padding: 10px;
-    text-align: left;
-  }
-  
-  th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-  }
-  
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  /* Add some additional styling */
-  h2 {
-    margin-bottom: 10px;
-  }
-  
-  div {
-    margin-top: 20px;
-  }
-  
-  /* Add responsiveness for smaller screens */
-  @media (max-width: 767px) {
-    table {
-      font-size: 14px;
-    }
-  }
-  // button.btn {
-  //   &.btn-primary {
-  //     // Primary button styles
-  //     background-color: rgb(51, 51, 215);
-  //     color: white;
-  
-  //     // Button padding and margin
-  //     padding: 10px 20px;
-  //     margin-bottom: 3 px;
-  //     margin-right: 20px;
-  
-  //     // Button hover effect
-  //     &:hover {
-  //       background-color: rgb(23, 23, 204);
-  //     }
-  //   }
-  // }
-  .container {
-    display: flex;
-    justify-content: flex-end;
-    offset: 1;
-  }
-  .search-container {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin-bottom: 10px;
-  }
-  
-  .search-container .label {
-    margin-right: 5px;
-  }
-  
-  .search-container .p-inputgroup-addon {
-    position: relative;
-  }
-  
-  .search-container input[type="text"] {
-    padding-right: 24px;
-  }
-  
+}
+// button.btn {
+//   &.btn-primary {
+//     // Primary button styles
+//     background-color: rgb(51, 51, 215);
+//     color: white;
+
+//     // Button padding and margin
+//     padding: 10px 20px;
+//     margin-bottom: 3 px;
+//     margin-right: 20px;
+
+//     // Button hover effect
+//     &:hover {
+//       background-color: rgb(23, 23, 204);
+//     }
+//   }
+// }
+.container {
+  display: flex;
+  justify-content: flex-end;
+  offset: 1;
+}
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.search-container .label {
+  margin-right: 5px;
+}
+
+.search-container .p-inputgroup-addon {
+  position: relative;
+}
+
+.search-container input[type="text"] {
+  padding-right: 24px;
+}

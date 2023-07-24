@@ -26,6 +26,7 @@ import { FieldsetModule } from 'primeng/fieldset';
     // Add other PrimeNG modules as needed
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [DashboardComponent]
 })
 export class DashboardModule { }

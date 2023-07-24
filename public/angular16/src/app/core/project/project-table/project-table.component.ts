@@ -2,7 +2,8 @@ import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { ProjectService } from '../project.service';
 import { Table } from 'primeng/table';
 import { SortEvent } from 'primeng/api';
-
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Token } from '@angular/compiler';
 @Component({
   selector: 'app-project-table',
   templateUrl: './project-table.component.html',
@@ -12,6 +13,7 @@ export class ProjectTableComponent {
   projects: any[] = [];
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
+  email: any[] = [];
 
   constructor(private projectService: ProjectService) {}
 
@@ -19,13 +21,43 @@ export class ProjectTableComponent {
     this.loadProjects();
   }
 
+  // loadProjects() {
+  //   this.projectService.getAllProjects().subscribe(
+  //     (data) => {
+  //       this.projects = data;
+  //       console.log(this.projects);
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   );
+  // }
+
+  // Method to fetch projects from the API
   loadProjects() {
-    this.projectService.getAllProjects().subscribe(
-      (data) => {
-        this.projects = data;
+    const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      email: 'email',
+      Permission: 'view_project', // Add the Permission header with the desired value
+    });
+
+    // Make the API call with the headers
+    this.projectService.getAllProjects(headers).subscribe(
+      (response) => {
+        // Handle the response here
+        console.log(response);
+        this.projects = response; // Assuming the API returns an array of projects
       },
       (error) => {
-        console.log(error);
+        // Handle the error here
+        console.error(error);
       }
     );
   }
@@ -52,8 +84,8 @@ export class ProjectTableComponent {
       }
     );
   }
-  
-    // onSearch(): void {
+
+  // onSearch(): void {
   //   this.table.filter(this.searchQuery, 'name', 'contains');
   // }
 
@@ -100,4 +132,3 @@ export class ProjectTableComponent {
     }
   }
 }
-
