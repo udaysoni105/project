@@ -15,7 +15,7 @@ export class TaskService {
     return this.http.get<any[]>(url, { headers });
   }
 
-  createTask(projectData: any, token: string,email:string): Observable<any> {
+  createTask(taskData: any, token: string,email:string): Observable<any> {
     let headers = new HttpHeaders()
     headers = headers.append('Content-Type','application/json');
     headers = headers.append('Permission', 'create_tasks');
@@ -24,7 +24,7 @@ export class TaskService {
 
     const options = { headers: headers};
     console.log(options);
-    return this.http.post<any>( this. baseUrl, projectData, options);
+    return this.http.post<any>( this. baseUrl, taskData, options);
 
   }
 

@@ -19,7 +19,7 @@ export class TaskTableComponent implements OnInit {
   ngOnInit() {
     this.loadTasks();
   }
-  // Method to fetch projects from the API
+  // Method to fetch tasks from the API
   loadTasks() {
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
@@ -39,7 +39,7 @@ export class TaskTableComponent implements OnInit {
       (response) => {
         // Handle the response here
         console.log(response);
-        this.tasks = response; // Assuming the API returns an array of projects
+        this.tasks = response; // Assuming the API returns an array of tasks
       },
       (error) => {
         // Handle the error here
@@ -64,7 +64,7 @@ export class TaskTableComponent implements OnInit {
 
     this.taskService.deletetask(id, headers).subscribe(
       (response) => {
-        console.log('Project hard deleted successfully');
+        console.log('task hard deleted successfully');
         this.loadTasks();
         this.tasks = this.tasks.filter((task) => task.id !== id);
       },
