@@ -3,6 +3,8 @@ import { AuthService } from '../auth.service';
 import { Table } from 'primeng/table';
 import { SortEvent } from 'primeng/api';
 import { User } from './user';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
+
 @Component({
   selector: 'app-user-table',
   templateUrl: './user-table.component.html',
@@ -24,13 +26,40 @@ export class UserTableComponent implements OnInit {
     this.loadUsers();
   }
 
+  // loadUsers() {
+  //   this.authService.getAllUsers().subscribe(
+  //     data => {
+  //       this.users = data;
+  //     },
+  //     error => {
+  //       console.log(error);
+  //     }
+  //   );
+  // }
   loadUsers() {
-    this.authService.getAllUsers().subscribe(
-      data => {
-        this.users = data;
+    const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
+    }
+  
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      email :'email',
+      Permission: 'view_project' // Add the Permission header with the desired value
+    });
+  
+    // Make the API call with the headers
+    this.authService.getAllUsers(headers).subscribe(
+      (response) => {
+        // Handle the response here
+        console.log(response);
+        this.users = response; // Assuming the API returns an array of projects
       },
-      error => {
-        console.log(error);
+      (error) => {
+        // Handle the error here
+        console.error(error);
       }
     );
   }

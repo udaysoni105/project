@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -47,8 +47,12 @@ export class AuthService {
     const url = `${this.apiUrl}/send-reset-link`;
     return this.http.post(url, { email });
   }
-  getAllUsers(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/users`, {});
+  // getAllUsers(): Observable<any> {
+  //   return this.http.get(`${this.apiUrl}/users`, {});
+  // }
+  getAllUsers(headers: HttpHeaders) {
+    const url = `${this.apiUrl}/users`;
+    return this.http.get<any[]>(url, { headers });
   }
   IsLoggedIn(){
     return !!localStorage.getItem('token');

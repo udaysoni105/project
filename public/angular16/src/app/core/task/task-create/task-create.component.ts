@@ -44,44 +44,22 @@ export class TaskCreateComponent implements OnInit {
     });
   }
 
-  // registerTask(): void {
-  //   if (this.taskForm.invalid) {
-  //     return;
-  //   }
-
-  //   const task = this.taskForm.value;
-  //   this.taskService.createTask(task).subscribe(
-  //     (response) => {
-  //       console.log('Task registered successfully', response);
-  //       // Reset the form
-  //       this.taskForm.reset();
-  //       this.router.navigate(['/tasks']);
-  //     },
-  //     (error) => {
-  //       console.error('Failed to register task', error);
-  //     }
-  //   );
-  // }
-
-
-  registerTask() {
-    console.log(this.taskForm);
-
-    const token = localStorage.getItem('token');
-    const email = localStorage.getItem('email');
-
-    if (token !== null && email !== null) {
-      this.taskService.createTask(this.taskForm, token, email).subscribe(
-        (response) => {
-          console.log('product created:', response);
-          this.router.navigate(['/tasks']);
-        },
-        (error) => {
-          console.error('Failed to create product:', error);
-        }
-      );
+  registerTask(): void {
+    if (this.taskForm.invalid) {
+      return;
     }
-  }
-  
-}
 
+    const task = this.taskForm.value;
+    this.taskService.createTask(task).subscribe(
+      (response) => {
+        console.log('Task registered successfully', response);
+        // Reset the form
+        this.taskForm.reset();
+        this.router.navigate(['/tasks']);
+      },
+      (error) => {
+        console.error('Failed to register task', error);
+      }
+    );
+  }
+}

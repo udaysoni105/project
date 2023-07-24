@@ -13,7 +13,6 @@ export class ProjectTableComponent {
   projects: any[] = [];
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
-  email: any[] = [];
 
   constructor(private projectService: ProjectService) {}
 
@@ -21,46 +20,36 @@ export class ProjectTableComponent {
     this.loadProjects();
   }
 
-  // loadProjects() {
-  //   this.projectService.getAllProjects().subscribe(
-  //     (data) => {
-  //       this.projects = data;
-  //       console.log(this.projects);
-  //     },
-  //     (error) => {
-  //       console.log(error);
-  //     }
-  //   );
-  // }
-
-  // Method to fetch projects from the API
-  loadProjects() {
-    const jwtToken = localStorage.getItem('token');
-    const email = localStorage.getItem('email');
-    if (!jwtToken) {
-      console.error('JWT token not found in local storage. Please log in.');
-      return;
-    }
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${jwtToken}`,
-      email: 'email',
-      Permission: 'view_project', // Add the Permission header with the desired value
-    });
-
-    // Make the API call with the headers
-    this.projectService.getAllProjects(headers).subscribe(
-      (response) => {
-        // Handle the response here
-        console.log(response);
-        this.projects = response; // Assuming the API returns an array of projects
-      },
-      (error) => {
-        // Handle the error here
-        console.error(error);
+    // Method to fetch projects from the API
+    loadProjects() {
+      const jwtToken = localStorage.getItem('token');
+      const email = localStorage.getItem('email');
+      if (!jwtToken) {
+        console.error('JWT token not found in local storage. Please log in.');
+        return;
       }
-    );
-  }
+    
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${jwtToken}`,
+        email :'email',
+        Permission: 'view_project' // Add the Permission header with the desired value
+      });
+    
+      // Make the API call with the headers
+      this.projectService.getAllProjects(headers).subscribe(
+        (response) => {
+          // Handle the response here
+          console.log(response);
+          this.projects = response; // Assuming the API returns an array of projects
+        },
+        (error) => {
+          // Handle the error here
+          console.error(error);
+        }
+      );
+    }
+    
+  
 
   // softDeleteProject(id: number) {
   //   this.projectService.softDeleteProject(id).subscribe(
@@ -84,8 +73,8 @@ export class ProjectTableComponent {
       }
     );
   }
-
-  // onSearch(): void {
+  
+    // onSearch(): void {
   //   this.table.filter(this.searchQuery, 'name', 'contains');
   // }
 
@@ -132,3 +121,4 @@ export class ProjectTableComponent {
     }
   }
 }
+

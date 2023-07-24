@@ -32,6 +32,7 @@ class Authenticate extends Middleware
         info($email);
 
         //user
+        $user = auth()->user();
         $users = User::where('email', $email)->get();
         info(" user : " . $users);
 

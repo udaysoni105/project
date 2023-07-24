@@ -26,10 +26,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::group(['middleware' => 'auth'], function ($router) {
 Route::get('/users', [UserController::class, 'index']);
 Route::post('/users', [UserController::class, 'store']);
 Route::put('/users/{id}', [UserController::class, 'update']);
 Route::delete('/users/{id}', [UserController::class, 'destroy']);
+});
 
 Route::post('/me', [AuthController::class, 'me']);
 Route::post('/refresh', [AuthController::class, 'refresh']);
@@ -61,7 +63,7 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::get('/projects', [ProjectsController::class, 'index'])->name('projects.index');
     Route::get('/projects/{id}', [ProjectsController::class, 'show'])->name('projects.show');
     Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
-    Route::post('/projects', 'ProjectsController@store')->name('projects.store');
+    Route::post('/projects', [ProjectsController::class,'store'])->name('projects.store');
 
 });
 

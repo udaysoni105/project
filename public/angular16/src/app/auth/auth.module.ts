@@ -34,6 +34,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CalendarModule } from 'primeng/calendar';
 
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
     RegistrationComponent,
     MainComponent,
     LoginComponent,
-    LogoutComponent
+    LogoutComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
