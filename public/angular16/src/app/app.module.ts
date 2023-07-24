@@ -32,7 +32,7 @@ import { ResetComponent } from './auth/password/reset/reset.component';
 import { DashboardComponent } from './auth/dashboard/dashboard.component';
 import { CarouselModule } from 'primeng/carousel';
 import { UserTableComponent } from './auth/user-table/user-table.component';
-import { MainComponent } from './auth/main/main.component';
+
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
 import { InputTextareaModule } from 'primeng/inputtextarea';
@@ -45,7 +45,7 @@ import { TaskService } from './core/task/task.service';
 import { TabMenuModule } from 'primeng/tabmenu';
 
 const routes: Routes = [
-  {path: 'register', component: RegistrationComponent },
+  { path: 'register', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
 ];
@@ -71,13 +71,12 @@ const routes: Routes = [
     ResetComponent,
     DashboardComponent,
     UserTableComponent,
-    MainComponent,
 
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    ReactiveFormsModule, 
+    ReactiveFormsModule,
     CarouselModule,
     TableModule,
     AppRoutingModule,
@@ -94,13 +93,9 @@ const routes: Routes = [
     ToastModule,
     DropdownModule,
     TabMenuModule,
-    FieldsetModule
+    FieldsetModule,
   ],
-  providers: [AuthService, ProjectService,TaskService],
-  bootstrap: [AppComponent]
+  providers: [AuthService, ProjectService, TaskService],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
-
-
-
-
+export class AppModule {}

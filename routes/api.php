@@ -33,13 +33,16 @@ Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
 Route::post('/me', [AuthController::class, 'me']);
 Route::post('/refresh', [AuthController::class, 'refresh']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
-Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
-Route::post('/resetpassword', [ResetPasswordController::class, 'resetPassword']);
+
+Route::post('/register', [AuthController::class, 'register']);
+
 
 Route::group(['middleware' => 'api'], function ($router) {
-    Route::post('/register', [AuthController::class, 'register']);
+    Route::match(['get', 'post'], '/login', [AuthController::class, 'login'])->name('login');
+    // Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('/resetpassword', [ResetPasswordController::class, 'resetPassword']);
     Route::get('/profile', [AuthController::class, 'profile']);
 });
 
