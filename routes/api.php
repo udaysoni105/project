@@ -35,13 +35,11 @@ Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
 Route::post('/me', [AuthController::class, 'me']);
 Route::post('/refresh', [AuthController::class, 'refresh']);
-
 Route::post('/register', [AuthController::class, 'register']);
 
 
 Route::group(['middleware' => 'api'], function ($router) {
     Route::match(['get', 'post'], '/login', [AuthController::class, 'login'])->name('login');
-    // Route::post('/login', [AuthController::class, 'login']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
     Route::post('/resetpassword', [ResetPasswordController::class, 'resetPassword']);
@@ -56,8 +54,6 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::get('/projects/search', [ProjectsController::class, 'searchProjects'])->name('projects.searchProjects');
     Route::get('/projects/sorted', [ProjectsController::class, 'getSortedProjects'])->name('projects.getSortedProjects');
 
-
-    // Public route accessible to all
     Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
     Route::get('/projects', [ProjectsController::class, 'index'])->name('projects.index');
     Route::get('/projects/{id}', [ProjectsController::class, 'show'])->name('projects.show');
@@ -72,8 +68,6 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::get('/tasks/search', [TasksController::class, 'search'])->name('tasks.search');
     Route::get('/tasks/sorted', [TasksController::class, 'sorted'])->name('tasks.sorted');
 
-
-    // Public route accessible to all
     Route::get('/tasks', [TasksController::class, 'index'])->name('tasks.index');
     Route::get('/tasks/{id}', [TasksController::class, 'show'])->name('tasks.show');
     Route::post('/tasks', [TasksController::class, 'store'])->name('tasks.store');
@@ -81,17 +75,6 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::delete('/tasks/{id}', [TasksController::class, 'destroy'])->name('tasks.destroy');
 });
 
-
-
-
-
-
-
-// Route::get('/states/{country}',[RegistrationController::class,'getStates']);
-
-// Route::apiResource('/projects', ProjectsController::class);
-// Route::delete('/projects/{id}', [ProjectController::class, 'softDelete']);
-// Route::apiResource('/tasks', TasksController::class);
 
 // Routes for admin
 // Route::middleware(['auth', 'CORS:add_project,edit_project,softDelete_project'])->group(function () {
