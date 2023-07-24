@@ -41,11 +41,9 @@ export class ProjectCreateComponent implements OnInit {
           (response) => {
             console.log('Project created successfully', response);
             this.router.navigate(['/projects']);
-            // Handle success, e.g., show a success message or redirect to another page
           },
           (error) => {
             console.error('Failed to create project', error);
-            // Handle error, e.g., show an error message
           }
         );
     }

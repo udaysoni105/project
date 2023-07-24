@@ -30,15 +30,6 @@ export class ProjectService {
     return this.http.get<any[]>(url, { headers });
   }
 
-  // getAllProjects(): Observable<any> {
-  //   const headers = this.createHeaders();
-  //   return this.http.get(this.baseUrl, { headers });
-  // }
-  getProjectById(id: string): Observable<any> {
-    // const headers = this.createHeaders();
-    return this.http.get(`${this.baseUrl}/${id}`, {  });
-  }
-
   createProject(projectData: any, token: string,email:string): Observable<any> {
     let headers = new HttpHeaders()
     headers = headers.append('Content-Type','application/json');
@@ -52,16 +43,7 @@ export class ProjectService {
 
   }
 
-  updateProject(id: string, projectData: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/${id}`, projectData);
-  }
-
   deleteProject(id: string): Observable<any> {
-    // const headers = this.createHeaders();
-    return this.http.delete(`${this.baseUrl}/${id}`, {  });
-  }
-
-  softDeleteProject(id: number) {
     // const headers = this.createHeaders();
     return this.http.delete(`${this.baseUrl}/${id}`, {  });
   }
@@ -92,5 +74,19 @@ export class ProjectService {
   }
   getProjects(): Observable<any> {
     return this.http.get(`${this.baseUrl}`);
+  }
+  getProjectById(projectId: string, headers: HttpHeaders): Observable<any> {
+    const url = `${this.baseUrl}/${projectId}`;
+    return this.http.get(url, { headers });
+  }
+
+  updateProject(projectId: string, projectData: any, headers: HttpHeaders): Observable<any> {
+    const url = `${this.baseUrl}/${projectId}`;
+    return this.http.put(url, projectData, { headers });
+  }
+
+  softDeleteProject(projectId: number, headers: HttpHeaders): Observable<any> {
+    const url = `${this.baseUrl}/${projectId}`;
+    return this.http.delete(url, { headers });
   }
 }

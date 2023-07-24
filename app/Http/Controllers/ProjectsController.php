@@ -82,7 +82,7 @@ class ProjectsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         // Validate the request data
         $validator = Validator::make($request->all(), [

@@ -48,33 +48,33 @@ export class ProjectTableComponent {
         }
       );
     }
-    
-  
 
-  // softDeleteProject(id: number) {
-  //   this.projectService.softDeleteProject(id).subscribe(
-  //     (response) => {
-  //       console.log('Project soft deleted successfully');
-  //       this.loadProjects(); // Reload the projects after successful soft delete
-  //     },
-  //     (error) => {
-  //       console.log('Soft delete failed:', error);
-  //     }
-  //   );
-  // }
   softDeleteProject(id: number) {
-    this.projectService.softDeleteProject(id).subscribe(
+    const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+  
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
+    }
+  
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      Permission: 'delete_project' // Add the Permission header with the desired value
+    });
+  
+    this.projectService.softDeleteProject(id, headers).subscribe(
       (response) => {
         console.log('Project soft deleted successfully');
-        this.projects = this.projects.filter((project) => project.id !== id); // Filter out the soft-deleted task from the array
+        this.projects = this.projects.filter((project) => project.id !== id);
       },
       (error) => {
         console.log('Soft delete failed:', error);
       }
     );
   }
-  
-    // onSearch(): void {
+
+  // onSearch(): void {
   //   this.table.filter(this.searchQuery, 'name', 'contains');
   // }
 
