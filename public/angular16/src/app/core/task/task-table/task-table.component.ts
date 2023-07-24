@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { TaskService } from '../task.service';
 import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
+import { Token } from '@angular/compiler';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Component({
   selector: 'app-task-table',
@@ -10,7 +11,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class TaskTableComponent implements OnInit {
   tasks: any[] = [];
-
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
 
@@ -19,82 +19,62 @@ export class TaskTableComponent implements OnInit {
   ngOnInit() {
     this.loadTasks();
   }
-  //   ngOnInit(): void {
-  //     this.loadTasks();
-  //     // this.taskService.getTasks().subscribe(
-  //     //   (response) => {
-  //     //     this.tasks = response;
-  //     //     console.log('Headers:', response.headers);
-  //     //   },
-  //     //   (error) => {
-  //     //     console.error(error);
-  //     //   }
-  //     // );
-  //   }
+  // Method to fetch projects from the API
+  loadTasks() {
+    const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
+    }
 
-  // loadTasks() {
-  //   this.taskService.getAllTasks().subscribe(
-  //     (data) => {
-  //       this.tasks = data;
-  //     },
-  //     (error) => {
-  //       console.log(error);
-  //     }
-  //   );
-  // }
-      // Method to fetch projects from the API
-      loadTasks() {
-        const jwtToken = localStorage.getItem('token');
-        const email = localStorage.getItem('email');
-        if (!jwtToken) {
-          console.error('JWT token not found in local storage. Please log in.');
-          return;
-        }
-      
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${jwtToken}`,
-          email :'email',
-          Permission: 'view_project' // Add the Permission header with the desired value
-        });
-      
-        // Make the API call with the headers
-        this.taskService.getAllTasks(headers).subscribe(
-          (response) => {
-            // Handle the response here
-            console.log(response);
-            this.tasks = response; // Assuming the API returns an array of projects
-          },
-          (error) => {
-            // Handle the error here
-            console.error(error);
-          }
-        );
-      }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      email: 'email',
+      Permission: 'view_tasks', // Add the Permission header with the desired value
+    });
 
-  deleteTask(id: string) {
-    this.taskService.deletetask(id).subscribe(
-      () => {
-        this.loadTasks();
+    // Make the API call with the headers
+    this.taskService.getAllTasks(headers).subscribe(
+      (response) => {
+        // Handle the response here
+        console.log(response);
+        this.tasks = response; // Assuming the API returns an array of projects
       },
       (error) => {
-        console.log(error);
+        // Handle the error here
+        console.error(error);
       }
     );
-  }  
+  }
+
+  deleteTask(id: string) {
+    const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      Permission: 'delete_tasks', // Add the Permission header with the desired value
+    });
+
+    this.taskService.deletetask(id, headers).subscribe(
+      (response) => {
+        console.log('Project hard deleted successfully');
+        this.loadTasks();
+        this.tasks = this.tasks.filter((task) => task.id !== id);
+      },
+      (error) => {
+        console.log('Soft delete failed:', error);
+      }
+    );
+  }
 
   onSearch(): void {
     this.table.filter(this.searchQuery, 'name', 'contains');
   }
-
-  // checkPermission(permission: string): boolean {
-  //   // Return true or false based on the permission check
-  //   return true; // Replace with your implementation
-  // }
-
-  // editTask(taskId: number): void {
-  //   // Logic to edit the task with the given taskId
-
-  //   // Option 1: Navigate to a task editing page
-  //   this.router.navigate(['edit']);
-  // }
 }

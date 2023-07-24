@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TaskService } from '../task.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-task-create',
@@ -44,22 +45,25 @@ export class TaskCreateComponent implements OnInit {
     });
   }
 
-  registerTask(): void {
-    if (this.taskForm.invalid) {
-      return;
-    }
+  createtask(): void {
+    console.log(this.taskForm);
 
-    const task = this.taskForm.value;
-    this.taskService.createTask(task).subscribe(
-      (response) => {
-        console.log('Task registered successfully', response);
-        // Reset the form
-        this.taskForm.reset();
-        this.router.navigate(['/tasks']);
-      },
-      (error) => {
-        console.error('Failed to register task', error);
-      }
-    );
+    const token = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+
+    if (token !== null && email !== null) {
+      const task = this.taskForm.value;
+      this.taskService.createTask(this.taskForm.value, token, email).subscribe(
+        (response) => {
+          console.log('Task created successfully', response);
+          // Reset the form
+          this.taskForm.reset();
+          this.router.navigate(['/tasks']);
+        },
+        (error) => {
+          console.error('Failed to create task', error);
+        }
+      );
+    }
   }
 }

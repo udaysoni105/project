@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TaskService } from '../task.service';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Component({
   selector: 'app-task-edit',
   templateUrl: './task-edit.component.html',
@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class TaskEditComponent implements OnInit {
   taskForm!: FormGroup;
   taskId!: string;
+  tasks: any[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -35,13 +36,59 @@ export class TaskEditComponent implements OnInit {
     });
   }
 
+  // loadTaskDetails(): void {
+  //   this.taskService.getTaskById(this.taskId).subscribe(
+  //     (response) => {
+  //       this.taskForm.patchValue(response);
+  //     },
+  //     (error) => {
+  //       console.error('Failed to retrieve task details', error);
+  //     }
+  //   );
+  // }
+
+  // onUpdate(): void {
+  //   if (this.taskForm.valid) {
+  //     const taskData = this.taskForm.value;
+  //     this.taskService.updateTask(this.taskId, taskData).subscribe(
+  //       (response) => {
+  //         console.log('Task updated successfully', response);
+  //       },
+  //       (error) => {
+  //         console.error('Failed to update task', error);
+  //       }
+  //     );
+  //     console.log('Task ID:', this.taskId); // Add this line
+  //   } else {
+  //     console.error('Invalid form data');
+  //   }
+  // }
   loadTaskDetails(): void {
-    this.taskService.getTaskById(this.taskId).subscribe(
+    const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      taskId: this.taskId,
+      Permission: 'update_tasks' // Add the Permission header with the desired value
+    });
+
+    // Make the API call with the headers and task ID
+    this.taskService.getTaskById(this.taskId, headers).subscribe(
       (response) => {
-        this.taskForm.patchValue(response);
+        // Handle the response here
+        console.log(response);
+        this.tasks = response; 
+        this.taskForm.patchValue(response); // Update the form with the task data
       },
       (error) => {
-        console.error('Failed to retrieve task details', error);
+        // Handle the error here
+        console.error(error);
       }
     );
   }
@@ -49,15 +96,29 @@ export class TaskEditComponent implements OnInit {
   onUpdate(): void {
     if (this.taskForm.valid) {
       const taskData = this.taskForm.value;
-      this.taskService.updateTask(this.taskId, taskData).subscribe(
+      const jwtToken = localStorage.getItem('token');
+      const email = localStorage.getItem('email');
+  
+      if (!jwtToken) {
+        console.error('JWT token not found in local storage. Please log in.');
+        return;
+      }
+  
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${jwtToken}`,
+        Permission: 'update_tasks' // Add the Permission header with the desired value
+      });
+  
+      this.taskService.updateTask(this.taskId, taskData, headers).subscribe(
         (response) => {
-          console.log('Task updated successfully', response);
+          console.log('task updated successfully', response);
+          console.log('task ID:', this.taskId);
+          this.router.navigate(['/tasks']);
         },
         (error) => {
           console.error('Failed to update task', error);
         }
       );
-      console.log('Task ID:', this.taskId); // Add this line
     } else {
       console.error('Invalid form data');
     }

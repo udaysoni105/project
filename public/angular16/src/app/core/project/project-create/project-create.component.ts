@@ -40,6 +40,7 @@ export class ProjectCreateComponent implements OnInit {
         .subscribe(
           (response) => {
             console.log('Project created successfully', response);
+            this.projectForm.reset();
             this.router.navigate(['/projects']);
           },
           (error) => {

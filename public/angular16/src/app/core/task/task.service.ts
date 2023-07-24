@@ -35,23 +35,36 @@ export class TaskService {
     return this.http.get<any[]>(url, { headers });
   }
 
-  createTask(task: any): Observable<any> {
-    return this.http
-      .post<any>(this.baseUrl, task)
-      .pipe(catchError(this.handleError));
+  // createTask(task: any): Observable<any> {
+  //   return this.http
+  //     .post<any>(this.baseUrl, task)
+  //     .pipe(catchError(this.handleError));
+  // }
+  createTask(projectData: any, token: string,email:string): Observable<any> {
+    let headers = new HttpHeaders()
+    headers = headers.append('Content-Type','application/json');
+    headers = headers.append('Permission', 'create_project');
+    headers = headers.append('Authorization', `Bearer ${token}`);
+    headers = headers.append('email', `${email}`);
+
+    const options = { headers: headers};
+    console.log(options);
+    return this.http.post<any>( this. baseUrl, projectData, options);
+
+  }
+  
+  updateTask(taskId: string, taskData: any, headers: HttpHeaders): Observable<any> {
+    const url = `${this.baseUrl}/${taskId}`;
+    return this.http.put(url, taskData, { headers });
+  }
+  getTaskById(taskId: string, headers: HttpHeaders): Observable<any> {
+    const url = `${this.baseUrl}/${taskId}`;
+    return this.http.get(url, { headers });
   }
 
-  getTaskById(id: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/${id}`);
-  }
-
-  updateTask(id: string, taskData: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/${id}`, taskData);
-  }
-
-  deletetask(id: string): Observable<any> {
-    // const headers = this.createHeaders();
-    return this.http.delete(`${this.baseUrl}/${id}`, {  });
+  deletetask(taskId: string, headers: HttpHeaders): Observable<any> {
+    const url = `${this.baseUrl}/${taskId}`;
+    return this.http.delete(url, { headers });
   }
 
   registertask(task: any): Observable<any> {

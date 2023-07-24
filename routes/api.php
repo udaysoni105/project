@@ -20,7 +20,7 @@ use App\Http\Controllers\TasksController;
 */
 
 info("Route");
-Route::get('/states/{country}', 'RegistrationController@getStates');
+Route::get('/states/{country}', [RegistrationController::class, 'getStates']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -52,13 +52,12 @@ Route::group(['middleware' => 'api'], function ($router) {
 
 Route::group(['middleware' => 'auth'], function ($router) {
     // Additional routes for searching, sorting, and pagination
-    // Route::get('/projects', [ProjectsController::class, 'getProjects']);
-    Route::get('/projects/search', [ProjectsController::class, 'searchProjects']);
-    Route::get('/projects/sorted', [ProjectsController::class, 'getSortedProjects']);
+    // Route::get('/projects', [ProjectsController::class, 'getProjects'])->name('projects.searchProjects');
+    Route::get('/projects/search', [ProjectsController::class, 'searchProjects'])->name('projects.searchProjects');
+    Route::get('/projects/sorted', [ProjectsController::class, 'getSortedProjects'])->name('projects.getSortedProjects');
 
 
     // Public route accessible to all
-    // Route::post('/projects', [ProjectsController::class, 'store']);
     Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
     Route::get('/projects', [ProjectsController::class, 'index'])->name('projects.index');
     Route::get('/projects/{id}', [ProjectsController::class, 'show'])->name('projects.show');
@@ -68,18 +67,18 @@ Route::group(['middleware' => 'auth'], function ($router) {
 });
 
 Route::group(['middleware' => 'auth'], function ($router) {
-    // Route::get('/tasks', 'TaskController@index')->name('tasks.index');//pagination
-    Route::get('/tasks/search', 'TaskController@search')->name('tasks.search');
-    Route::get('/tasks/sorted', 'TaskController@sorted')->name('tasks.sorted');
+        // Additional routes for searching, sorting, and pagination
+    // Route::get('/tasks', [TasksController::class, 'index'])->name('tasks.index');//pagination
+    Route::get('/tasks/search', [TasksController::class, 'search'])->name('tasks.search');
+    Route::get('/tasks/sorted', [TasksController::class, 'sorted'])->name('tasks.sorted');
 
 
     // Public route accessible to all
     Route::get('/tasks', [TasksController::class, 'index'])->name('tasks.index');
     Route::get('/tasks/{id}', [TasksController::class, 'show'])->name('tasks.show');
-    Route::post('/tasks', [TasksController::class, 'store']);
-    Route::put('/tasks/{id}', [TasksController::class, 'update']);
+    Route::post('/tasks', [TasksController::class, 'store'])->name('tasks.store');
+    Route::put('/tasks/{id}', [TasksController::class, 'update'])->name('tasks.update');
     Route::delete('/tasks/{id}', [TasksController::class, 'destroy'])->name('tasks.destroy');
-    Route::post('/tasks', 'TasksController@store')->name('tasks.store');
 });
 
 

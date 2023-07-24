@@ -20,49 +20,49 @@ export class ProjectTableComponent {
     this.loadProjects();
   }
 
-    // Method to fetch projects from the API
-    loadProjects() {
-      const jwtToken = localStorage.getItem('token');
-      const email = localStorage.getItem('email');
-      if (!jwtToken) {
-        console.error('JWT token not found in local storage. Please log in.');
-        return;
-      }
-    
-      const headers = new HttpHeaders({
-        Authorization: `Bearer ${jwtToken}`,
-        email :'email',
-        Permission: 'view_project' // Add the Permission header with the desired value
-      });
-    
-      // Make the API call with the headers
-      this.projectService.getAllProjects(headers).subscribe(
-        (response) => {
-          // Handle the response here
-          console.log(response);
-          this.projects = response; // Assuming the API returns an array of projects
-        },
-        (error) => {
-          // Handle the error here
-          console.error(error);
-        }
-      );
-    }
-
-  softDeleteProject(id: number) {
+  // Method to fetch projects from the API
+  loadProjects() {
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
-  
     if (!jwtToken) {
       console.error('JWT token not found in local storage. Please log in.');
       return;
     }
-  
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
-      Permission: 'delete_project' // Add the Permission header with the desired value
+      email: 'email',
+      Permission: 'view_project', // Add the Permission header with the desired value
     });
-  
+
+    // Make the API call with the headers
+    this.projectService.getAllProjects(headers).subscribe(
+      (response) => {
+        // Handle the response here
+        console.log(response);
+        this.projects = response; // Assuming the API returns an array of projects
+      },
+      (error) => {
+        // Handle the error here
+        console.error(error);
+      }
+    );
+  }
+
+  softDeleteProject(id: number) {
+    const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      Permission: 'delete_project', // Add the Permission header with the desired value
+    });
+
     this.projectService.softDeleteProject(id, headers).subscribe(
       (response) => {
         console.log('Project soft deleted successfully');
@@ -74,14 +74,6 @@ export class ProjectTableComponent {
     );
   }
 
-  // onSearch(): void {
-  //   this.table.filter(this.searchQuery, 'name', 'contains');
-  // }
-
-  // onSort(event: SortEvent): void {
-  //   // Implement the sorting logic here
-  // }
-
   getProjects(): void {
     this.projectService.getProjects().subscribe(
       (response) => {
@@ -92,6 +84,14 @@ export class ProjectTableComponent {
       }
     );
   }
+
+  // onSearch(): void {
+  //   this.table.filter(this.searchQuery, 'name', 'contains');
+  // }
+
+  // onSort(event: SortEvent): void {
+  //   // Implement the sorting logic here
+  // }
 
   onSearch(): void {
     this.projectService.searchProjects(this.searchQuery).subscribe(
@@ -121,4 +121,3 @@ export class ProjectTableComponent {
     }
   }
 }
-
