@@ -36,33 +36,6 @@ export class TaskEditComponent implements OnInit {
     });
   }
 
-  // loadTaskDetails(): void {
-  //   this.taskService.getTaskById(this.taskId).subscribe(
-  //     (response) => {
-  //       this.taskForm.patchValue(response);
-  //     },
-  //     (error) => {
-  //       console.error('Failed to retrieve task details', error);
-  //     }
-  //   );
-  // }
-
-  // onUpdate(): void {
-  //   if (this.taskForm.valid) {
-  //     const taskData = this.taskForm.value;
-  //     this.taskService.updateTask(this.taskId, taskData).subscribe(
-  //       (response) => {
-  //         console.log('Task updated successfully', response);
-  //       },
-  //       (error) => {
-  //         console.error('Failed to update task', error);
-  //       }
-  //     );
-  //     console.log('Task ID:', this.taskId); // Add this line
-  //   } else {
-  //     console.error('Invalid form data');
-  //   }
-  // }
   loadTaskDetails(): void {
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');

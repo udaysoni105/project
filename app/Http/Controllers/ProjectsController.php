@@ -42,7 +42,7 @@ class ProjectsController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
         ]);
-
+info("project registration start");
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }

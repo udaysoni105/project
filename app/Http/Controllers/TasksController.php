@@ -106,38 +106,21 @@ class TasksController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
+        // Find the task with the given id
+        $task = Task::find($id);
 
+        // Check if the task exists
+        if (!$task) {
+            return response()->json(['error' => 'Task not found'], 404);
+        }
 
-        // // Get the authenticated user
-        // $user = Auth::user();
-
-        // // Check if the user is a developer
-        // if ($user->role !== 'developer') {
-        //     return response()->json(['error' => 'Unauthorized'], 401);
-        // }
-
-        // // Validate the request data
-        // $validator = Validator::make($request->all(), [
-        //     'is_completed' => 'required|boolean',
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return response()->json(['errors' => $validator->errors()], 400);
-        // }
-
-        // Update the task completion status
-        $task = Task::findOrFail($id);
+        // Perform the hard delete
         $task->forceDelete();
-        // $task->is_completed = $request->is_completed;
-        $task->save();
 
-        return response()->json(['message' => 'Task updated successfully']);
-
-        // Task::findOrFail($id)->delete();
-
-        // return response()->json(null, 204);
+        // Return a success response
+        return response()->json(['message' => 'Task deleted successfully']);
     }
 
     public function search(Request $request)
@@ -155,6 +138,7 @@ class TasksController extends Controller
         $tasks = Task::orderBy($column, $direction)->get();
         return response()->json($tasks);
     }
+    
     // In your Laravel controller method
     public function getTasks(Request $request)
     {

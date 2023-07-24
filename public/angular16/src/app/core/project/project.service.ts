@@ -11,20 +11,6 @@ export class ProjectService {
 
   constructor(private http: HttpClient) {}
 
-  // private createHeaders(): HttpHeaders {
-  //   let headers = new HttpHeaders();
-  //   headers = headers.append('Content-Type', 'application/json');
-  //   const email = localStorage.getItem('email');
-  //   headers = headers.append('email',`${email}`);
-  //   const token = localStorage.getItem('token'); // Retrieve the token from local storage
-  //   headers = headers.append('authentication', `Bearer ${token}`);
-  //   headers = headers.append('permission', 'create_project');
-
-  //   // Log the headers in the console to see if they are set correctly
-  //   console.log('Request Headers:', headers);
-
-  //   return headers;
-  // }
   getAllProjects(headers: HttpHeaders) {
     const url = `${this.baseUrl}`;
     return this.http.get<any[]>(url, { headers });
@@ -41,26 +27,6 @@ export class ProjectService {
     console.log(options);
     return this.http.post<any>( this. baseUrl, projectData, options);
 
-  }
-
-  deleteProject(id: string): Observable<any> {
-    // const headers = this.createHeaders();
-    return this.http.delete(`${this.baseUrl}/${id}`, {  });
-  }
-
-  registerProject(project: any): Observable<any> {
-    // const headers = this.createHeaders();
-    return this.http.post<any>(this.baseUrl, project, {  });
-  }
-
-  saveChanges(projectData: any, projectId: string): Observable<any> {
-    // const headers = this.createHeaders();
-    return this.http.put(`${this.baseUrl}/${projectId}`, projectData, {  });
-  }
-
-  private handleError(error: any) {
-    console.error('An error occurred:', error);
-    return throwError(error);
   }
 
   searchProjects(searchQuery: string): Observable<any> {
@@ -89,4 +55,24 @@ export class ProjectService {
     const url = `${this.baseUrl}/${projectId}`;
     return this.http.delete(url, { headers });
   }
+
+  private handleError(error: any) {
+    console.error('An error occurred:', error);
+    return throwError(error);
+  }
+
+  // deleteProject(id: string): Observable<any> {
+  //   // const headers = this.createHeaders();
+  //   return this.http.delete(`${this.baseUrl}/${id}`, {  });
+  // }
+
+  // registerProject(project: any): Observable<any> {
+  //   // const headers = this.createHeaders();
+  //   return this.http.post<any>(this.baseUrl, project, {  });
+  // }
+
+  // saveChanges(projectData: any, projectId: string): Observable<any> {
+  //   // const headers = this.createHeaders();
+  //   return this.http.put(`${this.baseUrl}/${projectId}`, projectData, {  });
+  // }
 }
