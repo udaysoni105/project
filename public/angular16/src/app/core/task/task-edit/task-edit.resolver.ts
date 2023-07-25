@@ -20,12 +20,14 @@ export class taskEditResolver implements Resolve<any> {
         console.error('JWT token not found in local storage. Please log in.');
         return of(null); // Return an empty observable if token is not available
       }
+      console.log('taskId:', taskId); // Log the taskId inside the resolve method
 
       const headers = new HttpHeaders({
         Authorization: `Bearer ${jwtToken}`,
         taskId: taskId,
         Permission: 'update_tasks' // Add the Permission header with the desired value
       });
+
       
       return this.taskService.getTaskById(taskId, headers).pipe(
         catchError((error) => {
@@ -39,15 +41,4 @@ export class taskEditResolver implements Resolve<any> {
     }
   }
 }
-
-
-
-      
-
-
-
-
-
-
-      
 

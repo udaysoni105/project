@@ -85,7 +85,6 @@ export class TaskEditComponent implements OnInit {
       this.taskService.updateTask(this.taskId, taskData, headers).subscribe(
         (response) => {
           console.log('task updated successfully', response);
-          console.log('task ID:', this.taskId);
           this.router.navigate(['/tasks']);
         },
         (error) => {

@@ -22,6 +22,7 @@ export class projectEditResolver implements Resolve<any> {
         console.error('JWT token not found in local storage. Please log in.');
         return of(null); // Return an empty observable if token is not available
       }
+      console.log('projectId:', projectId); // Log the taskId inside the resolve method
 
       const headers = new HttpHeaders({
         Authorization: `Bearer ${jwtToken}`,
