@@ -51,6 +51,6 @@ class Authenticate extends Middleware
         info(" role permission : " . $rolePermissions);
 
         $rolehasPermission = Permission::where('name', $Permission)->get();
-        info(" header and database : " .$rolehasPermission);
+        info(" header and database : " . $rolehasPermission);
     }
 }

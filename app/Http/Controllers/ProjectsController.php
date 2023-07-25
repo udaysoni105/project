@@ -1,10 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
 
+namespace App\Http\Controllers;
+use App\Models\User;
+
+use App\Models\UserRole;
+use Spatie\Permission\Models\Permission;
+use \Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Project;
 use Illuminate\Http\Request;
-// use Illuminate\Validation\Validator;
+
 use Laracasts\Flash\Flash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -14,8 +20,33 @@ class ProjectsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $permission = $request->header('permission');
+        info($permission);
+        $user = auth()->user();
+        info($user['id']);
+
+        $userRole = UserRole::where('user_id', $user->id)->first();
+
+        info("user role id : " . $userRole);
+
+        $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+            $query->select('permission_id')
+                ->from('role_has_permissions')
+                ->where('role_id', $userRole->role_id);
+        })->get();
+        info(" role permission : ".$rolePermissions);
+
+        $hasPermission = $rolePermissions->contains('name', $permission);
+
+        if (!$hasPermission) {
+            info('Unauthorized');
+        }
+
+        $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+        info('User has permission: ' . $matchedPermission->name);
+        
         $projects = Project::all();
 
         return response()->json($projects);
@@ -27,7 +58,9 @@ class ProjectsController extends Controller
     public function create()
     {
         // You can implement this method if needed for your frontend
+        // $project = Project::create($request->all());
 
+        // return response()->json($project, 201);
     }
 
     /**
@@ -35,6 +68,32 @@ class ProjectsController extends Controller
      */
     public function store(Request $request)
     {
+        $permission = $request->header('permission');
+        info($permission);
+        $user = auth()->user();
+        info($user['id']);
+
+        //$userRole = UserRole::where('user_id', $user['id'])->first();
+        $userRole = UserRole::where('user_id', $user->id)->first();
+
+        info("user role id : " . $userRole);
+
+        $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+            $query->select('permission_id')
+                ->from('role_has_permissions')
+                ->where('role_id', $userRole->role_id);
+        })->get();
+        info(" role permission : ".$rolePermissions);
+
+        $hasPermission = $rolePermissions->contains('name', $permission);
+
+        if (!$hasPermission) {
+            info('Unauthorized');
+        }
+
+        $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+        info('User has permission: ' . $matchedPermission->name);
+
         //  Validate the request data
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -42,7 +101,7 @@ class ProjectsController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
         ]);
-info("project registration start");
+        info("project registration start");
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
@@ -55,10 +114,6 @@ info("project registration start");
         Flash::success('Project created successfully');
 
         return redirect()->route('projects.index');
-
-        // $project = Project::create($request->all());
-
-        // return response()->json($project, 201);
     }
 
     /**
@@ -84,6 +139,32 @@ info("project registration start");
      */
     public function update(Request $request, $id)
     {
+        $permission = $request->header('permission');
+        info($permission);
+        $user = auth()->user();
+        info($user['id']);
+
+        $userRole = UserRole::where('user_id', $user->id)->first();
+
+        info("user role id : " . $userRole);
+
+        $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+            $query->select('permission_id')
+                ->from('role_has_permissions')
+                ->where('role_id', $userRole->role_id);
+        })->get();
+        info(" role permission : ".$rolePermissions);
+
+        $hasPermission = $rolePermissions->contains('name', $permission);
+
+        if (!$hasPermission) {
+            info('Unauthorized');
+        }
+
+        $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+        info('User has permission: ' . $matchedPermission->name);
+
+
         // Validate the request data
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -104,20 +185,42 @@ info("project registration start");
         Flash::success('Project updated successfully');
 
         return redirect()->route('projects.index');
-
-        // $project = Project::findOrFail($id);
-        // $project->update($request->all());
-
         // return response()->json($project, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
+        $permission = $request->header('permission');
+        info($permission);
+        $user = auth()->user();
+        info($user['id']);
+
+        //$userRole = UserRole::where('user_id', $user['id'])->first();
+        $userRole = UserRole::where('user_id', $user->id)->first();
+
+        info("user role id : " . $userRole);
+
+        $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+            $query->select('permission_id')
+                ->from('role_has_permissions')
+                ->where('role_id', $userRole->role_id);
+        })->get();
+        info(" role permission : ".$rolePermissions);
+
+        $hasPermission = $rolePermissions->contains('name', $permission);
+
+        if (!$hasPermission) {
+            info('Unauthorized');
+        }
+
+        $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+        info('User has permission: ' . $matchedPermission->name);
+
+
         // Perform the soft delete logic here, using the $id parameter
-        // Example:
         $project = Project::find($id);
         if (!$project) {
             return response()->json(['message' => 'Project not found'], 404);
@@ -158,7 +261,7 @@ info("project registration start");
     //     return redirect()->route('projects.index');
     // }
 
-    // In your Laravel controller method
+    // In your ProjectsController method
     public function searchProjects(Request $request)
     {
         $searchQuery = $request->input('searchQuery');
@@ -169,7 +272,8 @@ info("project registration start");
 
         return response()->json($projects);
     }
-    // In your Laravel controller method
+
+    // In your ProjectsController method
     public function getProjects(Request $request)
     {
         $perPage = $request->input('perPage', 5);
@@ -178,7 +282,8 @@ info("project registration start");
 
         return response()->json($projects);
     }
-    // In your Laravel controller method
+
+    // In your ProjectsController method
     public function getSortedProjects(Request $request)
     {
         $column = $request->input('column', 'id');
