@@ -47,14 +47,14 @@ Route::group(['middleware' => 'api'], function ($router) {
 });
 
 
-
+Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
 Route::group(['middleware' => 'auth'], function ($router) {
     // Additional routes for searching, sorting, and pagination
     // Route::get('/projects', [ProjectsController::class, 'getProjects'])->name('projects.searchProjects');
     Route::get('/projects/search', [ProjectsController::class, 'searchProjects'])->name('projects.searchProjects');
     Route::get('/projects/sorted', [ProjectsController::class, 'getSortedProjects'])->name('projects.getSortedProjects');
 
-    Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
+
     Route::get('/projects', [ProjectsController::class, 'index'])->name('projects.index');
     Route::get('/projects/{id}', [ProjectsController::class, 'show'])->name('projects.show');
     Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
@@ -62,6 +62,7 @@ Route::group(['middleware' => 'auth'], function ($router) {
 
 });
 
+Route::put('/tasks/{id}', [TasksController::class, 'update'])->name('tasks.update');
 Route::group(['middleware' => 'auth'], function ($router) {
         // Additional routes for searching, sorting, and pagination
     // Route::get('/tasks', [TasksController::class, 'index'])->name('tasks.index');//pagination
@@ -71,7 +72,6 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::get('/tasks', [TasksController::class, 'index'])->name('tasks.index');
     Route::get('/tasks/{id}', [TasksController::class, 'show'])->name('tasks.show');
     Route::post('/tasks', [TasksController::class, 'store'])->name('tasks.store');
-    Route::put('/tasks/{id}', [TasksController::class, 'update'])->name('tasks.update');
     Route::delete('/tasks/{id}', [TasksController::class, 'destroy'])->name('tasks.destroy');
 });
 

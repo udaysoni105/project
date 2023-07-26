@@ -6,6 +6,15 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
+
+
+use App\Models\UserRole;
+use Spatie\Permission\Models\Permission;
+use \Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
+use Laracasts\Flash\Flash;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     //
@@ -14,8 +23,34 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        
+        $permission = $request->header('permission');
+        info($permission);
+        $user = auth()->user();
+        info($user['id']);
+
+        $userRole = UserRole::where('user_id', $user->id)->first();
+
+        info("user role id : " . $userRole);
+
+        $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+            $query->select('permission_id')
+                ->from('role_has_permissions')
+                ->where('role_id', $userRole->role_id);
+        })->get();
+        info(" role permission : ".$rolePermissions);
+
+        $hasPermission = $rolePermissions->contains('name', $permission);
+
+        if (!$hasPermission) {
+            info('Unauthorized');
+        }
+
+        $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+        info('User has permission: ' . $matchedPermission->name);
+        
         $users = User::all();
         return response()->json($users);
     }

@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TaskService } from '../task.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-task-edit',
   templateUrl: './task-edit.component.html',
@@ -17,7 +18,8 @@ export class TaskEditComponent implements OnInit {
     private formBuilder: FormBuilder,
     private taskService: TaskService,
     private route: ActivatedRoute,
-    private router:Router
+    private router:Router,
+    private messageService: MessageService 
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +54,7 @@ export class TaskEditComponent implements OnInit {
     });
 
     // Make the API call with the headers and task ID
-    this.taskService.getTaskById(this.taskId, headers).subscribe(
+    this.taskService.gettaskById(this.taskId, headers).subscribe(
       (response) => {
         // Handle the response here
         console.log(response);
@@ -76,7 +78,7 @@ export class TaskEditComponent implements OnInit {
         console.error('JWT token not found in local storage. Please log in.');
         return;
       }
-  
+      
       const headers = new HttpHeaders({
         Authorization: `Bearer ${jwtToken}`,
         Permission: 'update_tasks' // Add the Permission header with the desired value
@@ -85,7 +87,13 @@ export class TaskEditComponent implements OnInit {
       this.taskService.updateTask(this.taskId, taskData, headers).subscribe(
         (response) => {
           console.log('task updated successfully', response);
-          this.router.navigate(['/tasks']);
+          console.log('task ID:', this.taskId);
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is updated' });
+
+          // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
+          setTimeout(() => {
+            this.router.navigate(['/tasks']);
+          },1500 );
         },
         (error) => {
           console.error('Failed to update task', error);

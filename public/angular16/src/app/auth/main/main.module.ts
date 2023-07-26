@@ -1,14 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
 
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    MessageService
+    ButtonModule
   ]
 })
-export class ProjectEditModule { }
+export class MainModule { }

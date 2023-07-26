@@ -25,4 +25,10 @@ class Project extends Model
 
         return response()->json(['message' => 'Project soft deleted']);
     }
+    public function Tasks(){
+        return $this->hasMany(Task::class);
+    }
+    public function users(){
+        return $this->hasMany(User::class);
+    }
 }

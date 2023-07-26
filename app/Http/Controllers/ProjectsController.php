@@ -176,15 +176,19 @@ class ProjectsController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
-
-        // Update the project
         $project = Project::findOrFail($id);
         $project->update($request->all());
 
-        // Display flash message
-        Flash::success('Project updated successfully');
+        return response()->json(['message' => 'project updated successfully', 'project' => $project]);
 
-        return redirect()->route('projects.index');
+        // Update the project
+        // $project = Project::findOrFail($id);
+        // $project->update($request->all());
+
+        // Display flash message
+        // Flash::success('Project updated successfully');
+
+        // return redirect()->route('projects.index');
         // return response()->json($project, 200);
     }
 

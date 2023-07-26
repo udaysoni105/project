@@ -32,6 +32,7 @@ import { ResetComponent } from './auth/password/reset/reset.component';
 import { DashboardComponent } from './auth/dashboard/dashboard.component';
 import { CarouselModule } from 'primeng/carousel';
 import { UserTableComponent } from './auth/user-table/user-table.component';
+import { MainComponent } from './auth/main/main.component';
 
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
@@ -43,7 +44,8 @@ import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
 import { TaskService } from './core/task/task.service';
 import { TabMenuModule } from 'primeng/tabmenu';
-
+import { MessageService } from 'primeng/api';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 const routes: Routes = [
   { path: 'register', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
@@ -71,7 +73,7 @@ const routes: Routes = [
     ResetComponent,
     DashboardComponent,
     UserTableComponent,
-
+    MainComponent
   ],
   imports: [
     BrowserModule,
@@ -79,6 +81,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     CarouselModule,
     TableModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
     // RegistrationModule,
@@ -94,8 +97,9 @@ const routes: Routes = [
     DropdownModule,
     TabMenuModule,
     FieldsetModule,
+  
   ],
-  providers: [AuthService, ProjectService, TaskService],
+  providers: [AuthService, ProjectService, TaskService,MessageService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

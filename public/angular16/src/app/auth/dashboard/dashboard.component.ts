@@ -21,24 +21,10 @@ export class DashboardComponent {
       { label: 'Projects', routerLink: '/projects', icon: 'pi pi-fw pi-calendar' },
       { label: 'Tasks', routerLink: '/tasks', icon: 'pi pi-fw pi-pencil' },
       { label: 'Team', routerLink: '/users', icon: 'pi pi-fw pi-file' },
-      { label: 'Logout', routerLink: '/login', icon: 'pi pi-fw pi-cog' }
+      { label: 'Logout', routerLink: '/home', icon: 'pi pi-fw pi-cog' }
     ];
   }
   
-
-  logout(): void {
-    this.authService.logout().subscribe(
-      response => {
-        console.log('Logout successful', response);
-        // Handle successful logout
-        this.router.navigate(['login'])
-      },
-      error => {
-        console.error('Logout failed', error);
-        // Handle logout error
-      }
-    );
-  }
   handleGetStartedClick() {
     this.getStartedClickCount++;
 

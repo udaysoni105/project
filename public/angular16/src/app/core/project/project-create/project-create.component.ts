@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ProjectService } from '../project.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-project-create',
   templateUrl: './project-create.component.html',
@@ -15,7 +16,8 @@ export class ProjectCreateComponent implements OnInit {
     private formBuilder: FormBuilder,
     private projectService: ProjectService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService 
   ) {}
 
   ngOnInit(): void {
@@ -41,7 +43,12 @@ export class ProjectCreateComponent implements OnInit {
           (response) => {
             console.log('Project created successfully', response);
             this.projectForm.reset();
-            this.router.navigate(['/projects']);
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is created' });
+
+            // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
+            setTimeout(() => {
+              this.router.navigate(['/projects']);
+            },1500 );
           },
           (error) => {
             console.error('Failed to create project', error);

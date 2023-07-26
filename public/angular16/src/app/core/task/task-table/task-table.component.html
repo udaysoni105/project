@@ -4,6 +4,8 @@
 <ng-template #taskList>
   <h2>TASKS LIST</h2>
 
+  <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
+
   <div class="container">
     <p-button routerLink="/task-Create" class="btn btn-primary">+Create New</p-button>
   </div>

@@ -29,7 +29,7 @@ export class taskEditResolver implements Resolve<any> {
       });
 
       
-      return this.taskService.getTaskById(taskId, headers).pipe(
+      return this.taskService.gettaskById(taskId, headers).pipe(
         catchError((error) => {
           console.error('Failed to fetch task details', error);
           return of(null); // Return an empty observable if there's an error

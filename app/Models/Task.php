@@ -11,8 +11,12 @@ class Task extends Model
     protected $gaurd_name = 'web';
     protected $fillable = ['project_id', 'name', 'description', 'start_date', 'end_date', 'completed'];
 
+    // public function project()
+    // {
+    //     return $this->belongsTo(Project::class);
+    // }
     public function project()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(Project::class, 'project_id');
     }
 }

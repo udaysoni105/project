@@ -26,7 +26,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-
+import { MessageService } from 'primeng/api';
 @NgModule({
   declarations: [
     ProjectCreateComponent,
@@ -56,6 +56,7 @@ import { RouterModule } from '@angular/router';
     ReactiveFormsModule,
     RouterModule,
     BrowserModule,
+    MessageService
   ],
   providers: [ProjectService],
   exports: [

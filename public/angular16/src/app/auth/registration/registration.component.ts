@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
+import { MessageService } from 'primeng/api';
 // interface Country {
 //   name: string;
 //   code: string;
@@ -31,7 +31,8 @@ export class RegistrationComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
@@ -55,12 +56,17 @@ export class RegistrationComponent implements OnInit {
   }
 
   register() {
-    this.authService.register(this.user).subscribe(
+    this.authService.register(this.registrationForm.value).subscribe(
       response => {
         // Registration successful
         console.log('User registered successfully', response);
         // Redirect to the desired path
-        this.router.navigate(['/login']);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'register successfully' });
+
+        // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        },1500 );
       },
       error => {
         // Registration failed
@@ -73,6 +79,25 @@ export class RegistrationComponent implements OnInit {
       }
     );
   }
+  // register() {
+  //   this.authService.register(this.registrationForm.value).subscribe(
+  //     response => {
+  //       // Registration successful
+  //       console.log('User registered successfully', response);
+  //       // Redirect to the desired path
+  //       this.router.navigate(['/login']);
+  //     },
+  //     error => {
+  //       // Registration failed
+  //       console.log('Registration failed:', error);
+  //       // Display error message to the user
+  //       // Log the detailed error message
+  //       if (error && error.error && error.error.message) {
+  //         console.error('Error message:', error.error.message);
+  //       }
+  //     }
+  //   );
+  // }
 
   // onCountryChange() {
   //   if (this.selectedCountry) {

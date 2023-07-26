@@ -4,6 +4,7 @@ import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
 import { Token } from '@angular/compiler';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-task-table',
   templateUrl: './task-table.component.html',
@@ -14,7 +15,8 @@ export class TaskTableComponent implements OnInit {
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
 
-  constructor(private taskService: TaskService, private router: Router) {}
+  constructor(private taskService: TaskService, private router: Router,
+    private messageService: MessageService ) {}
 
   ngOnInit() {
     this.loadTasks();
@@ -67,6 +69,11 @@ export class TaskTableComponent implements OnInit {
         console.log('task hard deleted successfully');
         this.loadTasks();
         this.tasks = this.tasks.filter((task) => task.id !== id);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is Hard deleted' });
+
+        // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
+        setTimeout(() => {
+        },1500 );
       },
       (error) => {
         console.log('Soft delete failed:', error);

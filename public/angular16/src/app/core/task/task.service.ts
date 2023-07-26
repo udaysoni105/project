@@ -28,13 +28,16 @@ export class TaskService {
 
   }
 
-  updateTask(taskId: string, taskData: any, headers: HttpHeaders): Observable<any> {
-    const url = `${this.baseUrl}/${taskId}`;
-    return this.http.put(url, taskData, { headers });
+  // updateTask(taskId: string, taskData: any, headers: HttpHeaders): Observable<any> {
+  //   const url = `${this.baseUrl}/${taskId}`;
+  //   return this.http.put(url, taskData, { headers });
+  // }
+  gettaskById(taskId: string, headers: HttpHeaders): Observable<any> {
+    return this.http.get(`${this.baseUrl}/${taskId}`, { headers });
   }
-  getTaskById(taskId: string, headers: HttpHeaders): Observable<any> {
-    const url = `${this.baseUrl}/${taskId}`;
-    return this.http.get(url, { headers });
+
+  updateTask(taskId: string, taskData: any, headers: HttpHeaders): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${taskId}`, taskData, { headers });
   }
 
   deletetask(taskId: string, headers: HttpHeaders): Observable<any> {

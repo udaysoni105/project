@@ -15,7 +15,7 @@ export class LogoutComponent {
       response => {
         console.log('Logout successful', response);
         // Handle successful logout
-        this.router.navigate(['login'])
+        this.router.navigate(['home'])
       },
       error => {
         console.error('Logout failed', error);

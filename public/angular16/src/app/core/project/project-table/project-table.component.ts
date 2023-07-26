@@ -4,6 +4,7 @@ import { Table } from 'primeng/table';
 import { SortEvent } from 'primeng/api';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Token } from '@angular/compiler';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-project-table',
   templateUrl: './project-table.component.html',
@@ -14,7 +15,8 @@ export class ProjectTableComponent {
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
 
-  constructor(private projectService: ProjectService) {}
+  constructor(private projectService: ProjectService,
+    private messageService: MessageService ) {}
 
   ngOnInit() {
     this.loadProjects();
@@ -67,6 +69,12 @@ export class ProjectTableComponent {
       (response) => {
         console.log('Project soft deleted successfully');
         this.projects = this.projects.filter((project) => project.id !== id);
+                // Show the success message using the MessageService
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is soft delete' });
+
+        // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
+        setTimeout(() => {
+        },1500 );
       },
       (error) => {
         console.log('Soft delete failed:', error);

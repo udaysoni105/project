@@ -105,18 +105,6 @@ class TasksController extends Controller
         // $task = Task::create($request->all());
         // return response()->json($task, 201);
 
-        // Validate the request data
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'required',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
         // Create a new task
         $task = Task::create($request->all());
 
@@ -144,7 +132,7 @@ class TasksController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id, Task $Task)
     {
         $permission = $request->header('permission');
         info($permission);
@@ -184,24 +172,16 @@ class TasksController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        // Validate the request data
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'required',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'status' => 'required'
-        ]);
+        $Task = Task::findOrFail($id);
+        $Task->update($request->all());
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
+        return response()->json(['message' => 'Task updated successfully', 'Task' => $Task]);
 
         // Update the task
-        $task = Task::findOrFail($id);
-        $task->update($request->all());
+        // $task = Task::findOrFail($id);
+        // $task->update($request->all());
 
-        return response()->json(['message' => 'Task updated successfully', 'task' => $task]);
+        // return response()->json(['message' => 'Task updated successfully', 'task' => $task]);
 
         // return response()->json($task, 200);
     }

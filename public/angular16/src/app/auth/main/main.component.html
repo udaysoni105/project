@@ -1,0 +1,80 @@
+<!-- <h1>Login Page</h1>
+
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <div>
+      <label for="email">Email</label>
+      <input type="email" id="email" formControlName="email" required>
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input type="password" id="password" formControlName="password" required>
+    </div>
+    <div>
+        <p>Don't have an account? <a (click)="navigateToRegistration()" class="register-link">Register here</a></p>
+      </div>
+  
+
+  </form> -->
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Page</title>
+    <style>
+      .hero {
+        background-image: url('assets/images/aaa.webp');
+        background-size: cover;
+        background-position: center;
+        padding: 100px;
+        text-align: center;
+        color: #fff;
+      }
+      </style>
+  </head>
+  <body>
+    <!-- <header>
+      <h1>Project Management System</h1>
+    </header> -->
+    <nav>
+      <ul>
+        <li><a routerLink="#">Home</a></li>
+      </ul>
+      <p-button routerLink="/login" class="btn btn-primary login-button">Login</p-button> 
+    </nav>
+    
+    <section class="hero" style="background-image: url('assets/images/aaa.webp'); background-size: cover; background-position: center;">
+      <div class="hero-content">
+        <h2 style="background-color: rgba(80, 80, 174, 0.8); color: white; display: inline-block; white-space: nowrap; padding: 5px;">Manage Your Projects with Ease</h2><br>
+        <p style="background-color: rgba(84, 84, 173, 0.8); color: white; display: inline-block; white-space: nowrap; padding: 5px;">Efficiently plan, track, and collaborate on your projects.</p><br>
+        <p-button routerLink="/login" >Get Started</p-button>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="feature">
+        <h3>Project Management</h3>
+        <p>Organize your projects, assign tasks, and set deadlines.</p>
+        <img src="assets/images/eee.jpg" alt="Feature 1">
+      </div>
+      <div class="feature">
+        <h3>Task Tracking</h3>
+        <p>Keep track of task progress, updates, and completion status.</p>
+        <img src="assets/images/ddd.jpeg" alt="Feature 2">
+      </div>
+      <div class="feature">
+        <h3>Team Collaboration</h3>
+        <p>Effortlessly collaborate with your team members in real-time.</p>
+        <img src="assets/images/ccc.avif" alt="Feature 3">
+      </div>
+    </section>
+    
+    <footer>
+      <p>&copy; 2023 Project Management System. All rights reserved.</p>
+    </footer>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/primeng/14.2.8/primeng.min.js"></script>
+  </body>
+  </html>
+  

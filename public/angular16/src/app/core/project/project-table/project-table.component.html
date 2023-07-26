@@ -6,7 +6,10 @@
 
   <div class="container">
     <p-button routerLink="/register-project" class="btn btn-primary">+Create New</p-button>
+    <p-button routerLink="/" class="btn btn-primary">Reactive</p-button>
   </div>
+
+  <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
 
   <div class="search-container">
     <label class="label" for="search">SEARCH<span class="required-indicator"></span>:</label>

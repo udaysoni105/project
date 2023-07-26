@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ProjectService } from '../project.service';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-project-edit',
@@ -19,7 +20,8 @@ export class ProjectEditComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private projectService: ProjectService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService 
   ) {}
 
   ngOnInit(): void {
@@ -87,8 +89,14 @@ export class ProjectEditComponent implements OnInit {
         (response) => {
           console.log('Project updated successfully', response);
           console.log('Project ID:', this.projectId);
+        // Show the success message using the MessageService
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is updated' });
+
+        // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
+        setTimeout(() => {
           this.router.navigate(['/projects']);
-        },
+        },1500 );
+      },
         (error) => {
           console.error('Failed to update project', error);
         }

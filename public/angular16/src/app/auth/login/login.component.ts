@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
   public isInValid !: boolean;
   error: string | null = null;
   
-  constructor(private router: Router,private formBuilder: FormBuilder, private authService: AuthService,private http: HttpClient){localStorage.clear()}
+  constructor(private router: Router,private formBuilder: FormBuilder, private authService: AuthService,private http: HttpClient,private messageService: MessageService ){localStorage.clear()}
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
@@ -39,11 +39,18 @@ export class LoginComponent implements OnInit {
       (response: any) => {
         console.log(response);
         const token = response.access_token;
+        const role = response.user.role; 
         localStorage.setItem('token', token);
-        this.router.navigate(['/dashboard']);
         localStorage.setItem('email', email);
         localStorage.setItem('password', password);
+        localStorage.setItem('role', role);
         this.users = { email: '', password: '' };
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'login successfully' });
+
+        // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        },1500 );
       },
       (error) => {
         console.error(error);
@@ -52,6 +59,7 @@ export class LoginComponent implements OnInit {
       }
     );
   }
+  
   forgotPassword() {
     const data = {
       // email: this.email,

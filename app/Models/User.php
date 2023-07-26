@@ -10,9 +10,10 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
+
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable,HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +24,7 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
-        'country', 
+        'country',
         'state',
     ];
 
@@ -56,14 +57,28 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
     public function roles()
-{
-    return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');
-}
-public function tasks()
-{
-    return $this->hasOne(Task::class);
-}
+    {
+        return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');
+    }
 
+    // public function projects()
+    // {
+    //     return $this->hasMany(Project::class);
+    // }
 
+    // public function Tasks()
+    // {
+    //     return $this->hasMany(Task::class);
+    // }
+
+    // public function joinedProjects()
+    // {
+    //     return $this->hasMany(ProjectUser::class);
+    // }
+    public function Tasks()
+    {
+        return $this->hasManyThrough(Task::class, UserProject::class, 'user_id', 'project_id');
+    }
 }

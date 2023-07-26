@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TaskService } from '../task.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-task-create',
   templateUrl: './task-create.component.html',
@@ -23,7 +24,8 @@ export class TaskCreateComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private taskService: TaskService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService 
   ) {
     this.taskForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -58,8 +60,13 @@ export class TaskCreateComponent implements OnInit {
           console.log('Task created successfully', response);
           // Reset the form
           this.taskForm.reset();
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is created' });
+
+        // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
+        setTimeout(() => {
           this.router.navigate(['/tasks']);
-        },
+        },1500 );
+      },
         (error) => {
           console.error('Failed to create task', error);
         }

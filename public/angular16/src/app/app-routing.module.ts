@@ -26,7 +26,7 @@ import { TaskDetailsComponent } from './core/task/task-details/task-details.comp
 import { taskEditResolver } from './core/task/task-edit/task-edit.resolver';
 
 import { UserTableComponent } from './auth/user-table/user-table.component';
-
+import { MainComponent } from './auth/main/main.component';
 const routes: Routes = [
 
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -37,7 +37,7 @@ const routes: Routes = [
   { path: 'email', component: EmailComponent },
   { path: 'reset', component: ResetComponent },
   { path: 'dashboard', component: DashboardComponent ,canActivate:[authGuard]},
-    // {path:'home',component:MainComponent},
+    {path: 'home',component:MainComponent},
     // { path: '',loadChildren:()=>import('./auth/dashboard/dashboard.module').then(a=>a.DashboardModule),canActivate:[authGuard]},
 
   { path: 'projects', component: ProjectTableComponent },

@@ -1,5 +1,6 @@
 <div  style="background-image: url('assets/images/b.jpg');">
 <h2>Edit Task</h2>
+<p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
 
 <form class="task-form" (ngSubmit)="onUpdate()" [formGroup]="taskForm">
   <div class="form-group">
