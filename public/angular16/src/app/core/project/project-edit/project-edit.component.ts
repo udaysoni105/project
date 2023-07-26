@@ -99,6 +99,11 @@ export class ProjectEditComponent implements OnInit {
       },
         (error) => {
           console.error('Failed to update project', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to update project',
+          });
         }
       );
     } else {

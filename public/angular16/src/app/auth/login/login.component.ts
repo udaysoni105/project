@@ -54,8 +54,15 @@ export class LoginComponent implements OnInit {
       },
       (error) => {
         console.error(error);
-        this.router.navigate(['/registration']);
-        console.log("user is not registered");
+        // this.router.navigate(['/registration']);
+        // console.log("user is not registered");
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'user is not associated'});
+          setTimeout(() => {
+            this.router.navigate(['/registration']);
+        },1500 );
       }
     );
   }

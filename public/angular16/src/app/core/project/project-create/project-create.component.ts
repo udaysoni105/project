@@ -52,6 +52,11 @@ export class ProjectCreateComponent implements OnInit {
           },
           (error) => {
             console.error('Failed to create project', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to create project',
+            });
           }
         );
     }

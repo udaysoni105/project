@@ -97,6 +97,11 @@ export class TaskEditComponent implements OnInit {
         },
         (error) => {
           console.error('Failed to update task', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to update task',
+          });
         }
       );
     } else {

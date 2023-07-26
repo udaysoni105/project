@@ -75,6 +75,10 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::delete('/tasks/{id}', [TasksController::class, 'destroy'])->name('tasks.destroy');
 });
 
+// Route::get('/download-pdf', 'TaskController@downloadPDF');
+// Route::get('tasks/{id}/generate-pdf', [TasksController::class, 'downloadPDF'])->name('downloadPDF');
+Route::get('tasks/{id}/generate-pdf', [TasksController::class, 'generatePDF'])->name('generate-pdf');
+
 
 // Routes for admin
 // Route::middleware(['auth', 'auth:add_project,edit_project,softDelete_project'])->group(function () {

@@ -48,6 +48,23 @@ export class TaskService {
   registertask(task: any): Observable<any> {
     return this.http.post<any>(this.baseUrl, task);
   }
+  generatePDF(taskId: string): void {
+    const url = `${this.baseUrl}/${taskId}/generate-pdf`;
+    this.http.get(url, { responseType: 'blob' }).subscribe(
+      (response: Blob) => {
+        const file = new Blob([response], { type: 'application/pdf' });
+        const fileURL = URL.createObjectURL(file);
+        const a = document.createElement('a');
+        a.href = fileURL;
+        a.download = 'filename.pdf';
+        a.click();
+      },
+      (error) => {
+        console.error('Error generating PDF:', error);
+        // Display a user-friendly error message, if needed.
+      }
+    );
+  }
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An error occurred';

@@ -12,8 +12,9 @@ use Spatie\Permission\Models\Permission;
 use \Spatie\Permission\Models\Role;
 use Laracasts\Flash\Flash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
-
+use PDF;
 class TasksController extends Controller
 {
     /**
@@ -260,5 +261,15 @@ class TasksController extends Controller
     {
         $tasks = Task::paginate(5); // Adjust the pagination limit as needed
         return response()->json($tasks);
+    }
+
+    public function generatePDF($id)
+    {
+        // Code to generate and download the PDF based on the $id parameter
+        // Example: 
+        $task = Task::find($id); // Assuming you have a Task model
+        $pdf = PDF::loadView('pdf_view', compact('task'));
+
+        return $pdf->download('task_' . $id . '.pdf');
     }
 }

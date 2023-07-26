@@ -15,7 +15,7 @@ export class TaskTableComponent implements OnInit {
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
 
-  constructor(private taskService: TaskService, private router: Router,
+  constructor(private taskService: TaskService, private router: Router,private http: HttpClient,
     private messageService: MessageService ) {}
 
   ngOnInit() {
@@ -77,11 +77,19 @@ export class TaskTableComponent implements OnInit {
       },
       (error) => {
         console.log('Soft delete failed:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to delete task',
+        });
       }
     );
   }
 
   onSearch(): void {
     this.table.filter(this.searchQuery, 'name', 'contains');
+  }
+  generatePDF(taskId: string): void {
+    this.taskService.generatePDF(taskId);
   }
 }

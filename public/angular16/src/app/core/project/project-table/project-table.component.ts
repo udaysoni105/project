@@ -78,6 +78,11 @@ export class ProjectTableComponent {
       },
       (error) => {
         console.log('Soft delete failed:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to softDeleteProject project',
+        });
       }
     );
   }

@@ -69,6 +69,11 @@ export class TaskCreateComponent implements OnInit {
       },
         (error) => {
           console.error('Failed to create task', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to create task',
+          });
         }
       );
     }
