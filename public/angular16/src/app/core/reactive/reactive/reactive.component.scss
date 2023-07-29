@@ -1,0 +1,35 @@
+.container {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 20px;
+    margin-right: 150px;
+    margin-left: 150px;
+  
+    ul {
+      list-style: none;
+      padding: 0;
+  
+      li {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+  
+        /* Add spacing on right and left sides */
+        margin-right: 10px;
+        margin-left: 10px;
+  
+        div {
+          margin-right: 10px;
+        }
+  
+        p-button {
+          width: 80px;
+        }
+      }
+    }
+  }
+  

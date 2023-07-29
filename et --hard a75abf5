@@ -1,0 +1,32 @@
+[33mc4daeb7[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m HEAD@{0}: reset: moving to HEAD~1
+[33ma75abf5[m[33m ([m[1;31morigin/main[m[33m)[m HEAD@{1}: commit: changes laravel and angular
+[33mc4daeb7[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m HEAD@{2}: commit: changes flash message
+[33m3a6a251[m HEAD@{3}: commit: changes
+[33m83146b9[m HEAD@{4}: commit: changes authentication
+[33m8860a6c[m HEAD@{5}: commit: changes
+[33m716f672[m HEAD@{6}: commit: changes route
+[33mb5e0e66[m HEAD@{7}: commit: changes angular
+[33m67b14ed[m HEAD@{8}: commit: changes
+[33m8b3f41b[m HEAD@{9}: commit: angular crud changes
+[33m5bc3d2b[m HEAD@{10}: commit: changes in project
+[33mea825b8[m HEAD@{11}: commit: project create done
+[33m7dc31a8[m HEAD@{12}: commit: project create done
+[33m49569ab[m HEAD@{13}: commit: changes
+[33m7247dc9[m HEAD@{14}: commit: middleware data show
+[33m4a0f0b4[m HEAD@{15}: commit: middleware changes
+[33md022f68[m HEAD@{16}: commit: middleware changes
+[33md33ec36[m HEAD@{17}: commit: changes header angular commit
+[33m2cf5ce2[m HEAD@{18}: commit: angular project create header
+[33mabda49a[m HEAD@{19}: commit: changes laravel and angular side
+[33m34b5893[m HEAD@{20}: commit: initial commit
+[33m151137d[m HEAD@{21}: commit: changes angular primeng
+[33mf204703[m HEAD@{22}: commit: angular crud changes
+[33mfcd0ee5[m HEAD@{23}: commit: angular crud change
+[33m5f7378d[m HEAD@{24}: commit: angular crud changes
+[33m262efdd[m HEAD@{25}: commit: angular crud changes
+[33m2099557[m HEAD@{26}: commit: initial changes
+[33m0a6b4a4[m HEAD@{27}: commit: add bearer token
+[33m9df9c10[m HEAD@{28}: commit: add middleware and angular changes
+[33m4cf34d2[m HEAD@{29}: commit: JWT configs
+[33m1588c8f[m HEAD@{30}: Branch: renamed refs/heads/master to refs/heads/main
+[33m1588c8f[m HEAD@{32}: commit (initial): initial commit

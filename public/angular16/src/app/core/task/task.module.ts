@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
 
 
 import { TaskEditComponent } from './task-edit/task-edit.component';
@@ -25,6 +25,10 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
 @NgModule({
   declarations: [
     TaskCreateComponent,
@@ -49,7 +53,12 @@ import { DropdownModule } from 'primeng/dropdown';
     DialogModule,
     TableModule,
     CardModule,
-    DropdownModule
+    DropdownModule,
+    MultiSelectModule,
+    MatFormFieldModule, 
+    MatSelectModule, 
+    NgFor, 
+    MatInputModule
   ],
   providers: [TaskService],
   exports: [

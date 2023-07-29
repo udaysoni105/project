@@ -49,9 +49,13 @@ import { MessageService } from 'primeng/api';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DialogModule } from 'primeng/dialog';
 import { ProfileComponent } from './auth/profile/profile.component';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgFor } from '@angular/common';
 import { UserchecktableComponent } from './core/userchecktablee/userchecktable/userchecktable.component';
 import { ReactiveComponent } from './core/reactive/reactive/reactive.component';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
 const routes: Routes = [
   { path: 'register', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
@@ -106,7 +110,11 @@ const routes: Routes = [
     DropdownModule,
     TabMenuModule,
     FieldsetModule,
-  
+    MultiSelectModule,
+    MatFormFieldModule, 
+    MatSelectModule, 
+    NgFor, 
+    MatInputModule
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

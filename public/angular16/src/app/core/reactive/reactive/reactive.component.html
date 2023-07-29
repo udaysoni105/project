@@ -1,20 +1,24 @@
 <h2>Soft-Deleted Projects</h2>
-
-<div *ngIf="softDeletedProjects">
-  <div *ngIf="softDeletedProjects.length === 0">
-    <p>No soft-deleted projects found.</p>
+<div class="container">
+  <div *ngIf="isLoading"> 
+    <p>Loading...</p>
   </div>
-
-  <div *ngIf="softDeletedProjects.length > 0">
-    <ul>
-      <li *ngFor="let project of softDeletedProjects">
-        <td>{{ project.name }}</td>
-        <td>{{ project.description }}</td>
-        <td>{{ project.start_date }}</td>
-        <td>{{ project.end_date }}</td>
-        <td>{{ project.status }}</td>
-        <button (click)="restoreProject(project.id)">Restore</button>
-      </li>
-    </ul>
+  <div *ngIf="!isLoading">
+  <div *ngIf="softDeletedProjects">
+    <div *ngIf="softDeletedProjects.length === 0">
+      <p>No soft-deleted projects found.</p>
+    </div>
+    <div *ngIf="softDeletedProjects.length > 0">
+      <ul>
+        <li *ngFor="let project of softDeletedProjects">
+          <div>{{ project.name }}</div>
+          <div>{{ project.description }}</div>
+          <div>{{ project.start_date }}</div>
+          <div>{{ project.end_date }}</div>
+          <div>{{ project.status }}</div>
+          <p-button (onClick)="restoreProject(project.id)">Restore</p-button>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>

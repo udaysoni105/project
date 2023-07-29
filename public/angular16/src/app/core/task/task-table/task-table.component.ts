@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { TaskService } from '../task.service';
 import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
-import { Token } from '@angular/compiler';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 
@@ -15,7 +14,7 @@ export class TaskTableComponent implements OnInit {
   tasks: any[] = [];
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
-  Status: any[] = [{ name: 'pending' }, { name: 'completed' }];
+  selectedValue: string = ''; 
 
   constructor(
     private taskService: TaskService,
@@ -107,5 +106,8 @@ export class TaskTableComponent implements OnInit {
 
   generatePDF(taskId: string): void {
     this.taskService.generatePDF(taskId);
+  }
+  getStatusOptions(): string[] {
+    return this.tasks.map((task) => task.status);
   }
 }
