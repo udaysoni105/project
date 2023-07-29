@@ -33,8 +33,10 @@
           <th>IS COMPLETED</th>
           <th>HARD DELETE</th>
           <th>EDIT</th>
-          <th>Projectid</th>
+          <th>ProjectId</th>
+          <th>UserId</th>
           <th>PDF</th>
+          <th>status</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-task>
@@ -48,16 +50,19 @@
           <td>
             <p-button (click)="deleteTask(task.id)" class="btn btn-primary">Delete</p-button>
           </td>          
-          <!-- <td>
-            <p-button *ngIf="checkPermission('edit')" (click)="editTask(task.id)">Edit</p-button>
-          </td> -->
           <td>
             <p-button [routerLink]="['/task-edit', task.id]" class="btn btn-primary">Edit Task</p-button>
           </td>
           <td>{{ task.project_id}}</td>
+          <td>{{ task.user_id }}</td>
           <td>
             <p-button (click)="generatePDF(task.id)" class="btn btn-primary">Generate PDF</p-button>
           </td>
+        <td>
+          <div class="card flex justify-content-center">
+            <p-dropdown [options]="Status" [(ngModel)]="task.status" optionLabel="name"></p-dropdown>
+          </div>          
+        </td>
         </tr>
       </ng-template>
     </p-table>

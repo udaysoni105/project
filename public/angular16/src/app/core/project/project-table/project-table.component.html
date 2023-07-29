@@ -1,14 +1,17 @@
 <div *ngIf="!projects; else projectList">
 </div>
 
-<ng-template #projectList>
+<ng-template #projectList pTemplate="body" let-project>
   <h2>PROJECT LIST</h2>
 
   <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
 
   <div class="container">
     <p-button routerLink="/register-project" class="btn btn-primary">+Create New</p-button>
-    <p-button routerLink="/" class="btn btn-primary">Reactive</p-button>
+
+      <p-button routerLink="/soft-deleted"  class="btn btn-warning">Restore</p-button>
+
+    <!-- <p-button routerLink="/" class="btn btn-primary">Reactive</p-button> -->
   </div>
 
   <div class="search-container">

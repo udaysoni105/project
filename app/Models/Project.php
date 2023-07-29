@@ -25,10 +25,16 @@ class Project extends Model
 
         return response()->json(['message' => 'Project soft deleted']);
     }
-    public function Tasks(){
-        return $this->hasMany(Task::class);
+
+    // Define the relationship between Project and User through the intermediate table UserProject (Many-to-Many)
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_project');
     }
-    public function users(){
-        return $this->hasMany(User::class);
+
+    // Define the relationship between Project and Task (One-to-Many)
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
     }
 }

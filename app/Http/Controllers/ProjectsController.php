@@ -2,6 +2,7 @@
 
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
 
 use App\Models\UserRole;
@@ -36,7 +37,7 @@ class ProjectsController extends Controller
                 ->from('role_has_permissions')
                 ->where('role_id', $userRole->role_id);
         })->get();
-        info(" role permission : ".$rolePermissions);
+        info(" role permission : " . $rolePermissions);
 
         $hasPermission = $rolePermissions->contains('name', $permission);
 
@@ -46,7 +47,7 @@ class ProjectsController extends Controller
 
         $matchedPermission = $rolePermissions->firstWhere('name', $permission);
         info('User has permission: ' . $matchedPermission->name);
-        
+
         $projects = Project::all();
 
         return response()->json($projects);
@@ -83,7 +84,7 @@ class ProjectsController extends Controller
                 ->from('role_has_permissions')
                 ->where('role_id', $userRole->role_id);
         })->get();
-        info(" role permission : ".$rolePermissions);
+        info(" role permission : " . $rolePermissions);
 
         $hasPermission = $rolePermissions->contains('name', $permission);
 
@@ -153,7 +154,7 @@ class ProjectsController extends Controller
                 ->from('role_has_permissions')
                 ->where('role_id', $userRole->role_id);
         })->get();
-        info(" role permission : ".$rolePermissions);
+        info(" role permission : " . $rolePermissions);
 
         $hasPermission = $rolePermissions->contains('name', $permission);
 
@@ -195,7 +196,7 @@ class ProjectsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request,$id)
+    public function destroy(Request $request, $id)
     {
         $permission = $request->header('permission');
         info($permission);
@@ -212,7 +213,7 @@ class ProjectsController extends Controller
                 ->from('role_has_permissions')
                 ->where('role_id', $userRole->role_id);
         })->get();
-        info(" role permission : ".$rolePermissions);
+        info(" role permission : " . $rolePermissions);
 
         $hasPermission = $rolePermissions->contains('name', $permission);
 
@@ -296,6 +297,35 @@ class ProjectsController extends Controller
         $projects = Project::orderBy($column, $direction)
             ->paginate(5);
 
+        return response()->json($projects);
+    }
+
+    // // Soft Delete a project
+    public function softDelete($id)
+    {
+        $project = Project::find($id);
+        $project->delete();
+        return response()->json(['message' => 'Project soft deleted successfully', 'project' => $project]);
+    }
+
+    // Restore a soft-deleted project
+    public function restore($id)
+    {
+        $project = Project::withTrashed()->find($id);
+
+        if (!$project) {
+            return response()->json(['message' => 'Project not found or already restored'], 404);
+        }
+
+        $project->restore();
+
+        return response()->json(['message' => 'Project restored successfully'], 200);
+    }
+
+    // Fetch all projects, including soft-deleted ones
+    public function softDeletedProjects()
+    {
+        $projects = Project::withTrashed()->get();
         return response()->json($projects);
     }
 }

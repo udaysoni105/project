@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
@@ -13,6 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { ProjectService } from './core/project/project.service';
 import { RegistrationComponent } from './auth/registration/registration.component';
 // Import PrimeNG modules
+
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
@@ -46,6 +47,11 @@ import { TaskService } from './core/task/task.service';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { MessageService } from 'primeng/api';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DialogModule } from 'primeng/dialog';
+import { ProfileComponent } from './auth/profile/profile.component';
+import { DatePipe } from '@angular/common';
+import { UserchecktableComponent } from './core/userchecktablee/userchecktable/userchecktable.component';
+import { ReactiveComponent } from './core/reactive/reactive/reactive.component';
 const routes: Routes = [
   { path: 'register', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
@@ -73,7 +79,10 @@ const routes: Routes = [
     ResetComponent,
     DashboardComponent,
     UserTableComponent,
-    MainComponent
+    MainComponent,
+    ProfileComponent,
+    UserchecktableComponent,
+    ReactiveComponent
   ],
   imports: [
     BrowserModule,
@@ -84,7 +93,7 @@ const routes: Routes = [
     BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
-    // RegistrationModule,
+    DialogModule,
     RouterModule.forRoot(routes),
     // Add PrimeNG modules to the imports
     ButtonModule,
@@ -99,7 +108,10 @@ const routes: Routes = [
     FieldsetModule,
   
   ],
-  providers: [AuthService, ProjectService, TaskService,MessageService],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ],
+  providers: [AuthService, ProjectService, TaskService,MessageService,DatePipe],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -1,4 +1,3 @@
-<div  style="background-image: url('assets/images/b.jpg');">
 <h2>Edit Task</h2>
 <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
 
@@ -24,8 +23,8 @@
   </div>
 
   <div>
-    <label for="is_completed">Is Completed</label>
-    <input type="checkbox" id="is_completed" name="is_completed" formControlName="is_completed">
+    <label for="completed">Is Completed</label>
+    <input type="checkbox" id="completed" name="completed" formControlName="completed">
   </div>
 
 
@@ -37,4 +36,3 @@
   <!-- <button type="submit" [disabled]="!taskForm.valid">Update Task</button> -->
   <p-button type="submit" [disabled]="!taskForm.valid" class="btn btn-primary btn-block btn-lg">Update Task</p-button>
 </form>
-</div>

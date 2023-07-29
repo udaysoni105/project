@@ -75,4 +75,8 @@ export class ProjectService {
   //   // const headers = this.createHeaders();
   //   return this.http.put(`${this.baseUrl}/${projectId}`, projectData, {  });
   // }
+  // restoreProject(id: number, headers: HttpHeaders): Observable<any> {
+  //   const url = `${this.baseUrl}/${id}/restore`;
+  //   return this.http.put(url, null, { headers });
+  // }
 }

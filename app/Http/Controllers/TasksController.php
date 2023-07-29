@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
 use PDF;
+
 class TasksController extends Controller
 {
     /**
@@ -36,7 +37,7 @@ class TasksController extends Controller
                 ->from('role_has_permissions')
                 ->where('role_id', $userRole->role_id);
         })->get();
-        info(" role permission : ".$rolePermissions);
+        info(" role permission : " . $rolePermissions);
 
         $hasPermission = $rolePermissions->contains('name', $permission);
 
@@ -47,9 +48,31 @@ class TasksController extends Controller
         $matchedPermission = $rolePermissions->firstWhere('name', $permission);
         info('User has permission: ' . $matchedPermission->name);
 
+                // Fetch all tasks with their associated project and assigned user
+                // $tasks = Task::with('project', 'user')->get();
+
+                // return response()->json(['tasks' => $tasks]);
+
         $tasks = Task::all();
 
         return response()->json($tasks);
+        // $tasks = Task::with('users')->get();
+
+        // return response()->json($tasks);
+
+        // $tasks = Task::join('users', 'tasks.user_id', '=', 'users.id')
+        // ->select('tasks.*', 'users.Name as uName', 'users.id as userid')
+        // ->get();
+    
+        // return response()->json($tasks);
+    //     $query = Task::join('user_task', 'tasks.id', '=', 'user_task.task_id')
+    //     ->join('users', 'user_task.user_id', '=', 'users.id')
+    //     ->select('tasks.*', 'users.Name as uName', 'users.id as userid');
+    
+    // $tasks = $query->get();
+    // return response()->json($tasks);
+    
+    
     }
 
     /**
@@ -80,7 +103,7 @@ class TasksController extends Controller
                 ->from('role_has_permissions')
                 ->where('role_id', $userRole->role_id);
         })->get();
-        info(" role permission : ".$rolePermissions);
+        info(" role permission : " . $rolePermissions);
 
         $hasPermission = $rolePermissions->contains('name', $permission);
 
@@ -97,6 +120,7 @@ class TasksController extends Controller
             'description' => 'required',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
+            'userid.*'=>''
         ]);
         info("task registration start");
         if ($validator->fails()) {
@@ -149,7 +173,7 @@ class TasksController extends Controller
                 ->from('role_has_permissions')
                 ->where('role_id', $userRole->role_id);
         })->get();
-        info(" role permission : ".$rolePermissions);
+        info(" role permission : " . $rolePermissions);
 
         $hasPermission = $rolePermissions->contains('name', $permission);
 
@@ -190,7 +214,7 @@ class TasksController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request,$id)
+    public function destroy(Request $request, $id)
     {
         $permission = $request->header('permission');
         info($permission);
@@ -207,7 +231,7 @@ class TasksController extends Controller
                 ->from('role_has_permissions')
                 ->where('role_id', $userRole->role_id);
         })->get();
-        info(" role permission : ".$rolePermissions);
+        info(" role permission : " . $rolePermissions);
 
         $hasPermission = $rolePermissions->contains('name', $permission);
 
@@ -271,5 +295,23 @@ class TasksController extends Controller
         $pdf = PDF::loadView('pdf_view', compact('task'));
 
         return $pdf->download('task_' . $id . '.pdf');
+    }
+    public function assignTaskToDeveloper(Request $request, Task $task)
+    {
+        // Check if the user has project manager role
+        if (!auth()->user()->hasRole('project_manager')) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        // Validate the request data (e.g., the selected developer ID)
+        $request->validate([
+            'developer_id' => 'required|exists:users,id',
+        ]);
+
+        // Assign the task to the selected developer
+        $task->developer_id = $request->input('developer_id');
+        $task->save();
+
+        return response()->json(['message' => 'Task assigned successfully']);
     }
 }

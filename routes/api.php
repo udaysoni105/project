@@ -20,18 +20,23 @@ use App\Http\Controllers\TasksController;
 */
 
 info("Route");
-Route::get('/states/{country}', [RegistrationController::class, 'getStates']);
-
+// routes/api.php
+// Route::group(['middleware' => 'auth:api'], function () {
+// Route::get('/countries', [AuthController::class, 'getCountries']);
+// Route::get('/states/{country}', [AuthController::class, 'getStates']);
+// });
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['middleware' => 'auth'], function ($router) {
+// Route::group(['middleware' => 'auth'], function ($router) {
 Route::get('/users', [UserController::class, 'index']);
 Route::post('/users', [UserController::class, 'store']);
 Route::put('/users/{id}', [UserController::class, 'update']);
 Route::delete('/users/{id}', [UserController::class, 'destroy']);
-});
+// });
+Route::get('/profile', [UserController::class, 'index']);
+
 
 Route::post('/me', [AuthController::class, 'me']);
 Route::post('/refresh', [AuthController::class, 'refresh']);
@@ -48,7 +53,7 @@ Route::group(['middleware' => 'api'], function ($router) {
 
 
 Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
-Route::group(['middleware' => 'auth'], function ($router) {
+// Route::group(['middleware' => 'auth'], function ($router) {
     // Additional routes for searching, sorting, and pagination
     // Route::get('/projects', [ProjectsController::class, 'getProjects'])->name('projects.searchProjects');
     Route::get('/projects/search', [ProjectsController::class, 'searchProjects'])->name('projects.searchProjects');
@@ -60,7 +65,15 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
     Route::post('/projects', [ProjectsController::class,'store'])->name('projects.store');
 
-});
+// });
+
+
+Route::delete('projects/{id}/soft-deleted', [ProjectsController::class, 'softDelete'])->name('projects.softDelete');
+Route::put('/projects/{id}/restore',[ProjectsController::class,  'restore']);
+Route::get('projects/{id}/soft-deleted', [ProjectsController::class, 'softDeletedProjects'])->name('projects.softDeletedProjects');
+
+
+
 
 Route::put('/tasks/{id}', [TasksController::class, 'update'])->name('tasks.update');
 Route::group(['middleware' => 'auth'], function ($router) {

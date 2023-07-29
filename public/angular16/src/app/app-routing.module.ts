@@ -27,6 +27,8 @@ import { taskEditResolver } from './core/task/task-edit/task-edit.resolver';
 
 import { UserTableComponent } from './auth/user-table/user-table.component';
 import { MainComponent } from './auth/main/main.component';
+import { ProfileComponent } from './auth/profile/profile.component';
+import { ReactiveComponent } from './core/reactive/reactive/reactive.component';
 const routes: Routes = [
 
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -45,6 +47,7 @@ const routes: Routes = [
     // { path: 'register-project', component: ProjectCreateComponent, canActivate: [ProjectGuard] }
   { path: 'project-edit/:id',component: ProjectEditComponent,resolve: {project: projectEditResolver}},
   { path: 'project-details', component: ProjectDetailsComponent },
+  { path: 'soft-deleted', component: ReactiveComponent },
 
   { path: 'tasks', component: TaskTableComponent, canActivate: [authGuard] },
   { path: 'task-Create', component: TaskCreateComponent },
@@ -53,7 +56,7 @@ const routes: Routes = [
   { path: 'task-edit/:id', component: TaskEditComponent, resolve: { task: taskEditResolver } },
 
   { path: 'users', component: UserTableComponent },
-  { path: 'profile', component: UserTableComponent }
+  { path: 'profile', component: ProfileComponent }
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

@@ -5,6 +5,7 @@ import { SortEvent } from 'primeng/api';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Token } from '@angular/compiler';
 import { MessageService } from 'primeng/api';
+import { ReactiveService } from '../../reactive/reactive.service';
 @Component({
   selector: 'app-project-table',
   templateUrl: './project-table.component.html',
@@ -16,7 +17,7 @@ export class ProjectTableComponent {
   @ViewChild('table') table!: Table;
 
   constructor(private projectService: ProjectService,
-    private messageService: MessageService ) {}
+    private messageService: MessageService,private reactiveService:ReactiveService ) {}
 
   ngOnInit() {
     this.loadProjects();
@@ -81,7 +82,7 @@ export class ProjectTableComponent {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Failed to softDeleteProject project',
+          detail: 'Failed to softDelete project',
         });
       }
     );
@@ -133,4 +134,5 @@ export class ProjectTableComponent {
       );
     }
   }
+
 }

@@ -1,1 +1,15 @@
-<p>profile works!</p>
+<p-card class="profile-card">
+  <ng-container>
+    <img src="assets/images/photo.jpeg" alt="User Photo" width="100">
+  </ng-container>
+  <ng-container *ngIf="user">
+    <p>Name: {{ user.name }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Country: {{ user.country }}</p>
+    <p>State: {{ user.state }}</p>
+    <p>Verification Status: {{ user.isverify ? 'Verified' : 'Not Verified' }}</p>
+  </ng-container>
+  <ng-container *ngIf="!user">
+    <p>No User selected.</p>
+  </ng-container>
+</p-card>

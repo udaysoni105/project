@@ -62,12 +62,18 @@ export class AuthService {
     return this.http.post<{ access_token: string }>(`${this.apiUrl}/login`, { email, password });
   }
   
+  getUserProfile(token: string) {
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
+    return this.http.get(`${this.apiUrl}/profile`, { headers });
+  }
   getCountries(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/countries`);
+    return this.http.get('/api/countries');
   }
 
   getStates(countryCode: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/states/${countryCode}`);
+    return this.http.get(`/api/states/${countryCode}`);
   }
   
 }

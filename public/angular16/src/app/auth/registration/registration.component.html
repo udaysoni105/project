@@ -22,7 +22,21 @@
     <label for="password_confirmation">Confirm Password:</label>
     <input type="password" id="password_confirmation" formControlName="password_confirmation"  required [(ngModel)]="user.password_confirmation"/>
   </div>
+
+  <!-- <div>
+    <label for="country">Country:</label>
+    <select id="country" [(ngModel)]="selectedCountryCode" (change)="fetchStates()">
+      <option *ngFor="let country of countries" [value]="country.alpha2Code">{{ country.name }}</option>
+    </select>
+  </div>
   
+  <div *ngIf="states.length > 0">
+    <label for="state">State:</label>
+    <select id="state" [(ngModel)]="selectedStateCode"> 
+      <option *ngFor="let state of states" [value]="state.alpha2Code">{{ state.name }}</option>
+    </select>
+  </div> -->
+
   <div>
     <label for="country">Country:</label>
     <input type="text" id="country" formControlName="country"  required [(ngModel)]="user.country"/>
@@ -33,19 +47,6 @@
     <input type="text" id="state" formControlName="state"  required [(ngModel)]="user.state"/>
   </div>
 
-    <!-- <br>
-  <div>
-    <label for="country">Country</label>
-    <p-dropdown [options]="countries" [(ngModel)]="selectedCountry" optionLabel="name" placeholder="Select Country" (onChange)="onCountryChange()"></p-dropdown>
   </div>
-  <br>
-  <div>
-    <label for="state">State</label>
-    <p-dropdown [options]="states" [(ngModel)]="selectedState" optionLabel="name" placeholder="Select State"></p-dropdown>
-  </div> -->
-  
-  </div>
-  <!-- @role('developer') -->
   <button type="submit" [disabled]="registrationForm.invalid">Register</button>
-  <!-- @endrole -->
 </form>

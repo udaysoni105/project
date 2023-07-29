@@ -20,14 +20,14 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'country',
-        'state',
-    ];
-
+    // protected $fillable = [
+    //     'name',
+    //     'email',
+    //     'password',
+    //     'country',
+    //     'state',
+    // ];
+    protected $fillable = ['name', 'email', 'password', 'country', 'state', 'isverify'];
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -68,17 +68,23 @@ class User extends Authenticatable implements JWTSubject
     //     return $this->hasMany(Project::class);
     // }
 
-    // public function Tasks()
-    // {
-    //     return $this->hasMany(Task::class);
-    // }
-
     // public function joinedProjects()
     // {
     //     return $this->hasMany(ProjectUser::class);
     // }
-    public function Tasks()
+    
+    public function projects()
     {
-        return $this->hasManyThrough(Task::class, UserProject::class, 'user_id', 'project_id');
+        return $this->belongsToMany(Project::class, 'user_project');
+    }
+
+    // Define the relationship between User and Task (One-to-Many)
+    // public function tasks()
+    // {
+    //     return $this->hasMany(Task::class);
+    // }
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_task');
     }
 }

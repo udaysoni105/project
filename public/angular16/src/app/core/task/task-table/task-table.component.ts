@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Token } from '@angular/compiler';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
+
 @Component({
   selector: 'app-task-table',
   templateUrl: './task-table.component.html',
@@ -14,9 +15,14 @@ export class TaskTableComponent implements OnInit {
   tasks: any[] = [];
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
+  Status: any[] = [{ name: 'pending' }, { name: 'completed' }];
 
-  constructor(private taskService: TaskService, private router: Router,private http: HttpClient,
-    private messageService: MessageService ) {}
+  constructor(
+    private taskService: TaskService,
+    private router: Router,
+    private http: HttpClient,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     this.loadTasks();
@@ -69,11 +75,14 @@ export class TaskTableComponent implements OnInit {
         console.log('task hard deleted successfully');
         this.loadTasks();
         this.tasks = this.tasks.filter((task) => task.id !== id);
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is Hard deleted' });
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Task is Hard deleted',
+        });
 
         // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
-        setTimeout(() => {
-        },1500 );
+        setTimeout(() => {}, 1500);
       },
       (error) => {
         console.log('Soft delete failed:', error);
@@ -86,9 +95,16 @@ export class TaskTableComponent implements OnInit {
     );
   }
 
+  // onSearch(): void {
+  //   this.table.filter(this.searchQuery, 'name', 'contains');
+  // }
   onSearch(): void {
+    if (typeof this.searchQuery === 'string') {
+      this.searchQuery = this.searchQuery.trim();
+    }
     this.table.filter(this.searchQuery, 'name', 'contains');
   }
+
   generatePDF(taskId: string): void {
     this.taskService.generatePDF(taskId);
   }

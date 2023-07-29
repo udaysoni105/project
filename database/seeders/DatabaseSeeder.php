@@ -40,21 +40,21 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@example.com',
         ], [
             'name' => 'admin',
-            'password' => bcrypt('password'),
+            'password' => bcrypt('12345678'),
         ]);
 
         User::firstOrCreate([
             'email' => 'developer@example.com',
         ], [
             'name' => 'developer',
-            'password' => bcrypt('password'),
+            'password' => bcrypt('12345678'),
         ]);
 
         User::firstOrCreate([
             'email' => 'projectManager@example.com',
         ], [
             'name' => 'projectManager',
-            'password' => bcrypt('password'),
+            'password' => bcrypt('12345678'),
         ]);
     }
 
@@ -140,6 +140,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'view_tasks',
             'guard_name' => 'web',
         ]);
+        Permission::firstOrCreate([
+            'name' => 'reactive',
+            'guard_name' => 'web',
+        ]);
     }
 
     private function assignPermissionsToRoles()
@@ -156,6 +160,7 @@ class DatabaseSeeder extends Seeder
         $updateTasksPermission = Permission::where('name', 'update_tasks')->first();
         $deleteTasksPermission = Permission::where('name', 'delete_tasks')->first();
         $viewTasksPermission = Permission::where('name', 'view_tasks')->first();
+        $reactivePermission = Permission::where('name', 'reactive')->first();
 
         if ($adminRole && $createProjectPermission && !$adminRole->hasPermissionTo($createProjectPermission)) {
             $adminRole->givePermissionTo($createProjectPermission);
@@ -199,6 +204,9 @@ class DatabaseSeeder extends Seeder
         }
         if ($projectManagerRole && $viewTasksPermission && !$projectManagerRole->hasPermissionTo($viewTasksPermission)) {
             $projectManagerRole->givePermissionTo($viewTasksPermission);
+        }
+        if ($adminRole && $reactivePermission && !$adminRole->hasPermissionTo($reactivePermission)) {
+            $adminRole->givePermissionTo($reactivePermission);
         }
     }
 }

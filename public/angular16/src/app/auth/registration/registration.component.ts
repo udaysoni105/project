@@ -2,17 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { HttpClient } from '@angular/common/http';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+// import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-// interface Country {
-//   name: string;
-//   code: string;
-// }
-
-// interface State {
-//   name: string;
-//   code: string;
-// }
+import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-registration',
@@ -22,11 +14,11 @@ import { MessageService } from 'primeng/api';
 export class RegistrationComponent implements OnInit {
   registrationForm!: FormGroup;
   user: any = {};
-  // countries: Country[] = [];
-  // states: State[] = [];
-  // selectedCountry: Country | undefined;
-  // selectedState: State | undefined;
-
+  formGroup!: FormGroup; 
+  countries: any[] = [];
+  states: any[] = [];
+  // selectedCountryCode: string | undefined;
+  // selectedStateCode: string | undefined;
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
@@ -36,6 +28,7 @@ export class RegistrationComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // this.fetchCountries();
     this.registrationForm = this.formBuilder.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -43,8 +36,10 @@ export class RegistrationComponent implements OnInit {
       password_confirmation: ['', Validators.required],
       country: ['', Validators.required],
       state: ['', Validators.required]
+    }, {
+      // validator: this.passwordMatchValidator // Custom validator to check password match
     });
-
+  
     // this.authService.getCountries().subscribe(
     //   (countries: Country[]) => {
     //     this.countries = countries;
@@ -54,11 +49,14 @@ export class RegistrationComponent implements OnInit {
     //   }
     // );
   }
+    // Custom validator function to check if passwords match
+
 
   register() {
     this.authService.register(this.registrationForm.value).subscribe(
       response => {
         // Registration successful
+
         console.log('User registered successfully', response);
         // Redirect to the desired path
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'register successfully' });
@@ -109,5 +107,40 @@ export class RegistrationComponent implements OnInit {
   //     this.states = [];
   //   }
   // }
-}
+  // onCountryChange(selectedCountryCode: string) {
+  //   // Make an HTTP request to fetch the states based on the selected country
+  //   this.authService.getStates(selectedCountryCode).subscribe(
+  //     (states: State[]) => {
+  //       this.states = states;
+  //     },
+  //     (error) => {
+  //       console.error('Failed to fetch states:', error);
+  //     }
+  //   );
+  // }
+  // fetchCountries() {
+  //   this.authService.getCountries().subscribe(
+  //     (data) => {
+  //       this.countries = data;
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching countries:', error);
+  //     }
+  //   );
+  // }
 
+  // fetchStates() {
+  //   if (this.selectedCountryCode) {
+  //     this.authService.getStates(this.selectedCountryCode).subscribe(
+  //       (data) => {
+  //         this.states = data;
+  //       },
+  //       (error) => {
+  //         console.error('Error fetching states:', error);
+  //       }
+  //     );
+  //   } else {
+  //     this.states = [];
+  //   }
+  // }
+}

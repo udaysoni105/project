@@ -38,13 +38,34 @@ form {
     width: auto;
   }
 }
+/* task-create.component.scss */
 
-// button[type="submit"] {
-//   padding: 0.5rem 1rem;
-//   border-radius: 4px;
-//   font-weight: bold;
-//   background-color: #007bff;
-//   color: #fff;
-//   border: none;
-//   cursor: pointer;
-// }
+/* Form field styles */
+.form-group {
+  display: grid;
+  gap: 10px;
+}
+
+/* Form labels */
+label {
+  font-weight: bold;
+}
+
+/* Form checkbox section styles */
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Form checkboxes styles */
+.user-section input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+/* Increase button size inside app-userchecktable */
+.userchecktable-container p-button {
+  font-size: 18px;
+  padding: 10px 20px;
+  /* Add other custom button styles as needed */
+}

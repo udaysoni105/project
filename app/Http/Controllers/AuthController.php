@@ -37,7 +37,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
+            'password' => 'required|min:6|confirmed',
             'country' => 'required',
             'state' => 'required',
         ]);
@@ -45,6 +45,10 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
+
+        // $countries = CountryState::getCountries();
+        // $states = CountryState::getStates($request->country);
+        
         $user = User::create(array_merge(
             $validator->validated(),
             ['name' => $request->name],
@@ -52,13 +56,18 @@ class AuthController extends Controller
             ['password' => bcrypt($request->password)],
             ['country' => $request->country],
             ['state' => $request->state],
-            // ['is_verified' => 0] // Set is_verified to 0 (not verified)
+            ['is_verified' => 0] 
         ));
+        info("register");
                 // Assign the "developer" role to the registered user
                 $developerRole = Role::where('name', 'developer')->first();
                 if ($developerRole) {
                     $user->assignRole($developerRole);
                 }
+                    //      // Check if the user is a developer based on email domain or any other criteria
+    //      if (!$this->isDeveloperEmail($request)) {
+    //          return response()->json(['message' => 'Only developers can register'], 403);
+    //      }
 
                 // Send verification email
                 // Mail::to($user->email)->send(new VerificationEmail($user));
@@ -66,43 +75,6 @@ class AuthController extends Controller
         return response()->json(['message' => 'User successful Registration', 'user' => $user],201);
 
     }
-    
-
-    // public function register(Request $request){
-    //     info("AuthController");
-    //      $validator = Validator::make($request->all(), [
-    //          'name' => 'required',
-    //          'email' => 'required|email|unique:users',
-    //          'password' => 'required|min:6',
-    //          'country' => 'required',
-    //          'state' => 'required',
-    //      ]);
- 
-    //      if ($validator->fails()) {
-    //          return response()->json($validator->errors()->toJson(), 400);
-    //      }
-     
-    //      // Check if the user is a developer based on email domain or any other criteria
-    //      if (!$this->isDeveloperEmail($request)) {
-    //          return response()->json(['message' => 'Only developers can register'], 403);
-    //      }
- 
-    //      // The rest of your registration logic for developers
-    //      $user = User::create(array_merge(
-    //          $validator->validated(),
-    //          ['name' => $request->name],
-    //          ['email' => $request->email],
-    //          ['password' => bcrypt($request->password)],
-    //          ['country' => $request->country],
-    //          ['state' => $request->state],
-    //          // ['is_verified' => 0] // Set is_verified to 0 (not verified)
-    //      ));
- 
-    //      return response()->json(['message' => 'User registered successfully'], 201);
- 
-    //      // return response()->json(['message' => 'User successful Registration', 'user' => $user],201);
- 
-    //  }
  
      private function isDeveloperEmail($email)
      {
@@ -123,7 +95,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
 
-            // Attempt to log in the user
+    // Attempt to log in the user
     if (! $token = auth()->attempt($request->only('email', 'password'))) {
         return response()->json(['error' => 'Unauthorized'], 401);
     }
@@ -194,26 +166,10 @@ class AuthController extends Controller
             'user' => auth()->user()->name
         ]);
     }
-
-
-    // public function createNewToken($token)
-    // {
-    //     return response()->json([
-    //         'access_token' => $token,
-    //         'token_type' => 'bearer',
-    //         'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
-    //         'user' => auth()->user()
-    //     ]);
-    // }
     
     public function profile(){
         return response()->json(auth()->user());
     }
-
-    // public function logout(){
-    //     auth()->logout();
-    //     return response()->json(['message' =>'user logged out']);
-    // }
 
        /**
      * Get the authenticated User.
@@ -224,7 +180,6 @@ class AuthController extends Controller
     {
         return response()->json(auth()->user());
     }
-
     
         /**
      * Log the user out (Invalidate the token).
@@ -279,6 +234,28 @@ class AuthController extends Controller
         return $status === Password::PASSWORD_RESET
             ? response()->json(['message' => 'Password reset successful'])
             : response()->json(['message' => 'Unable to reset password'], 500);
+    }
+        /**
+     * Get an array of countries.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCountries()
+    {
+        $countries = CountryState::getCountries();
+        return response()->json($countries);
+    }
+
+    /**
+     * Get an array of states for a specific country.
+     *
+     * @param string $countryCode
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getStates($countryCode)
+    {
+        $states = CountryState::getStates($countryCode);
+        return response()->json($states);
     }
 }
 

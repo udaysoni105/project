@@ -24,7 +24,7 @@ import { AppRoutingModule } from 'src/app/app-routing.module';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
-
+import { DropdownModule } from 'primeng/dropdown';
 @NgModule({
   declarations: [
     TaskCreateComponent,
@@ -48,7 +48,8 @@ import { CardModule } from 'primeng/card';
     AppRoutingModule,
     DialogModule,
     TableModule,
-    CardModule
+    CardModule,
+    DropdownModule
   ],
   providers: [TaskService],
   exports: [
