@@ -21,6 +21,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { ProjectTableComponent } from './project-table.component';
 import { ProjectService } from '../project.service';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,8 @@ import { ProjectService } from '../project.service';
     ConfirmDialogModule,
     InputTextModule,
     CalendarModule,
+    ProgressBarModule,
+
   ],
   providers: [ProjectService],
   exports: [ButtonModule, ProjectTableComponent],

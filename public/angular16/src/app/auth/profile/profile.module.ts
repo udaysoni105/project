@@ -8,7 +8,9 @@ import { TableModule } from 'primeng/table'; // Import the TableModule from Prim
 
 import { AppComponent } from 'src/app/app.component';
 import { ProfileComponent } from './profile.component';
-
+import { ProgressBarModule } from 'primeng/progressbar';
+// For dynamic progressbar demo
+import { ToastModule } from 'primeng/toast';
 @NgModule({
   declarations: [
     AppComponent,
@@ -17,7 +19,9 @@ import { ProfileComponent } from './profile.component';
   imports: [
     BrowserModule,
     HttpClientModule,
-    TableModule // Add the TableModule to imports
+    TableModule,
+    ProgressBarModule,
+    ToastModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -56,6 +56,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
+import { ProgressBarModule } from 'primeng/progressbar';
+
 const routes: Routes = [
   { path: 'register', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
@@ -114,7 +116,8 @@ const routes: Routes = [
     MatFormFieldModule, 
     MatSelectModule, 
     NgFor, 
-    MatInputModule
+    MatInputModule,
+    ProgressBarModule
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { UserTableComponent } from './user-table.component';
 import { AuthService } from '../auth.service';
 import { FormsModule } from '@angular/forms';
-
+import { ProgressBarModule } from 'primeng/progressbar';
 @NgModule({
   declarations: [UserTableComponent],
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    ProgressBarModule
   ],
   providers: [
     AuthService
