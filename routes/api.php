@@ -53,7 +53,7 @@ Route::group(['middleware' => 'api'], function ($router) {
 
 
 Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
-// Route::group(['middleware' => 'auth'], function ($router) {
+Route::group(['middleware' => 'auth'], function ($router) {
     // Additional routes for searching, sorting, and pagination
     // Route::get('/projects', [ProjectsController::class, 'getProjects'])->name('projects.searchProjects');
     Route::get('/projects/search', [ProjectsController::class, 'searchProjects'])->name('projects.searchProjects');
@@ -65,7 +65,7 @@ Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('proje
     Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
     Route::post('/projects', [ProjectsController::class,'store'])->name('projects.store');
 
-// });
+});
 
 
 Route::delete('projects/{id}/soft-deleted', [ProjectsController::class, 'softDelete'])->name('projects.softDelete');
