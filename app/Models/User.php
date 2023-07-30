@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Validator;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -47,6 +48,34 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+        // Add a static validation rules array
+        public static $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'country' => 'required|string',
+            'state' => 'required|string',
+            'isverify' => 'boolean',
+        ];
+
+        protected static function boot()
+        {
+            parent::boot();
+    
+            // Register the 'saving' event listener
+            static::saving(function ($model) {
+                $validator = Validator::make($model->toArray(), static::$rules);
+    
+                if ($validator->fails()) {
+                    // If validation fails, throw an exception or handle the error as needed.
+                    throw new \Exception($validator->errors()->first());
+                }
+    
+                // Validation succeeded, return true to proceed with the save operation.
+                return true;
+            });
+        }
 
     public function getJWTIdentifier()
     {
