@@ -28,9 +28,9 @@ export class TaskEditComponent implements OnInit {
       description: [''],
       start_date: ['', Validators.required],
       end_date: ['', Validators.required],
-      completed: [false],
+      // completed: [false],
       project_id: ['', Validators.required],
-      user_id:['',Validators.required]
+      // user_id:['',Validators.required]
     });
 
     this.route.params.subscribe((params) => {

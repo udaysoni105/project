@@ -34,7 +34,7 @@
           <th>DESCRIPTION</th>
           <th>START DATE</th>
           <th>END DATE</th>
-          <th>IS COMPLETED</th>
+          <!-- <th>IS COMPLETED</th> -->
           <th>HARD DELETE</th>
           <th>EDIT</th>
           <th>ProjectId</th>
@@ -50,7 +50,7 @@
           <td>{{ task.description }}</td>
           <td>{{ task.start_date }}</td>
           <td>{{ task.end_date }}</td>
-          <td>{{ task.is_completed ? 'Yes' : 'No' }}</td>
+          <!-- <td>{{ task.is_completed ? 'Yes' : 'No' }}</td> -->
           <td>
             <p-button (click)="deleteTask(task.id)" class="btn btn-primary">Delete</p-button>
           </td>          
