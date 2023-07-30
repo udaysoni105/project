@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Laracasts\Flash\Flash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+
 class UserController extends Controller
 {
     //
@@ -25,7 +26,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        
+
         $permission = $request->header('permission');
         info($permission);
         $user = auth()->user();
@@ -40,19 +41,35 @@ class UserController extends Controller
                 ->from('role_has_permissions')
                 ->where('role_id', $userRole->role_id);
         })->get();
-        info(" role permission : ".$rolePermissions);
+        info(" role permission : " . $rolePermissions);
 
         $hasPermission = $rolePermissions->contains('name', $permission);
 
         if (!$hasPermission) {
-            info('Unauthorized');
+            return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $matchedPermission = $rolePermissions->firstWhere('name', $permission);
-        info('User has permission: ' . $matchedPermission->name);
-        
-        $users = User::all();
-        return response()->json($users);
+        // $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+        // info('User has permission: ' . $matchedPermission->name);
+
+        // $users = User::all();
+
+        // Fetch users based on their roles
+        if ($userRole->role->name === 'admin' || $userRole->role->name === 'project manager') {
+            // For admin and project manager roles, only fetch developers
+            $users = User::whereHas('roles', function ($query) {
+                $query->where('name', 'developer');
+            })->get();
+        } else {
+            // For other roles, fetch all users
+            $users = User::all();
+        }
+            // Exclude admin and project manager users from the response
+    $filteredUsers = $users->reject(function ($user) {
+        return $user->hasRole('admin') || $user->hasRole('project manager');
+    });
+
+        return response()->json($filteredUsers);
     }
 
     /**
@@ -87,27 +104,27 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function update(Request $request, $id)
-     {
-         $user = User::find($id);
-     
-         if (!$user) {
-             return response()->json(['error' => 'User not found'], 404);
-         }
-     
-         $user->password = bcrypt($request->input('password'));
-         $user->save();
-     
-         return response()->json(['message' => 'Password updated successfully']);
-     }
-     
+    public function update(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        $user->password = bcrypt($request->input('password'));
+        $user->save();
+
+        return response()->json(['message' => 'Password updated successfully']);
+    }
+
     // public function update(Request $request, $id)
     // {
     //     $user = User::findOrFail($id);
     //             // Perform the password update logic here
     //     $user->password = bcrypt($request->input('password'));
     //     $user->save();
-        
+
     //     return response()->json(['message' => 'Password updated successfully']);
     //     // $user->update($request->all());
     //     // return response()->json($user, 200);
@@ -144,7 +161,7 @@ class UserController extends Controller
             'country' => $request->input('country'),
             'state' => $request->input('state'),
         ]);
-        
+
 
         // Assign role to the user (if using Spatie)
         $user->assignRole('developer');

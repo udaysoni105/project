@@ -21,6 +21,7 @@ export class TaskCreateComponent implements OnInit {
   @Output() userSelected: EventEmitter<any> = new EventEmitter<any>();
   @Input() selectedProject: any;
   visible: boolean = false;
+  selectedUserIds: number[] = [];
   tasks: any[] = [
     {
       name: '',
@@ -39,52 +40,109 @@ export class TaskCreateComponent implements OnInit {
     private route: ActivatedRoute,
   ) {
   }
-
-  ngOnInit(): void {
-    this.taskForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      description: [''],
-      start_date: ['', Validators.required],
-      end_date: ['', Validators.required],
-      project_id: ['', Validators.required],
-      userIds:['',Validators.required]
-    });
-  }
-
-  createtask(taskForm: NgForm): void {
-    this.checkeusers = this.user.filter((user) => user.isChecked);
   
-    if (taskForm.valid) {
-      const userIds = this.checkeusers.map((user) => user.id);
-      const data = { ...this.tasks, userid: userIds };
-      console.log('Selected data:', data);
-      console.log(userIds);
-      
-      const token = localStorage.getItem('token');
-      const email = localStorage.getItem('email');
+    ngOnInit(): void {
+      this.taskForm = this.formBuilder.group({
+        name: ['', Validators.required],
+        description: [''],
+        start_date: ['', Validators.required],
+        end_date: ['', Validators.required],
+        project_id: ['', Validators.required],
+        // userIds:['',Validators.required]
+      });
+      this.fetchUsers(); // Fetch users data during component initialization
+    }
   
-      if (token !== null && email !== null) {
-        const task = this.taskForm.value;
-        console.log(task);
-        this.taskService.createTask(task, token, email).subscribe(
-          (response) => {
-            console.log('Task created successfully', response);
-            this.taskForm.reset();
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is created' });
-            setTimeout(() => {
-              this.router.navigate(['/tasks']);
-            }, 1500);
-          },
-          (error) => {
-            console.error('Failed to create task', error);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Failed to create task',
-            });
-          }
-        );
+    fetchUsers() {
+      // Assuming you have a service method to fetch users, like 'getUserList()'
+      // Modify it accordingly to match your implementation.
+      this.taskService.getUserList().subscribe(
+        (users) => {
+          this.user = users;
+        },
+        (error) => {
+          console.error('Error fetching users:', error);
+        }
+      );
+    }
+  
+    onUserCheckboxChange(user: any) {
+      const index = this.selectedUserIds.indexOf(user.id);
+      if (index === -1) {
+        this.selectedUserIds.push(user.id);
+      } else {
+        this.selectedUserIds.splice(index, 1);
       }
+    }
+    
+  // createtask(taskForm: NgForm): void {
+  //   this.checkeusers = this.user.filter((user) => user.isChecked);
+  
+  //   if (taskForm.valid) {
+  //     const taskData = { ...this.taskForm.value, userIds: this.selectedUserIds };
+  //     console.log('Task data:', taskData);
+  //     const userIds = this.checkeusers.map((user) => user.id);
+  //     const data = { ...this.tasks, userid: userIds };
+  //     console.log('Selected data:', data);
+  //     console.log(userIds);
+      
+  //     const token = localStorage.getItem('token');
+  //     const email = localStorage.getItem('email');
+  
+  //     if (token !== null && email !== null) {
+  //       const task = this.taskForm.value;
+  //       console.log(task);
+  //       this.taskService.createTask(task, token, email).subscribe(
+  //         (response) => {
+  //           console.log('Task created successfully', response);
+  //           this.taskForm.reset();
+  //           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is created' });
+  //           setTimeout(() => {
+  //             this.router.navigate(['/tasks']);
+  //           }, 1500);
+  //         },
+  //         (error) => {
+  //           console.error('Failed to create task', error);
+  //           this.messageService.add({
+  //             severity: 'error',
+  //             summary: 'Error',
+  //             detail: 'Failed to create task',
+  //           });
+  //         }
+  //       );
+  //     }
+  //   }
+  // }
+
+    createtask(): void {
+    console.log(this.taskForm);
+
+    const token = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+
+    if (token !== null && email !== null) {
+      const task = this.taskForm.value;
+      this.taskService.createTask(this.taskForm.value, token, email).subscribe(
+        (response) => {
+          console.log('Task created successfully', response);
+          // Reset the form
+          this.taskForm.reset();
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is created' });
+
+        // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
+        setTimeout(() => {
+          this.router.navigate(['/tasks']);
+        },1500 );
+      },
+        (error) => {
+          console.error('Failed to create task', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to create task',
+          });
+        }
+      );
     }
   }
   

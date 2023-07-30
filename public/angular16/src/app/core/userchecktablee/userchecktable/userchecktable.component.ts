@@ -2,6 +2,16 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { UserchecktableService } from '../userchecktable.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { HttpHeaders } from '@angular/common/http'; 
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  isverify: boolean;
+  roles: {
+    name: string;
+    // Add any other properties if needed
+  }[];
+}
 
 @Component({
   selector: 'app-userchecktable',
@@ -39,7 +49,6 @@ export class UserchecktableComponent implements OnInit {
   }
 
   fetchUsers(headers: HttpHeaders) {
-    const url = 'http://127.0.0.1:8000/api/users';
 
     // Fetch users using the UserService with headers
     this.userchecktableService.getUser(headers).subscribe(
@@ -86,5 +95,8 @@ export class UserchecktableComponent implements OnInit {
         user: this.selectedUser
       }
     });
+  }
+  isDeveloper(user: User): boolean {
+    return user.roles.some((role) => role.name === 'developer');
   }
 }

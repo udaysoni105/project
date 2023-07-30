@@ -7,7 +7,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class TaskService {
   private baseUrl = 'http://localhost:8000/api/tasks'; // Update with your API endpoint
-
+private apiUrl = 'http://localhost:8000/api/users';
   constructor(private http: HttpClient) {}
 
   getAllTasks(headers: HttpHeaders) {
@@ -64,6 +64,10 @@ export class TaskService {
         // Display a user-friendly error message, if needed.
       }
     );
+  }
+  getUserList(): Observable<any[]> {
+    const url = `${this.apiUrl}`; // Modify the URL accordingly
+    return this.http.get<any[]>(url);
   }
 
   private handleError(error: HttpErrorResponse) {
