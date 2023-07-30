@@ -7,7 +7,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class TaskService {
   private baseUrl = 'http://localhost:8000/api/tasks'; // Update with your API endpoint
-private apiUrl = 'http://localhost:8000/api/users';
+
   constructor(private http: HttpClient) {}
 
   getAllTasks(headers: HttpHeaders) {
@@ -28,10 +28,15 @@ private apiUrl = 'http://localhost:8000/api/users';
 
   }
 
-  // updateTask(taskId: string, taskData: any, headers: HttpHeaders): Observable<any> {
-  //   const url = `${this.baseUrl}/${taskId}`;
-  //   return this.http.put(url, taskData, { headers });
-  // }
+  getProjects(): Observable<any[]> {
+    const url = 'http://localhost:8000/api/projects'; // Update with your API endpoint for projects
+    return this.http.get<any[]>(url);
+  }
+
+  getUsers(): Observable<any[]> {
+    const url = 'http://localhost:8000/api/users'; // Update with your API endpoint for users
+    return this.http.get<any[]>(url);
+  }
   gettaskById(taskId: string, headers: HttpHeaders): Observable<any> {
     return this.http.get(`${this.baseUrl}/${taskId}`, { headers });
   }
@@ -61,13 +66,8 @@ private apiUrl = 'http://localhost:8000/api/users';
       },
       (error) => {
         console.error('Error generating PDF:', error);
-        // Display a user-friendly error message, if needed.
       }
     );
-  }
-  getUserList(): Observable<any[]> {
-    const url = `${this.apiUrl}`; // Modify the URL accordingly
-    return this.http.get<any[]>(url);
   }
 
   private handleError(error: HttpErrorResponse) {

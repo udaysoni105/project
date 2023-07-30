@@ -130,6 +130,9 @@ class TasksController extends Controller
         // $task = Task::create($request->all());
         // return response()->json($task, 201);
 
+            $tasks = Task::with('users')->get();
+    return response()->json($tasks);
+
         // Create a new task
         $task = Task::create($request->all());
 

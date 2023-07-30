@@ -76,7 +76,7 @@ Route::get('projects/{id}/soft-deleted', [ProjectsController::class, 'softDelete
 
 
 Route::put('/tasks/{id}', [TasksController::class, 'update'])->name('tasks.update');
-Route::group(['middleware' => 'auth'], function ($router) {
+// Route::group(['middleware' => 'auth'], function ($router) {
         // Additional routes for searching, sorting, and pagination
     // Route::get('/tasks', [TasksController::class, 'index'])->name('tasks.index');//pagination
     Route::get('/tasks/search', [TasksController::class, 'search'])->name('tasks.search');
@@ -86,7 +86,7 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::get('/tasks/{id}', [TasksController::class, 'show'])->name('tasks.show');
     Route::post('/tasks', [TasksController::class, 'store'])->name('tasks.store');
     Route::delete('/tasks/{id}', [TasksController::class, 'destroy'])->name('tasks.destroy');
-});
+// });
 
 // Route::get('/download-pdf', 'TaskController@downloadPDF');
 // Route::get('tasks/{id}/generate-pdf', [TasksController::class, 'downloadPDF'])->name('downloadPDF');

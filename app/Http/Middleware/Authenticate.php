@@ -21,36 +21,36 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request)
     {
-        info('middleware called');
-        // return $request->expectsJson() ? null : route('login');
-        $Permission = $request->header('Permission');
-        $authentication = $request->header('authentication');
-        $email = $request->header('email');
+        // info('middleware called');
+        // // return $request->expectsJson() ? null : route('login');
+        // $Permission = $request->header('Permission');
+        // $authentication = $request->header('authentication');
+        // $email = $request->header('email');
 
-        info($Permission);
-        info($authentication);
-        info($email);
+        // info($Permission);
+        // info($authentication);
+        // info($email);
 
-        //user
-        $user = auth()->user();
-        $users = User::where('email', $email)->get();
-        info(" user : " . $users);
+        // //user
+        // $user = auth()->user();
+        // $users = User::where('email', $email)->get();
+        // info(" user : " . $users);
 
-        //userrole
-        $user = $users->first();
-        $userRole = UserRole::where('user_id', $user->id)->first();
-        // info($userRole);
-        info(" userRole : " . $userRole);
+        // //userrole
+        // $user = $users->first();
+        // $userRole = UserRole::where('user_id', $user->id)->first();
+        // // info($userRole);
+        // info(" userRole : " . $userRole);
 
-        //rolehaspermission
-        $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
-            $query->select('permission_id')
-                ->from('role_has_permissions')
-                ->where('role_id', $userRole->role_id);
-        })->get();
-        info(" role permission : " . $rolePermissions);
+        // //rolehaspermission
+        // $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+        //     $query->select('permission_id')
+        //         ->from('role_has_permissions')
+        //         ->where('role_id', $userRole->role_id);
+        // })->get();
+        // info(" role permission : " . $rolePermissions);
 
-        $rolehasPermission = Permission::where('name', $Permission)->get();
-        info(" header and database : " . $rolehasPermission);
+        // $rolehasPermission = Permission::where('name', $Permission)->get();
+        // info(" header and database : " . $rolehasPermission);
     }
 }
