@@ -18,7 +18,6 @@
     <label class="label" for="search">SEARCH<span class="required-indicator"></span>:</label>
     <span class="p-inputgroup-addon">
       <i class="pi pi-search-plus" style="font-weight: 1000;"></i>
-      <!-- <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()"> -->
       <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" placeholder="Search...">
     </span>
   </div>
@@ -34,7 +33,6 @@
           <th>DESCRIPTION</th>
           <th>START DATE</th>
           <th>END DATE</th>
-          <!-- <th>IS COMPLETED</th> -->
           <th>HARD DELETE</th>
           <th>EDIT</th>
           <th>ProjectId</th>
@@ -50,7 +48,6 @@
           <td>{{ task.description }}</td>
           <td>{{ task.start_date }}</td>
           <td>{{ task.end_date }}</td>
-          <!-- <td>{{ task.is_completed ? 'Yes' : 'No' }}</td> -->
           <td>
             <p-button (click)="deleteTask(task.id)" class="btn btn-primary">Delete</p-button>
           </td>          

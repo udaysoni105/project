@@ -57,7 +57,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { ProgressBarModule } from 'primeng/progressbar';
-
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 const routes: Routes = [
   { path: 'register', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
@@ -117,7 +118,9 @@ const routes: Routes = [
     MatSelectModule, 
     NgFor, 
     MatInputModule,
-    ProgressBarModule
+    ProgressBarModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

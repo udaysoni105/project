@@ -29,6 +29,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule, 
     MatSelectModule, 
     NgFor, 
-    MatInputModule
+    MatInputModule,
+    MatDatepickerModule
   ],
   providers: [TaskService],
   exports: [

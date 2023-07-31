@@ -53,6 +53,11 @@ class TasksController extends Controller
 
                 // return response()->json(['tasks' => $tasks]);
 
+    // $tasks = Task::join('users', 'tasks.userid', '=', 'users.id')
+    // ->select('tasks.*', 'users.name as uName', 'users.id as userid')
+    // ->get();
+
+
         $tasks = Task::all();
 
         return response()->json($tasks);
