@@ -11,7 +11,7 @@ class Task extends Model
     use HasFactory,HasRoles;
     protected $table = 'tasks';
     protected $gaurd_name = 'web';
-    protected $fillable = ['name', 'description', 'start_date', 'end_date', 'completed', 'project_id'];
+    protected $fillable = ['name', 'description', 'start_date', 'end_date', 'status', 'project_id'];
     protected $dates = ['start_date', 'end_date'];
 
     // Add a static validation rules array

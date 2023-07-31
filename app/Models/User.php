@@ -11,10 +11,10 @@ use Illuminate\Database\Eloquent\Model;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Validator;
-
+use Spatie\Permission\Traits\HasPermissions;
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles,HasPermissions;
 
     /**
      * The attributes that are mass assignable.

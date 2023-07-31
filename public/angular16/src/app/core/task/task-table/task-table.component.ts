@@ -14,8 +14,12 @@ export class TaskTableComponent implements OnInit {
   tasks: any[] = [];
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
-  selectedValue: string = ''; 
-
+  selectedValue: string = '';
+  task: any = { status: 'pending' }; 
+  Status: any[] = [
+    { name: 'Pending' },
+    { name: 'completed' }
+  ];
   constructor(
     private taskService: TaskService,
     private router: Router,
@@ -54,6 +58,7 @@ export class TaskTableComponent implements OnInit {
       }
     );
   }
+
 
   deleteTask(id: string) {
     const jwtToken = localStorage.getItem('token');
@@ -109,5 +114,38 @@ export class TaskTableComponent implements OnInit {
   }
   getStatusOptions(): string[] {
     return this.tasks.map((task) => task.status);
+  }
+  updateTaskStatus(task: any, newStatus: string): void {
+    const jwtToken = localStorage.getItem('token');
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      Permission: 'update_status', // Add the required permission
+    });
+
+    const updatedTask = { ...task, status: newStatus };
+    this.taskService.updateTask(task.id, updatedTask, headers).subscribe(
+      (response) => {
+        console.log('Task status updated successfully');
+        task.status = newStatus; // Update the status in the tasks array on success
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Task status updated successfully',
+        });
+      },
+      (error) => {
+        console.log('Failed to update task status:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to update task status',
+        });
+      }
+    );
   }
 }

@@ -1,4 +1,4 @@
-<h2>Task Registration Form</h2>
+<!-- <h2>Task Registration Form</h2>
 <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
 
 <form [formGroup]="taskForm" (ngSubmit)="createtask()">
@@ -42,4 +42,61 @@
     </div>
   </div>
   <p-button type="submit" [disabled]="taskForm.invalid">Register Task</p-button>
+</form> -->
+<h2>Task Registration Form</h2>
+<p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
+<form [formGroup]="taskForm" (ngSubmit)="createtask()" >
+<div class="form-group">
+  <div>
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" formControlName="name" required>
+  </div>
+
+  <div>
+    <label for="description">Description</label>
+    <textarea id="description" name="description" formControlName="description"></textarea>
+  </div>
+
+  <div>
+    <label for="start_date">Start Date</label>
+    <input type="date" id="start_date" name="start_date" formControlName="start_date" required>
+  </div>
+
+  <div>
+    <label for="end_date">End Date</label>
+    <input type="date" id="end_date" name="end_date" formControlName="end_date" required>
+  </div>
+  
+  <div>
+    <label for="project_id">Project ID</label>
+    <input type="text" id="project_id" name="project_id" formControlName="project_id" required>
+  </div>
+
+<!--  <div>
+  <mat-form-field>
+    <mat-label>Project ID</mat-label>
+    <mat-select formControlName="project_id">
+      <mat-option *ngFor="let project of projects" [value]="project.id">{{ project.name }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div>
+  <mat-form-field>
+    <mat-label>User ID</mat-label>
+    <mat-select formControlName="user_id" multiple>
+      <mat-option *ngFor="let user of users" [value]="user.id">{{ user.name }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div> -->
+
+  
+  <!-- <div>
+    <label for="user_id">User ID</label>
+    <input type="text" id="user_id" name="user_id" formControlName="user_id" required>
+  </div> -->
+  
+</div>
+
+<p-button type="submit" [disabled]="taskForm.invalid">Register Task</p-button>
 </form>

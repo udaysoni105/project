@@ -13,7 +13,7 @@ use \Spatie\Permission\Models\Role;
 use Laracasts\Flash\Flash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use PDF;
 
 class TasksController extends Controller
@@ -120,7 +120,6 @@ class TasksController extends Controller
             'description' => 'required',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'userid.*'=>''
         ]);
         info("task registration start");
         if ($validator->fails()) {
@@ -130,8 +129,8 @@ class TasksController extends Controller
         // $task = Task::create($request->all());
         // return response()->json($task, 201);
 
-            $tasks = Task::with('users')->get();
-    return response()->json($tasks);
+            // $tasks = Task::with('users')->get();
+    // return response()->json($tasks);
 
         // Create a new task
         $task = Task::create($request->all());
@@ -200,8 +199,12 @@ class TasksController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $Task = Task::findOrFail($id);
-        $Task->update($request->all());
+        // $Task = Task::findOrFail($id);
+        // $Task->update($request->all());
+
+        $task = Task::findOrFail($id);
+$task->update($request->all());
+
 
         return response()->json(['message' => 'Task updated successfully', 'Task' => $Task]);
 
@@ -317,4 +320,22 @@ class TasksController extends Controller
 
         return response()->json(['message' => 'Task assigned successfully']);
     }
+    public function updateStatus(Request $request, $taskId)
+    {
+        $user = Auth::user();
+    
+        // Find the task by ID
+        $task = Task::findOrFail($taskId);
+    
+        // Get the new status from the request
+        $newStatus = $request->input('status');
+    
+        // Update the task status
+        $task->status = $newStatus;
+        $task->save();
+    
+        // Return a success response
+        return response()->json(['message' => 'Task status updated successfully'], 200);
+    }
+    
 }

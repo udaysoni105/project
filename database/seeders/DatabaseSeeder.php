@@ -144,6 +144,11 @@ class DatabaseSeeder extends Seeder
             'name' => 'reactive',
             'guard_name' => 'web',
         ]);
+        Permission::firstOrCreate([
+            'name' => 'update_status',
+            'guard_name' => 'web',
+        ]);
+        
     }
 
     private function assignPermissionsToRoles()
@@ -161,6 +166,8 @@ class DatabaseSeeder extends Seeder
         $deleteTasksPermission = Permission::where('name', 'delete_tasks')->first();
         $viewTasksPermission = Permission::where('name', 'view_tasks')->first();
         $reactivePermission = Permission::where('name', 'reactive')->first();
+        $developerRole = Role::where('name', 'developer')->first();
+        $updateStatusPermission = Permission::where('name', 'update_status')->first();
 
         if ($adminRole && $createProjectPermission && !$adminRole->hasPermissionTo($createProjectPermission)) {
             $adminRole->givePermissionTo($createProjectPermission);
@@ -207,6 +214,9 @@ class DatabaseSeeder extends Seeder
         }
         if ($adminRole && $reactivePermission && !$adminRole->hasPermissionTo($reactivePermission)) {
             $adminRole->givePermissionTo($reactivePermission);
+        }
+        if ($developerRole && $updateStatusPermission && !$developerRole->hasPermissionTo($updateStatusPermission)) {
+            $developerRole->givePermissionTo($updateStatusPermission);
         }
     }
 }

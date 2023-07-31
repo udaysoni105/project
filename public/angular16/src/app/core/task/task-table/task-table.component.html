@@ -63,14 +63,14 @@
             <p-button (click)="generatePDF(task.id)" class="btn btn-primary">Generate PDF</p-button>
           </td>
       <td>
-        <mat-form-field>
-          <mat-label>Status</mat-label>
-          <mat-select [(ngModel)]="task.status" name="status">
-            <mat-option *ngFor="let statusOption of getStatusOptions()" [value]="statusOption">
-              {{ statusOption }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <div>
+          <mat-form-field>
+            <mat-label>Pending</mat-label>
+            <mat-select [(ngModel)]="task.status"  name="status" (selectionChange)="updateTaskStatus(task, $event.value)">
+              <mat-option *ngFor="let option of Status" [value]="option.name">{{ option.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </td>
         </tr>
       </ng-template>
