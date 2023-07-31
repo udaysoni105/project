@@ -6,4 +6,5 @@ export interface Task {
     end_date: string;
     is_completed: boolean;
     projectId: number;
+    UserId:number;
   }

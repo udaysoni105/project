@@ -51,8 +51,6 @@ const routes: Routes = [
 
   { path: 'tasks', component: TaskTableComponent, canActivate: [authGuard] },
   { path: 'task-Create', component: TaskCreateComponent },
-  // { path: 'task-edit/:id',component: TaskEditComponent,resolve: {task: taskEditResolver}},
-  // { path: 'task-edit/:id', component: TaskEditComponent, resolve: { task: taskEditResolver } },
   { path: 'task-edit/:id', component: TaskEditComponent, resolve: { task: taskEditResolver } },
 
   { path: 'users', component: UserTableComponent },

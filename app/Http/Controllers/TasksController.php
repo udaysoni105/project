@@ -48,36 +48,21 @@ class TasksController extends Controller
         $matchedPermission = $rolePermissions->firstWhere('name', $permission);
         info('User has permission: ' . $matchedPermission->name);
 
-                // Fetch all tasks with their associated project and assigned user
-                // $tasks = Task::with('project', 'user')->get();
 
-                // return response()->json(['tasks' => $tasks]);
+        // // Fetch all tasks with their associated project and assigned user
+        // $user = auth()->user();
+        // info('Authenticated user ID: ' . $user->id);
 
-    // $tasks = Task::join('users', 'tasks.userid', '=', 'users.id')
-    // ->select('tasks.*', 'users.name as uName', 'users.id as userid')
-    // ->get();
+        // // Fetch all tasks with their associated project and assigned user
+        // $tasks = Task::with('project', 'user')->where('user_id', $user->id)->get();
+        // info($tasks);
 
+        // return response()->json(['tasks' => $tasks]);
 
         $tasks = Task::all();
 
         return response()->json($tasks);
-        // $tasks = Task::with('users')->get();
 
-        // return response()->json($tasks);
-
-        // $tasks = Task::join('users', 'tasks.user_id', '=', 'users.id')
-        // ->select('tasks.*', 'users.Name as uName', 'users.id as userid')
-        // ->get();
-    
-        // return response()->json($tasks);
-    //     $query = Task::join('user_task', 'tasks.id', '=', 'user_task.task_id')
-    //     ->join('users', 'user_task.user_id', '=', 'users.id')
-    //     ->select('tasks.*', 'users.Name as uName', 'users.id as userid');
-    
-    // $tasks = $query->get();
-    // return response()->json($tasks);
-    
-    
     }
 
     /**
@@ -134,8 +119,8 @@ class TasksController extends Controller
         // $task = Task::create($request->all());
         // return response()->json($task, 201);
 
-            // $tasks = Task::with('users')->get();
-    // return response()->json($tasks);
+        // $tasks = Task::with('users')->get();
+        // return response()->json($tasks);
 
         // Create a new task
         $task = Task::create($request->all());
@@ -208,7 +193,7 @@ class TasksController extends Controller
         // $Task->update($request->all());
 
         $task = Task::findOrFail($id);
-$task->update($request->all());
+        $task->update($request->all());
 
 
         return response()->json(['message' => 'Task updated successfully', 'Task' => $Task]);
@@ -328,19 +313,18 @@ $task->update($request->all());
     public function updateStatus(Request $request, $taskId)
     {
         $user = Auth::user();
-    
+
         // Find the task by ID
         $task = Task::findOrFail($taskId);
-    
+
         // Get the new status from the request
         $newStatus = $request->input('status');
-    
+
         // Update the task status
         $task->status = $newStatus;
         $task->save();
-    
+
         // Return a success response
         return response()->json(['message' => 'Task status updated successfully'], 200);
     }
-    
 }

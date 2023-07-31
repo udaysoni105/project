@@ -102,7 +102,6 @@ const routes: Routes = [
     FormsModule,
     DialogModule,
     RouterModule.forRoot(routes),
-    // Add PrimeNG modules to the imports
     ButtonModule,
     InputTextModule,
     CardModule,

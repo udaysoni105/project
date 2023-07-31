@@ -18,7 +18,6 @@ import { FormsModule } from '@angular/forms';
   declarations: [
     AppComponent,
     TaskTableComponent
-    // Other component declarations
   ],
   imports: [
     CommonModule,
