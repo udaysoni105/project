@@ -35,6 +35,7 @@ import { CalendarModule } from 'primeng/calendar';
 
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ProfileComponent } from './profile/profile.component';
+import { ErrorComponent } from './error/error.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { ProfileComponent } from './profile/profile.component';
     MainComponent,
     LoginComponent,
     LogoutComponent,
-    ProfileComponent
+    ProfileComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,

@@ -11,7 +11,7 @@ import { ConfirmComponent } from './auth/password/confirm/confirm.component';
 import { EmailComponent } from './auth/password/email/email.component';
 import { ResetComponent } from './auth/password/reset/reset.component';
 import { DashboardComponent } from './auth/dashboard/dashboard.component';
-
+import { ErrorComponent } from './auth/error/error.component';
 
 import { ProjectCreateComponent } from './core/project/project-create/project-create.component';
 import { ProjectTableComponent } from './core/project/project-table/project-table.component';
@@ -54,7 +54,8 @@ const routes: Routes = [
   { path: 'task-edit/:id', component: TaskEditComponent, resolve: { task: taskEditResolver } },
 
   { path: 'users', component: UserTableComponent },
-  { path: 'profile', component: ProfileComponent }
+  { path: 'profile', component: ProfileComponent },
+  { path: '**', component: ErrorComponent },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

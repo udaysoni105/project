@@ -1,4 +1,8 @@
-
+<!-- 
+    @author: UDAY SONI
+    Created on: July 24, 2023
+    Note: Design for create a User Table. 
+-->
 <div *ngIf="!users; else userList">
 </div>
 
@@ -16,12 +20,12 @@
       <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" placeholder="Search...">
     </span>
   </div>
-  
+
   <div *ngIf="!users" class="horizontal-loader"></div>
   <div *ngIf="users">
 
-    <p-table #table [value]="users" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5" >
-      <ng-template pTemplate="header" >
+    <p-table #table [value]="users" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5">
+      <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
           <th>Name</th>

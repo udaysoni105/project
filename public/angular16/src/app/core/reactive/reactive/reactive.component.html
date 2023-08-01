@@ -1,24 +1,29 @@
+<!-- 
+    @author: UDAY SONI
+    Created on: July 29, 2023
+    Note: Design for soft-deleted projects found reactive Page. 
+-->
 <h2>Soft-Deleted Projects</h2>
 <div class="container">
-  <div *ngIf="isLoading"> 
+  <div *ngIf="isLoading">
     <p>Loading...</p>
   </div>
   <div *ngIf="!isLoading">
-  <div *ngIf="softDeletedProjects">
-    <div *ngIf="softDeletedProjects.length === 0">
-      <p>No soft-deleted projects found.</p>
-    </div>
-    <div *ngIf="softDeletedProjects.length > 0">
-      <ul>
-        <li *ngFor="let project of softDeletedProjects">
-          <div>{{ project.name }}</div>
-          <div>{{ project.description }}</div>
-          <div>{{ project.start_date }}</div>
-          <div>{{ project.end_date }}</div>
-          <div>{{ project.status }}</div>
-          <p-button (onClick)="restoreProject(project.id)">Restore</p-button>
-        </li>
-      </ul>
+    <div *ngIf="softDeletedProjects">
+      <div *ngIf="softDeletedProjects.length === 0">
+        <p>No soft-deleted projects found.</p>
+      </div>
+      <div *ngIf="softDeletedProjects.length > 0">
+        <ul>
+          <li *ngFor="let project of softDeletedProjects">
+            <div>{{ project.name }}</div>
+            <div>{{ project.description }}</div>
+            <div>{{ project.start_date }}</div>
+            <div>{{ project.end_date }}</div>
+            <div>{{ project.status }}</div>
+            <p-button (onClick)="restoreProject(project.id)">Restore</p-button>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
-</div>

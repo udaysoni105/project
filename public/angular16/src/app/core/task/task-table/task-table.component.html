@@ -1,3 +1,8 @@
+<!-- 
+    @author: UDAY SONI
+    Created on: July 24, 2023
+    Note: Design for tasktable view Page. 
+-->
 <div *ngIf="!tasks; else taskList">
 </div>
 
@@ -50,7 +55,7 @@
           <td>{{ task.end_date }}</td>
           <td>
             <p-button (click)="deleteTask(task.id)" class="btn btn-primary">Delete</p-button>
-          </td>          
+          </td>
           <td>
             <p-button [routerLink]="['/task-edit', task.id]" class="btn btn-primary">Edit Task</p-button>
           </td>
@@ -59,16 +64,17 @@
           <td>
             <p-button (click)="generatePDF(task.id)" class="btn btn-primary">Generate PDF</p-button>
           </td>
-      <td>
-        <div>
-          <mat-form-field>
-            <mat-label>Pending</mat-label>
-            <mat-select [(ngModel)]="task.status"  name="status" (selectionChange)="updateTaskStatus(task, $event.value)">
-              <mat-option *ngFor="let option of Status" [value]="option.name">{{ option.name }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </td>
+          <td>
+            <div>
+              <mat-form-field>
+                <mat-label>Pending</mat-label>
+                <mat-select [(ngModel)]="task.status" name="status"
+                  (selectionChange)="updateTaskStatus(task, $event.value)">
+                  <mat-option *ngFor="let option of Status" [value]="option.name">{{ option.name }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </td>
         </tr>
       </ng-template>
     </p-table>

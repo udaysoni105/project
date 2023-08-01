@@ -4,328 +4,428 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-
 use App\Models\UserRole;
 use Spatie\Permission\Models\Permission;
-use \Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 use App\Models\Project;
 use Illuminate\Http\Request;
-
-use Laracasts\Flash\Flash;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
+/** @author UDAY SONI
+ *
+ * Class name: ProjectsController
+ * Create a new controller for doing operation on Project module.
+ *
+ */
 class ProjectsController extends Controller
 {
-    /**
+    /** 
+     * @author : UDAY SONI
+     * Method name: index
      * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        $permission = $request->header('permission');
-        info($permission);
-        $user = auth()->user();
-        info($user['id']);
+        $result = DB::transaction(function () use ($request) {
+            try {
+                Log::info("Controller::ProjectsController::index::START");
+                $permission = $request->header('permission');
+                $user = auth()->user();
 
-        $userRole = UserRole::where('user_id', $user->id)->first();
+                $userRole = UserRole::where('user_id', $user->id)->first();
 
-        info("user role id : " . $userRole);
+                $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+                    $query->select('permission_id')
+                        ->from('role_has_permissions')
+                        ->where('role_id', $userRole->role_id);
+                })->get();
 
-        $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
-            $query->select('permission_id')
-                ->from('role_has_permissions')
-                ->where('role_id', $userRole->role_id);
-        })->get();
-        info(" role permission : " . $rolePermissions);
+                $hasPermission = $rolePermissions->contains('name', $permission);
 
-        $hasPermission = $rolePermissions->contains('name', $permission);
+                if (!$hasPermission) {
+                    info('Unauthorized');
+                }
 
-        if (!$hasPermission) {
-            info('Unauthorized');
-        }
+                $matchedPermission = $rolePermissions->firstWhere('name', $permission);
 
-        $matchedPermission = $rolePermissions->firstWhere('name', $permission);
-        info('User has permission: ' . $matchedPermission->name);
+                $projects = Project::all();
+                Log::info("Controller::ProjectsController::index::END");
+                return response()->json($projects);
+            } catch (\Exception $ex) {
+                Log::error("Error in ProjectsController::index: " . $ex->getMessage());
+                return response()->json(['error' => 'An error occurred while fetching projects'], 500);
+            }
+        });
 
-        $projects = Project::all();
-
-        return response()->json($projects);
+        return $result;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        // You can implement this method if needed for your frontend
-        // $project = Project::create($request->all());
-
-        // return response()->json($project, 201);
-    }
-
-    /**
+    /** 
+     * @author : UDAY SONI
+     * Method name: store
      * Store a newly created resource in storage.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $permission = $request->header('permission');
-        info($permission);
-        $user = auth()->user();
-        info($user['id']);
+        $result = DB::transaction(function () use ($request) {
+            try {
+                Log::info("Controller::ProjectsController::store::START");
+                $permission = $request->header('permission');
+                $user = auth()->user();
 
-        //$userRole = UserRole::where('user_id', $user['id'])->first();
-        $userRole = UserRole::where('user_id', $user->id)->first();
+                //$userRole = UserRole::where('user_id', $user['id'])->first();
+                $userRole = UserRole::where('user_id', $user->id)->first();
 
-        info("user role id : " . $userRole);
+                $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+                    $query->select('permission_id')
+                        ->from('role_has_permissions')
+                        ->where('role_id', $userRole->role_id);
+                })->get();
 
-        $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
-            $query->select('permission_id')
-                ->from('role_has_permissions')
-                ->where('role_id', $userRole->role_id);
-        })->get();
-        info(" role permission : " . $rolePermissions);
+                $hasPermission = $rolePermissions->contains('name', $permission);
 
-        $hasPermission = $rolePermissions->contains('name', $permission);
+                if (!$hasPermission) {
+                    info('Unauthorized');
+                }
 
-        if (!$hasPermission) {
-            info('Unauthorized');
-        }
+                $matchedPermission = $rolePermissions->firstWhere('name', $permission);
 
-        $matchedPermission = $rolePermissions->firstWhere('name', $permission);
-        info('User has permission: ' . $matchedPermission->name);
+                //  Validate the request data
+                $validator = Validator::make($request->all(), [
+                    'name' => 'required',
+                    'description' => 'required',
+                    'start_date' => 'required|date',
+                    'end_date' => 'required|date|after:start_date',
+                ]);
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 400);
+                }
 
-        //  Validate the request data
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'required',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-        ]);
-        info("project registration start");
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
+                //  Create a new project
+                $project = Project::create($request->all());
+                Log::info("Controller::ProjectsController::store::END");
+                return response()->json(['message' => 'Project created successfully', 'project' => $project]);
+            } catch (\Exception $ex) {
+                Log::error("Error in ProjectsController::store: " . $ex->getMessage());
+                return response()->json(['error' => 'An error occurred while creating the project'], 500);
+            }
+        });
 
-        //  Create a new project
-        $project = Project::create($request->all());
-
-
-        // Display flash message
-        Flash::success('Project created successfully');
-
-        return redirect()->route('projects.index');
+        return $result;
     }
-
-    /**
+    /** 
+     * @author : UDAY SONI
+     * Method name: show
      * Display the specified resource.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function show(string $id)
     {
-        $project = Project::findOrFail($id);
+        $result = DB::transaction(function () use ($id) {
+            try {
+                Log::info("Controller::ProjectsController::show::START");
+                $project = Project::findOrFail($id);
+                Log::info("Controller::ProjectsController::show::END");
+                return response()->json($project);
+            } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
+                return response()->json(['error' => 'Project not found'], 404);
+            } catch (\Exception $ex) {
+                Log::error("Error in ProjectsController::show: " . $ex->getMessage());
+                return response()->json(['error' => 'An error occurred while fetching the project'], 500);
+            }
+        });
 
-        return response()->json($project);
+        return $result;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        // You can implement this method if needed for your frontend
-    }
-
-    /**
+    /** 
+     * @author : UDAY SONI
+     * Method name: update
      * Update the specified resource in storage.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        $permission = $request->header('permission');
-        info($permission);
-        $user = auth()->user();
-        info($user['id']);
+        $result = DB::transaction(function () use ($request, $id) {
+            try {
+                Log::info("Controller::ProjectsController::update::START");
+                $permission = $request->header('permission');
+                $user = auth()->user();
 
-        $userRole = UserRole::where('user_id', $user->id)->first();
-
-        info("user role id : " . $userRole);
-
-        $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
-            $query->select('permission_id')
-                ->from('role_has_permissions')
-                ->where('role_id', $userRole->role_id);
-        })->get();
-        info(" role permission : " . $rolePermissions);
-
-        $hasPermission = $rolePermissions->contains('name', $permission);
-
-        if (!$hasPermission) {
-            info('Unauthorized');
-        }
-
-        $matchedPermission = $rolePermissions->firstWhere('name', $permission);
-        info('User has permission: ' . $matchedPermission->name);
+                $userRole = UserRole::where('user_id', $user->id)->first();
 
 
-        // Validate the request data
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'required',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-        ]);
+                $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+                    $query->select('permission_id')
+                        ->from('role_has_permissions')
+                        ->where('role_id', $userRole->role_id);
+                })->get();
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-        $project = Project::findOrFail($id);
-        $project->update($request->all());
+                $hasPermission = $rolePermissions->contains('name', $permission);
 
-        return response()->json(['message' => 'project updated successfully', 'project' => $project]);
+                if (!$hasPermission) {
+                    info('Unauthorized');
+                }
 
-        // Update the project
-        // $project = Project::findOrFail($id);
-        // $project->update($request->all());
+                $matchedPermission = $rolePermissions->firstWhere('name', $permission);
 
-        // Display flash message
-        // Flash::success('Project updated successfully');
+                // Validate the request data
+                $validator = Validator::make($request->all(), [
+                    'name' => 'required',
+                    'description' => 'required',
+                    'start_date' => 'required|date',
+                    'end_date' => 'required|date|after:start_date',
+                ]);
 
-        // return redirect()->route('projects.index');
-        // return response()->json($project, 200);
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 400);
+                }
+                $project = Project::findOrFail($id);
+                $project->update($request->all());
+                Log::info("Controller::ProjectsController::update::END");
+                return response()->json(['message' => 'Project updated successfully', 'project' => $project]);
+            } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
+                return response()->json(['error' => 'Project not found'], 404);
+            } catch (\Exception $ex) {
+                Log::error("Error in ProjectsController::update: " . $ex->getMessage());
+                return response()->json(['error' => 'An error occurred while updating the project'], 500);
+            }
+        });
+
+        return $result;
     }
 
-    /**
+    /** 
+     * @author : UDAY SONI
+     * Method name: destroy
      * Remove the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, $id)
     {
-        $permission = $request->header('permission');
-        info($permission);
-        $user = auth()->user();
-        info($user['id']);
+        $result = DB::transaction(function () use ($request, $id) {
+            try {
+                Log::info("Controller::ProjectsController::destroy::START");
+                $permission = $request->header('permission');
+                $user = auth()->user();
 
-        //$userRole = UserRole::where('user_id', $user['id'])->first();
-        $userRole = UserRole::where('user_id', $user->id)->first();
+                //$userRole = UserRole::where('user_id', $user['id'])->first();
+                $userRole = UserRole::where('user_id', $user->id)->first();
 
-        info("user role id : " . $userRole);
+                $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+                    $query->select('permission_id')
+                        ->from('role_has_permissions')
+                        ->where('role_id', $userRole->role_id);
+                })->get();
 
-        $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
-            $query->select('permission_id')
-                ->from('role_has_permissions')
-                ->where('role_id', $userRole->role_id);
-        })->get();
-        info(" role permission : " . $rolePermissions);
+                $hasPermission = $rolePermissions->contains('name', $permission);
 
-        $hasPermission = $rolePermissions->contains('name', $permission);
+                if (!$hasPermission) {
+                    info('Unauthorized');
+                }
 
-        if (!$hasPermission) {
-            info('Unauthorized');
-        }
+                $matchedPermission = $rolePermissions->firstWhere('name', $permission);
 
-        $matchedPermission = $rolePermissions->firstWhere('name', $permission);
-        info('User has permission: ' . $matchedPermission->name);
+                // Perform the soft delete logic here, using the $id parameter
+                $project = Project::find($id);
+                if (!$project) {
+                    return response()->json(['message' => 'Project not found'], 404);
+                }
 
+                // Perform the soft delete
+                $project->delete();
+                Log::info("Controller::ProjectsController::destroy::END");
+                // Optionally, return a success response or any additional data
+                return response()->json(['message' => 'Project soft deleted successfully']);
+            } catch (\Exception $ex) {
+                Log::error("Error in ProjectsController::destroy: " . $ex->getMessage());
+                return response()->json(['error' => 'An error occurred while soft deleting the project'], 500);
+            }
+        });
 
-        // Perform the soft delete logic here, using the $id parameter
-        $project = Project::find($id);
-        if (!$project) {
-            return response()->json(['message' => 'Project not found'], 404);
-        }
-
-        // Display flash message
-        //     Flash::success('Project deleted successfully');
-
-        // Perform the soft delete
-        $project->delete();
-
-        // Optionally, return a success response or any additional data
-        return response()->json(['message' => 'Project soft deleted successfully']);
+        return $result;
     }
 
 
-    // public function activate($id)
-    // {
-    //     // Activate the project
-    //     $project = Project::onlyTrashed()->findOrFail($id);
-    //     $project->restore();
-
-    //     // Display flash message
-    //     Flash::success('Project activated successfully');
-
-    //     return redirect()->route('projects.index');
-    // }
-
-    // public function deactivate($id)
-    // {
-    //     // Deactivate the project
-    //     $project = Project::findOrFail($id);
-    //     $project->delete();
-
-    //     // Display flash message
-    //     Flash::success('Project deactivated successfully');
-
-    //     return redirect()->route('projects.index');
-    // }
-
-    // In your ProjectsController method
+    /** 
+     * @author : UDAY SONI
+     * Method name: searchProjects
+     * searchProjects the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function searchProjects(Request $request)
     {
-        $searchQuery = $request->input('searchQuery');
+        $result = DB::transaction(function () use ($request) {
+            try {
+                Log::info("Controller::ProjectsController::searchProjects::START");
+                $searchQuery = $request->input('searchQuery');
 
-        $projects = Project::where('name', 'LIKE', "%$searchQuery%")
-            ->orWhere('description', 'LIKE', "%$searchQuery%")
-            ->paginate(5);
+                $projects = Project::where('name', 'LIKE', "%$searchQuery%")
+                    ->orWhere('description', 'LIKE', "%$searchQuery%")
+                    ->paginate(5);
+                Log::info("Controller::ProjectsController::searchProjects::END");
+                return response()->json($projects);
+            } catch (\Exception $ex) {
+                Log::error("Error in ProjectsController::searchProjects: " . $ex->getMessage());
+                return response()->json(['error' => 'An error occurred while searching projects'], 500);
+            }
+        });
 
-        return response()->json($projects);
+        return $result;
     }
 
-    // In your ProjectsController method
+    /** 
+     * @author : UDAY SONI
+     * Method name: getProjects
+     * getProjects the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getProjects(Request $request)
     {
-        $perPage = $request->input('perPage', 5);
+        $result = DB::transaction(function () use ($request) {
+            try {
+                Log::info("Controller::ProjectsController::getProjects::START");
+                $perPage = $request->input('perPage', 5);
+                $projects = Project::paginate($perPage);
+                Log::info("Controller::ProjectsController::getProjects::END");
+                return response()->json($projects);
+            } catch (\Exception $ex) {
+                // Log the exception if needed
+                Log::error("Error in retrieving projects: " . $ex->getMessage());
 
-        $projects = Project::paginate($perPage);
+                // Return an error response
+                return response()->json(['error' => 'An error occurred while retrieving projects'], 500);
+            }
+        });
 
-        return response()->json($projects);
+        return $result;
     }
 
-    // In your ProjectsController method
+    /** 
+     * @author : UDAY SONI
+     * Method name: getSortedProjects
+     * getSortedProjects the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getSortedProjects(Request $request)
     {
-        $column = $request->input('column', 'id');
-        $direction = $request->input('direction', 'asc');
+        $result = DB::transaction(function () use ($request) {
+            try {
+                Log::info("Controller::ProjectsController::getSortedProjects::START");
+                $column = $request->input('column', 'id');
+                $direction = $request->input('direction', 'asc');
 
-        $projects = Project::orderBy($column, $direction)
-            ->paginate(5);
+                $projects = Project::orderBy($column, $direction)
+                    ->paginate(5);
+                Log::info("Controller::ProjectsController::getSortedProjects::END");
+                return response()->json($projects);
+            } catch (\Exception $ex) {
+                Log::error("Error in ProjectsController::getSortedProjects: " . $ex->getMessage());
+                return response()->json(['error' => 'An error occurred while fetching projects'], 500);
+            }
+        });
 
-        return response()->json($projects);
+        return $result;
     }
 
-    // // Soft Delete a project
+    /** 
+     * @author : UDAY SONI
+     * Method name: getSortedProjects
+     * Soft Delete a project for specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function softDelete($id)
     {
-        $project = Project::find($id);
-        $project->delete();
-        return response()->json(['message' => 'Project soft deleted successfully', 'project' => $project]);
+        $result = DB::transaction(function () use ($id) {
+            try {
+                Log::info("Controller::ProjectsController::softDelete::START");
+                $project = Project::find($id);
+                $project->delete();
+                Log::info("Controller::ProjectsController::softDelete::END");
+                return response()->json(['message' => 'Project soft deleted successfully', 'project' => $project]);
+            } catch (\Exception $ex) {
+                Log::error("Error in ProjectsController::softDelete: " . $ex->getMessage());
+                return response()->json(['error' => 'An error occurred while softDelete projects'], 500);
+            }
+        });
+
+        return $result;
     }
 
-    // Restore a soft-deleted project
-    public function restore($id)
-    {
-        $project = Project::withTrashed()->find($id);
-
-        if (!$project) {
-            return response()->json(['message' => 'Project not found or already restored'], 404);
-        }
-
-        $project->restore();
-
-        return response()->json(['message' => 'Project restored successfully'], 200);
-    }
-
-    // Fetch all projects, including soft-deleted ones
+        /** 
+     * @author : UDAY SONI
+     * Method name: getSortedProjects
+     * Fetch all projects, including soft-deleted ones for specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function softDeletedProjects()
     {
-        $projects = Project::withTrashed()->get();
-        return response()->json($projects);
+        $result = DB::transaction(function () {
+            try {
+                Log::info("Controller::ProjectsController::softDeletedProjects::START");
+                $projects = Project::withTrashed()->get();
+                Log::info("Controller::ProjectsController::softDeletedProjects::END");
+                return response()->json($projects);
+            } catch (\Exception $ex) {
+                // Log the exception if needed
+                Log::error("Error in retrieving soft-deleted projects: " . $ex->getMessage());
+
+                // Return an error response
+                return response()->json(['error' => 'An error occurred while retrieving soft-deleted projects'], 500);
+            }
+        });
+
+        return $result;
     }
+
+    /** 
+     * @author : UDAY SONI
+     * Method name: getSortedProjects
+     * Restore a soft-deleted project for specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        $result = DB::transaction(function () use ($id) {
+            try {
+                Log::info("Controller::ProjectsController::restore::START");
+                $project = Project::withTrashed()->find($id);
+
+                if (!$project) {
+                    return response()->json(['message' => 'Project not found or already restored'], 404);
+                }
+
+                $project->restore();
+                Log::info("Controller::ProjectsController::restore::END");
+                return response()->json(['message' => 'Project restored successfully'], 200);
+            } catch (\Exception $ex) {
+                // Log the exception if needed
+                Log::error("Error in restoring project: " . $ex->getMessage());
+
+                // Return an error response
+                return response()->json(['error' => 'An error occurred during project restoration'], 500);
+            }
+        });
+
+        return $result;
+    }
+
+
 }

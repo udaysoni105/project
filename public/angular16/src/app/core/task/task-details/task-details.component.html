@@ -1,10 +1,14 @@
+<!-- 
+    @author: UDAY SONI
+    Created on: July 13, 2023
+    Note: Design for details task Page. 
+-->
 <p-card>
     <ng-container *ngIf="Task">
       <p>Name:{{ Task.name }}</p>
       <p>Description:{{ Task.description }}</p>
       <p>Start Date: {{ Task.startDate }}</p>
       <p>End Date: {{ Task.endDate }}</p>
-      <p>Status: {{ Task.isCompleted ? 'Completed' : 'In Progress' }}</p>
     </ng-container>
     <ng-container *ngIf="!Task">
       <p>No Task selected.</p>

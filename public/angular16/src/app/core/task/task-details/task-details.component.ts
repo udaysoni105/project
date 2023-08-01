@@ -7,12 +7,14 @@ import { TaskService } from '../task.service';
   styleUrls: ['./task-details.component.scss']
 })
 export class TaskDetailsComponent {
-  Task = {id: '',
-  name: '',
-  description: '',
-  startDate: '',
-  endDate: '',
-  isCompleted: '',
-  projectId: ''};
-
+  Task = {
+    id: '',
+    name: '',
+    description: '',
+    startDate: '',
+    endDate: '',
+    isCompleted: '',
+    projectId: '',
+    userId: ''
+  };
 }

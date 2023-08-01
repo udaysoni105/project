@@ -1,19 +1,24 @@
+<!-- 
+    @author: UDAY SONI
+    Created on: July 18, 2023
+    Note: Design for projecttable view Page. 
+-->
 <div *ngIf="!projects; else projectList">
   <div class="horizontal-loader"></div>
 </div>
 
 <ng-template #projectList pTemplate="body" let-project>
   <div>
-  <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
-  <!-- <p-progressBar [value]="50"></p-progressBar> -->
-</div>
+    <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+    <!-- <p-progressBar [value]="50"></p-progressBar> -->
+  </div>
   <h2>PROJECT LIST</h2>
 
   <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
 
   <div class="container">
     <p-button routerLink="/register-project" class="btn btn-primary">+Create New</p-button>
-    <p-button routerLink="/soft-deleted"  class="btn btn-warning">Restore</p-button>
+    <p-button routerLink="/soft-deleted" class="btn btn-warning">Restore</p-button>
   </div>
 
   <div class="search-container">
@@ -50,7 +55,7 @@
           <!-- <td>{{ project.status }}</td> -->
           <td>
             <p-button (click)="softDeleteProject(project.id)" class="btn btn-primary">Soft Delete</p-button>
-          </td> 
+          </td>
           <td>
             <p-button [routerLink]="['/project-edit', project.id]" class="btn btn-primary">Edit Project</p-button>
           </td>

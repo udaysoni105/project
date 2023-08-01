@@ -4,172 +4,85 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-
-
-
 use App\Models\UserRole;
 use Spatie\Permission\Models\Permission;
-use \Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Auth;
-use Laracasts\Flash\Flash;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Spatie\Permission\Models\Role;
 
+/** @author UDAY SONI
+ *
+ * Class name: UserController
+ * Create a new controller for doing operation on User module.
+ *
+ */
 class UserController extends Controller
 {
-    //
-    /**
-     * Display a listing of the users.
+    /** 
+     * @author : UDAY SONI
+     * Method name: index
+     * Display a listing of users based on the user's role and permission.
      *
      * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-
-        $permission = $request->header('permission');
-        info($permission);
-        $user = auth()->user();
-        info($user['id']);
-
-        $userRole = UserRole::where('user_id', $user->id)->first();
-
-        info("user role id : " . $userRole);
-
-        $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
-            $query->select('permission_id')
-                ->from('role_has_permissions')
-                ->where('role_id', $userRole->role_id);
-        })->get();
-        info(" role permission : " . $rolePermissions);
-
-        $hasPermission = $rolePermissions->contains('name', $permission);
-
-        if (!$hasPermission) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-
-        // $matchedPermission = $rolePermissions->firstWhere('name', $permission);
-        // info('User has permission: ' . $matchedPermission->name);
-
-        // $users = User::all();
-
-        // Fetch users based on their roles
-        if ($userRole->role->name === 'admin' || $userRole->role->name === 'project manager') {
-            // For admin and project manager roles, only fetch developers
-            $users = User::whereHas('roles', function ($query) {
-                $query->where('name', 'developer');
-            })->get();
-        } else {
-            // For other roles, fetch all users
-            $users = User::all();
-        }
-            // Exclude admin and project manager users from the response
-    $filteredUsers = $users->reject(function ($user) {
-        return $user->hasRole('admin') || $user->hasRole('project manager');
-    });
-
-        return response()->json($filteredUsers);
-    }
-
-    /**
-     * Display the specified user.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Exception
      */
-    public function show($id)
+    public function index(Request $request): JsonResponse
     {
-        $user = User::findOrFail($id);
-        return response()->json($user);
-    }
+        $result = DB::transaction(function () use ($request) { // Add $request parameter to the closure
+            try {
+                Log::info("Controller::UserController::index::START");
 
-    /**
-     * Store a newly created user in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $user = User::create($request->all());
-        return response()->json($user, 201);
-    }
+                // Get the permission from the request header
+                $permission = $request->header('permission');
 
-    /**
-     * Update the specified user in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+                // Get the authenticated user
+                $user = auth()->user();
 
-    public function update(Request $request, $id)
-    {
-        $user = User::find($id);
+                // Get the user's role information
+                $userRole = UserRole::where('user_id', $user->id)->first();
 
-        if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
+                // Get the permissions associated with the user's role
+                $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+                    $query->select('permission_id')
+                        ->from('role_has_permissions')
+                        ->where('role_id', $userRole->role_id);
+                })->get();
 
-        $user->password = bcrypt($request->input('password'));
-        $user->save();
+                // Check if the user has the required permission
+                $hasPermission = $rolePermissions->contains('name', $permission);
 
-        return response()->json(['message' => 'Password updated successfully']);
-    }
+                if (!$hasPermission) {
+                    return response()->json(['error' => 'Unauthorized'], 403);
+                }
 
-    // public function update(Request $request, $id)
-    // {
-    //     $user = User::findOrFail($id);
-    //             // Perform the password update logic here
-    //     $user->password = bcrypt($request->input('password'));
-    //     $user->save();
+                // Fetch users based on their roles
+                if (in_array($userRole->role->name, ['admin', 'project manager'])) {
+                    // For admin and project manager roles, only fetch developers
+                    $users = User::whereHas('roles', function ($query) {
+                        $query->where('name', 'developer');
+                    })->get();
+                } else {
+                    // For other roles, fetch all users
+                    $users = User::all();
+                }
 
-    //     return response()->json(['message' => 'Password updated successfully']);
-    //     // $user->update($request->all());
-    //     // return response()->json($user, 200);
-    // }
+                // Exclude admin and project manager users from the response
+                $filteredUsers = $users->reject(function ($user) {
+                    return $user->hasRole('admin') || $user->hasRole('project manager');
+                });
 
-    /**
-     * Remove the specified user from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $user = User::findOrFail($id);
-        $user->delete();
-        return response()->json(null, 204);
-    }
-    public function registration(Request $request)
-    {
-        // Validate input data
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'country' => 'required|string',
-            'state' => 'required|string',
-        ]);
+                Log::info("Controller::UserController::index::END"); // Add this line
 
-        // Create user
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'country' => $request->input('country'),
-            'state' => $request->input('state'),
-        ]);
-
-
-        // Assign role to the user (if using Spatie)
-        $user->assignRole('developer');
-
-        // Return response
-        return response()->json([
-            'message' => 'User registered successfully',
-            'user' => $user,
-        ], 201);
+                return response()->json($filteredUsers);
+            } catch (Exception $ex) {
+                Log::error("Controller::UserController::index:: An error occurred: " . $ex->getMessage());
+                throw new Exception("An error occurred: " . $ex->getMessage());
+            }
+        });
+        return $result;
     }
 }

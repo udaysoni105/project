@@ -1,3 +1,8 @@
+<!-- 
+    @author: UDAY SONI
+    Created on: July 24, 2023
+    Note: Design for edit projecttable Page. 
+-->
 <h2>Project Edit Form</h2>
 <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
 <form [formGroup]="projectForm" (ngSubmit)="saveChanges()">
@@ -21,10 +26,10 @@
     <input type="date" id="end_date" formControlName="end_date" name="end_date" pCalendar required />
   </div>
 
-  <div>
+  <!-- <div>
     <label for="status">Status: </label>
     <input type="text" id="status" formControlName="status" pInputText />
-  </div>
+  </div> -->
 
-  <p-button type="submit"  label="Save Changes"></p-button>
+  <p-button type="submit" label="Save Changes"></p-button>
 </form>

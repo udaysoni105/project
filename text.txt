@@ -1,0 +1,44 @@
+/** @author : DIVYA KANAK.
+* Method name: update
+* This method is used for update admin/employee/manager's profile.
+* @param {int} id - user_id of admin/employee/manager
+*
+*
+* @param {object} request - which contain below details.
+* if admin/employee/manager update profile detail
+* @param
+state - profile
+* @param
+{varchar} email - The email of the customer.
+* @param
+*
+@param
+{varchar} name - The name of the customer.
+{varchar} phone - The phone no of the customer. * if admin/employee/manager update mail address detail @param
+state - address
+{varchar} Address1 - The Addressl of the customer. {varchar} Address2 - The Address2 of the customer. {varchar} town - The town of the customer.
+*
+* @param
+* @param
+* @param
+* @param
+{varchar} state
+* @param
+- The state of the customer. {varchar} zip - The zip of the customer.
+*
+@param {varchar} country - The country of the customer.
+* if admin/employee/manager update mail password detail
+* @param
+state - password
+*
+@param {varchar} password - The password of the customer.
+* @param
+{varchar} current password - The current password of the customer.
+* @return admin/employee/manager's profile detail, Response code, message.
+* @exception throw if any error occur when update admin/employee/manager's profile details in storage. * NOTE: send email when password update, email update
+*/
+
+
+public function update (Request $request, $id) {
+Log::info('Admin::AdminProfileController::update::START');
+$result = DB::transaction(function () use ($request. Šid) {
