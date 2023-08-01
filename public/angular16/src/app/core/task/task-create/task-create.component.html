@@ -27,13 +27,16 @@
     <label for="project_id">Project ID</label>
     <input type="text" id="project_id" name="project_id" formControlName="project_id" required>
   </div>
+
+
+
   
-  <!-- <div>
+  <!--   <div>
     <mat-form-field>
       <mat-label>Project ID</mat-label>
-        <mat-select [(ngModel)]="task.project_id" formControlName="project_id"  name="project_id" (selectionChange)="addtaskprojectid(task, $event.value)">
+      <mat-select formControlName="project_id" name="project_id" (selectionChange)="projectcreate($event.value)">
         <mat-option *ngFor="let project of projects" [value]="project.id">{{ project.name }}</mat-option>
-      </mat-select>
+      </mat-select>      
     </mat-form-field>
   </div>
 

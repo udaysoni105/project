@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use PDF;
-
+use App\Http\Controllers\Logs;
 class TasksController extends Controller
 {
     /**
@@ -48,21 +48,21 @@ class TasksController extends Controller
         $matchedPermission = $rolePermissions->firstWhere('name', $permission);
         info('User has permission: ' . $matchedPermission->name);
 
+        // Check if the user is an admin (assuming 'admin' is the role name for admins)
+        $isAdmin = $user->hasRole('Admin');
 
-        // // Fetch all tasks with their associated project and assigned user
-        // $user = auth()->user();
-        // info('Authenticated user ID: ' . $user->id);
+        if ($isAdmin) {
+            // If the user is an admin, fetch all tasks
+            $tasks = Task::all();
+            // You can log the tasks to check if they are being fetched properly
+            Log::info($tasks);
+        } else {
+            // If the user is a developer, fetch only assigned tasks
+            $tasks = Task::with('Project', 'User')->where('user_id', $user->id)->get();
+        }
 
-        // // Fetch all tasks with their associated project and assigned user
-        // $tasks = Task::with('project', 'user')->where('user_id', $user->id)->get();
-        // info($tasks);
-
-        // return response()->json(['tasks' => $tasks]);
-
-        $tasks = Task::all();
-
+        // Return the tasks as JSON response
         return response()->json($tasks);
-
     }
 
     /**

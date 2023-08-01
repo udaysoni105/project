@@ -7,14 +7,17 @@ import { catchError } from 'rxjs/operators';
 })
 export class TaskService {
   private baseUrl = 'http://localhost:8000/api/tasks'; // Update with your API endpoint
-
+  private apiUrl = 'http://localhost:8000/api/projects'; 
+  private userUrl = 'http://localhost:8000/api/users';
   constructor(private http: HttpClient) {}
 
   getAllTasks(headers: HttpHeaders) {
     const url = `${this.baseUrl}`;
     return this.http.get<any[]>(url, { headers });
   }
-
+  projectcreate(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
+  }
   createTask(taskData: any, token: string,email:string): Observable<any> {
     let headers = new HttpHeaders()
     headers = headers.append('Content-Type','application/json');
@@ -29,12 +32,12 @@ export class TaskService {
   }
 
   getProjects(): Observable<any[]> {
-    const url = 'http://localhost:8000/api/projects'; // Update with your API endpoint for projects
+    const url = `${this.apiUrl}`; // Update with your API endpoint for projects
     return this.http.get<any[]>(url);
   }
 
   getUsers(): Observable<any[]> {
-    const url = 'http://localhost:8000/api/users'; // Update with your API endpoint for users
+    const url = `${this.userUrl}`;// Update with your API endpoint for users
     return this.http.get<any[]>(url);
   }
   gettaskById(taskId: string, headers: HttpHeaders): Observable<any> {

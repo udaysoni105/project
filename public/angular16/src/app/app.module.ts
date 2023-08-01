@@ -59,6 +59,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+
 const routes: Routes = [
   { path: 'register', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
