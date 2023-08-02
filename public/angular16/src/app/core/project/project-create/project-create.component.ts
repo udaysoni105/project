@@ -26,8 +26,7 @@ export class ProjectCreateComponent implements OnInit {
       name: ['', Validators.required],
       description: ['', Validators.required],
       start_date: ['', Validators.required],
-      end_date: ['', Validators.required],
-      // status: ['', Validators.required],
+      end_date: ['', Validators.required]
     });
   }
 

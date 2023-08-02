@@ -42,9 +42,8 @@
           <th>HARD DELETE</th>
           <th>EDIT</th>
           <th>ProjectId</th>
-          <th>UserId</th>
           <th>PDF</th>
-          <th>status</th>
+          <th>STATUS</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-task>
@@ -61,7 +60,6 @@
             <p-button [routerLink]="['/task-edit', task.id]" class="btn btn-primary">Edit Task</p-button>
           </td>
           <td>{{ task.project_id}}</td>
-          <td>{{ task.user_id }}</td>
           <td>
             <p-button (click)="generatePDF(task.id)" class="btn btn-primary">Generate PDF</p-button>
           </td>

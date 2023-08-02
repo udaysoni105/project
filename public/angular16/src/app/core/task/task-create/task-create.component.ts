@@ -14,14 +14,14 @@ export class TaskCreateComponent implements OnInit {
   taskForm!: FormGroup;
   projects: SelectItem[] = [];
   users: SelectItem[] = [];
-    projectOptions: SelectItem[] = [];
+  projectOptions: SelectItem[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private taskService: TaskService,
     private router: Router,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.taskForm = this.formBuilder.group({

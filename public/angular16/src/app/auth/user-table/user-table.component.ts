@@ -29,6 +29,7 @@ export class UserTableComponent implements OnInit {
     this.loading = true;
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
+    
     if (!jwtToken) {
       console.error('JWT token not found in local storage. Please log in.');
       return;

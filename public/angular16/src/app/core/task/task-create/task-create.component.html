@@ -9,28 +9,28 @@
 <form [formGroup]="taskForm" (ngSubmit)="createtask()">
   <div class="form-group">
     <div>
-      <label for="name">Name</label>
+      <label for="name">Name: </label>
       <input type="text" id="name" name="name" formControlName="name" required>
     </div>
 
     <div>
-      <label for="description">Description</label>
+      <label for="description">Description: </label>
       <textarea id="description" name="description" formControlName="description"></textarea>
     </div>
 
     <div>
-      <label for="start_date">Start Date</label>
+      <label for="start_date">Start Date: </label>
       <input type="date" id="start_date" name="start_date" formControlName="start_date" required>
     </div>
 
     <div>
-      <label for="end_date">End Date</label>
+      <label for="end_date">End Date: </label>
       <input type="date" id="end_date" name="end_date" formControlName="end_date" required>
     </div>
 
     <div>
       <mat-form-field>
-        <mat-label>Project ID</mat-label>
+        <mat-label>Project: </mat-label>
         <mat-select formControlName="project_id" required >
           <mat-option *ngFor="let project of projectOptions" [value]="project.value">
             {{ project.label }}
@@ -40,7 +40,7 @@
     </div>
     <div>
       <mat-form-field>
-        <mat-label>User ID</mat-label>
+        <mat-label>User: </mat-label>
         <mat-select formControlName="user_id" required multiple>
           <mat-option *ngFor="let user of users" [value]="user.value">
             {{ user.label }}
@@ -49,7 +49,6 @@
       </mat-form-field>
     </div>
   </div>
-
 
   <p-button type="submit" [disabled]="taskForm.invalid">Register Task</p-button>
 </form>
