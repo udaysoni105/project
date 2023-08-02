@@ -4,6 +4,9 @@
     Note: Design for create a profile Page. 
 -->
 <p-card class="profile-card">
+  <div class="loading-container" *ngIf="loading">
+    <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+  </div>
   <ng-container>
     <img src="assets/images/photo.jpeg" alt="User Photo" width="100">
   </ng-container>

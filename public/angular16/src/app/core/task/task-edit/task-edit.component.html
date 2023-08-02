@@ -5,7 +5,9 @@
 -->
 <h2>Edit Task</h2>
 <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
-
+<div class="loading-container" *ngIf="loading">
+  <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+</div>
 <form class="task-form" (ngSubmit)="onUpdate()" [formGroup]="taskForm">
   <div class="form-group">
     <label for="name">Name</label>
@@ -27,17 +29,10 @@
     <input type="date" id="end_date" name="end_date" pCalendar formControlName="end_date" required>
   </div>
 
-  <!-- <div>
-    <label for="completed">Is Completed</label>
-    <input type="checkbox" id="completed" name="completed" formControlName="completed">
-  </div> -->
-
-
   <div class="form-group">
     <label for="project_id">Project ID</label>
     <input type="text" id="project_id" name="project_id" formControlName="project_id" required>
   </div>
-
-  <!-- <button type="submit" [disabled]="!taskForm.valid">Update Task</button> -->
+  
   <p-button type="submit" [disabled]="!taskForm.valid" class="btn btn-primary btn-block btn-lg">Update Task</p-button>
 </form>

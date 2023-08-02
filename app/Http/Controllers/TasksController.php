@@ -50,17 +50,20 @@ class TasksController extends Controller
                 }
 
                 $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+                info('user has permission: ' . $matchedPermission->name);
 
-                // Check if the user is an admin (assuming 'admin' is the role name for admins)
+                // Check if the user is an admin or a project manager
                 $isAdmin = $user->hasRole('Admin');
+                $isProjectManager = $user->hasRole('projectManager');
 
-                if ($isAdmin) {
-                    // If the user is an admin, fetch all tasks
+                if ($isAdmin || $isProjectManager) {
+                    // If the user is an admin or project manager, fetch all tasks
                     $tasks = Task::all();
                 } else {
                     // If the user is a developer, fetch only assigned tasks
                     $tasks = Task::with('Project', 'User')->where('user_id', $user->id)->get();
                 }
+
                 Log::info("Controller::TasksController::index::END");
                 // Return the tasks as JSON response
                 return response()->json($tasks);
@@ -108,6 +111,7 @@ class TasksController extends Controller
                 }
 
                 $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+                info('user has permission: ' . $matchedPermission->name);
 
                 //  Validate the request data
                 $validator = Validator::make($request->all(), [
@@ -172,7 +176,7 @@ class TasksController extends Controller
      */
     public function update(Request $request, string $id, Task $task)
     {
-        $result = DB::transaction(function () use ($request,$id,$task) {
+        $result = DB::transaction(function () use ($request, $id, $task) {
             try {
                 Log::info("Controller::TasksController::update::START");
                 $permission = $request->header('permission');
@@ -193,6 +197,7 @@ class TasksController extends Controller
                 }
 
                 $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+                info('user has permission: ' . $matchedPermission->name);
 
                 // Validate the request data
                 $validator = Validator::make($request->all(), [
@@ -232,7 +237,7 @@ class TasksController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $result = DB::transaction(function () use ($request,$id) {
+        $result = DB::transaction(function () use ($request, $id) {
             try {
                 Log::info("Controller::TasksController::destroy::START");
                 $permission = $request->header('permission');
@@ -254,6 +259,7 @@ class TasksController extends Controller
                 }
 
                 $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+                info('user has permission: ' . $matchedPermission->name);
 
 
                 // Perform the soft delete logic here, using the $id parameter

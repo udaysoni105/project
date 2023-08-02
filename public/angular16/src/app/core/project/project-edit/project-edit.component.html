@@ -5,6 +5,9 @@
 -->
 <h2>Project Edit Form</h2>
 <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
+<div class="loading-container" *ngIf="loading">
+  <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+</div>
 <form [formGroup]="projectForm" (ngSubmit)="saveChanges()">
   <div class="form-group">
     <label for="name">Name: </label>
@@ -25,11 +28,6 @@
     <label for="end_date">End Date: </label>
     <input type="date" id="end_date" formControlName="end_date" name="end_date" pCalendar required />
   </div>
-
-  <!-- <div>
-    <label for="status">Status: </label>
-    <input type="text" id="status" formControlName="status" pInputText />
-  </div> -->
 
   <p-button type="submit" label="Save Changes"></p-button>
 </form>

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,7 +16,6 @@ use Illuminate\Support\Facades\Hash;
 use CountryState;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerificationEmail;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Auth;
 

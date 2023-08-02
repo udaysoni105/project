@@ -18,44 +18,35 @@ export class UserTableComponent implements OnInit {
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
 
-
-
+  loading: boolean = false;
   constructor(private authService: AuthService) { }
 
   ngOnInit() {
     this.loadUsers();
   }
 
-  // loadUsers() {
-  //   this.authService.getAllUsers().subscribe(
-  //     data => {
-  //       this.users = data;
-  //     },
-  //     error => {
-  //       console.log(error);
-  //     }
-  //   );
-  // }
   loadUsers() {
+    this.loading = true;
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
     if (!jwtToken) {
       console.error('JWT token not found in local storage. Please log in.');
       return;
     }
-  
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
-      email :'email',
+      email: 'email',
       Permission: 'view_project' // Add the Permission header with the desired value
     });
-  
+
     // Make the API call with the headers
     this.authService.getAllUsers(headers).subscribe(
       (response) => {
         // Handle the response here
         console.log(response);
         this.users = response; // Assuming the API returns an array of projects
+        this.loading = false; // Stop loading when the data is fetched
       },
       (error) => {
         // Handle the error here
@@ -67,7 +58,7 @@ export class UserTableComponent implements OnInit {
   onSearch(): void {
     this.table.filter(this.searchQuery, 'name', 'contains');
   }
-  
+
   // onSearch(): void {
   //   if (this.searchValue.trim() !== '') {
   //     this.filteredUsers = this.users.filter(user => {

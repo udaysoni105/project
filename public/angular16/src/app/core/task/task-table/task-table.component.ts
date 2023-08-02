@@ -15,23 +15,25 @@ export class TaskTableComponent implements OnInit {
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
   selectedValue: string = '';
-  task: any = { status: 'pending' }; 
+  task: any = { status: 'pending' };
   Status: any[] = [
     { name: 'Pending' },
     { name: 'completed' }
   ];
+  loading: boolean = false;
   constructor(
     private taskService: TaskService,
     private router: Router,
     private http: HttpClient,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadTasks();
   }
   // Method to fetch tasks from the API
   loadTasks() {
+    this.loading = true;
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
     if (!jwtToken) {
@@ -51,10 +53,12 @@ export class TaskTableComponent implements OnInit {
         // Handle the response here
         console.log(response);
         this.tasks = response; // Assuming the API returns an array of tasks
+        this.loading = false; // Stop loading when the data is fetched
       },
       (error) => {
         // Handle the error here
         console.error(error);
+
       }
     );
   }
@@ -86,7 +90,7 @@ export class TaskTableComponent implements OnInit {
         });
 
         // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
-        setTimeout(() => {}, 1500);
+        setTimeout(() => { }, 1500);
       },
       (error) => {
         console.log('Soft delete failed:', error);

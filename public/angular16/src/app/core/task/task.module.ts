@@ -30,6 +30,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @NgModule({
   declarations: [
@@ -57,11 +58,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     CardModule,
     DropdownModule,
     MultiSelectModule,
-    MatFormFieldModule, 
-    MatSelectModule, 
-    NgFor, 
+    MatFormFieldModule,
+    MatSelectModule,
+    NgFor,
     MatInputModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    ProgressBarModule
   ],
   providers: [TaskService],
   exports: [

@@ -12,12 +12,7 @@ import { projectEditResolver } from './project-edit/project-edit.resolver';
 const routes: Routes = [
   { path: 'projects', component: ProjectTableComponent },
   { path: 'register-project', component: ProjectCreateComponent },
-  // { path: 'register-project', component: ProjectCreateComponent, canActivate: [ProjectGuard] }
-  {
-    path: 'project-edit/:id',
-    component: ProjectEditComponent,
-    resolve: { project: projectEditResolver },
-  },
+  { path: 'project-edit/:id',component: ProjectEditComponent,resolve: { project: projectEditResolver },},
   { path: 'project-details', component: ProjectDetailsComponent },
 ];
 @NgModule({
@@ -30,4 +25,4 @@ const routes: Routes = [
   ],
   imports: [CommonModule],
 })
-export class ProjectRoutingModule {}
+export class ProjectRoutingModule { }

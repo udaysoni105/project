@@ -13,6 +13,7 @@ export class TaskEditComponent implements OnInit {
   taskForm!: FormGroup;
   taskId!: string;
   tasks: any[] = [];
+  loading: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,6 +41,7 @@ export class TaskEditComponent implements OnInit {
   }
 
   loadTaskDetails(): void {
+    this.loading = true;
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
 
@@ -61,6 +63,7 @@ export class TaskEditComponent implements OnInit {
         console.log(response);
         this.tasks = response; 
         this.taskForm.patchValue(response); // Update the form with the task data
+        this.loading = false; // Stop loading when the data is fetched
       },
       (error) => {
         // Handle the error here
@@ -70,6 +73,7 @@ export class TaskEditComponent implements OnInit {
   }
 
   onUpdate(): void {
+    this.loading = true;
     if (this.taskForm.valid) {
       const taskData = this.taskForm.value;
       const jwtToken = localStorage.getItem('token');
@@ -89,6 +93,7 @@ export class TaskEditComponent implements OnInit {
         (response) => {
           console.log('task updated successfully', response);
           console.log('task ID:', this.taskId);
+          this.loading = false; // Stop loading when the data is fetched
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is updated' });
 
           // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)

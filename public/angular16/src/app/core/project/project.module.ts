@@ -68,4 +68,4 @@ import { MessageService } from 'primeng/api';
     AppComponent,
   ],
 })
-export class ProjectModule {}
+export class ProjectModule { }

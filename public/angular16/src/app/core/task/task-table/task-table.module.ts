@@ -13,7 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-
+import { ProgressBarModule } from 'primeng/progressbar';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,15 +27,16 @@ import { FormsModule } from '@angular/forms';
     DialogModule,
     DropdownModule,
     MultiSelectModule,
-    MatFormFieldModule, 
-    MatSelectModule, 
-    NgFor, 
-    MatInputModule, 
-    FormsModule
+    MatFormFieldModule,
+    MatSelectModule,
+    NgFor,
+    MatInputModule,
+    FormsModule,
+    ProgressBarModule
   ],
   providers: [TaskService],
   bootstrap: [AppComponent],
-  exports:[
+  exports: [
     TaskTableComponent
   ]
 })

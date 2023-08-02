@@ -114,9 +114,9 @@ const routes: Routes = [
     TabMenuModule,
     FieldsetModule,
     MultiSelectModule,
-    MatFormFieldModule, 
-    MatSelectModule, 
-    NgFor, 
+    MatFormFieldModule,
+    MatSelectModule,
+    NgFor,
     MatInputModule,
     ProgressBarModule,
     MatDatepickerModule,
@@ -125,7 +125,7 @@ const routes: Routes = [
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ],
-  providers: [AuthService, ProjectService, TaskService,MessageService,DatePipe],
+  providers: [AuthService, ProjectService, TaskService, MessageService, DatePipe],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

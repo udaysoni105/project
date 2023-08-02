@@ -15,14 +15,15 @@ export class ProjectEditComponent implements OnInit {
   projectForm!: FormGroup;
   projectId!: string;
   projects: any[] = [];
+  loading: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private projectService: ProjectService,
     private router: Router,
-    private messageService: MessageService 
-  ) {}
+    private messageService: MessageService
+  ) { }
 
   ngOnInit(): void {
     this.projectForm = this.formBuilder.group({
@@ -40,6 +41,7 @@ export class ProjectEditComponent implements OnInit {
   }
 
   loadProjectDetails(): void {
+    this.loading = true;
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
 
@@ -59,8 +61,9 @@ export class ProjectEditComponent implements OnInit {
       (response) => {
         // Handle the response here
         console.log(response);
-        this.projects = response; 
+        this.projects = response;
         this.projectForm.patchValue(response); // Update the form with the project data
+        this.loading = false; // Stop loading when the data is fetched
       },
       (error) => {
         // Handle the error here
@@ -70,33 +73,35 @@ export class ProjectEditComponent implements OnInit {
   }
 
   saveChanges(): void {
+    this.loading = true;
     if (this.projectForm.valid) {
       const projectData = this.projectForm.value;
       const jwtToken = localStorage.getItem('token');
       const email = localStorage.getItem('email');
-  
+
       if (!jwtToken) {
         console.error('JWT token not found in local storage. Please log in.');
         return;
       }
-  
+
       const headers = new HttpHeaders({
         Authorization: `Bearer ${jwtToken}`,
         Permission: 'update_project' // Add the Permission header with the desired value
       });
-  
+
       this.projectService.updateProject(this.projectId, projectData, headers).subscribe(
         (response) => {
           console.log('Project updated successfully', response);
           console.log('Project ID:', this.projectId);
-        // Show the success message using the MessageService
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is updated' });
+          this.loading = false; // Stop loading when the data is fetched
+          // Show the success message using the MessageService
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is updated' });
 
-        // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
-        setTimeout(() => {
-          this.router.navigate(['/projects']);
-        },1500 );
-      },
+          // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
+          setTimeout(() => {
+            this.router.navigate(['/projects']);
+          }, 1500);
+        },
         (error) => {
           console.error('Failed to update project', error);
           this.messageService.add({
@@ -110,10 +115,8 @@ export class ProjectEditComponent implements OnInit {
       console.error('Invalid form data');
     }
   }
-
-  
 }
 
 
 
- 
+
