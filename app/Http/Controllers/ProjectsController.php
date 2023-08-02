@@ -125,6 +125,7 @@ class ProjectsController extends Controller
 
         return $result;
     }
+
     /** 
      * @author : UDAY SONI
      * Method name: show
@@ -206,7 +207,6 @@ class ProjectsController extends Controller
                 return response()->json(['error' => 'An error occurred while updating the project'], 500);
             }
         });
-
         return $result;
     }
 
@@ -259,10 +259,8 @@ class ProjectsController extends Controller
                 return response()->json(['error' => 'An error occurred while soft deleting the project'], 500);
             }
         });
-
         return $result;
     }
-
 
     /** 
      * @author : UDAY SONI
@@ -288,7 +286,6 @@ class ProjectsController extends Controller
                 return response()->json(['error' => 'An error occurred while searching projects'], 500);
             }
         });
-
         return $result;
     }
 
@@ -316,7 +313,6 @@ class ProjectsController extends Controller
                 return response()->json(['error' => 'An error occurred while retrieving projects'], 500);
             }
         });
-
         return $result;
     }
 
@@ -344,7 +340,6 @@ class ProjectsController extends Controller
                 return response()->json(['error' => 'An error occurred while fetching projects'], 500);
             }
         });
-
         return $result;
     }
 
@@ -369,7 +364,6 @@ class ProjectsController extends Controller
                 return response()->json(['error' => 'An error occurred while softDelete projects'], 500);
             }
         });
-
         return $result;
     }
 
@@ -417,7 +411,6 @@ class ProjectsController extends Controller
                 return response()->json(['error' => 'An error occurred while retrieving soft-deleted projects'], 500);
             }
         });
-
         return $result;
     }
 
@@ -469,7 +462,6 @@ class ProjectsController extends Controller
                 return response()->json(['error' => 'An error occurred during project restoration'], 500);
             }
         });
-
         return $result;
     }
 }

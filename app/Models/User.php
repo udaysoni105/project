@@ -12,22 +12,16 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Traits\HasPermissions;
+
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles,HasPermissions;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPermissions;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    // protected $fillable = [
-    //     'name',
-    //     'email',
-    //     'password',
-    //     'country',
-    //     'state',
-    // ];
     protected $fillable = ['name', 'email', 'password', 'country', 'state', 'isverify'];
     /**
      * The attributes that should be hidden for serialization.
@@ -49,33 +43,33 @@ class User extends Authenticatable implements JWTSubject
         'password' => 'hashed',
     ];
 
-        // Add a static validation rules array
-        public static $rules = [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-            'country' => 'required|string',
-            'state' => 'required|string',
-            'isverify' => 'boolean',
-        ];
+    // Add a static validation rules array
+    public static $rules = [
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:6',
+        'country' => 'required|string',
+        'state' => 'required|string',
+        'isverify' => 'boolean',
+    ];
 
-        // protected static function boot()
-        // {
-        //     parent::boot();
-    
-        //     // Register the 'saving' event listener
-        //     static::saving(function ($model) {
-        //         $validator = Validator::make($model->toArray(), static::$rules);
-    
-        //         if ($validator->fails()) {
-        //             // If validation fails, throw an exception or handle the error as needed.
-        //             throw new \Exception($validator->errors()->first());
-        //         }
-    
-        //         // Validation succeeded, return true to proceed with the save operation.
-        //         return true;
-        //     });
-        // }
+    // protected static function boot()
+    // {
+    //     parent::boot();
+
+    //     // Register the 'saving' event listener
+    //     static::saving(function ($model) {
+    //         $validator = Validator::make($model->toArray(), static::$rules);
+
+    //         if ($validator->fails()) {
+    //             // If validation fails, throw an exception or handle the error as needed.
+    //             throw new \Exception($validator->errors()->first());
+    //         }
+
+    //         // Validation succeeded, return true to proceed with the save operation.
+    //         return true;
+    //     });
+    // }
 
     public function getJWTIdentifier()
     {
@@ -92,16 +86,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');
     }
 
-    // public function projects()
-    // {
-    //     return $this->hasMany(Project::class);
-    // }
-
-    // public function joinedProjects()
-    // {
-    //     return $this->hasMany(ProjectUser::class);
-    // }
-    
     public function projects()
     {
         return $this->belongsToMany(Project::class, 'user_project');

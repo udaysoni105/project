@@ -75,7 +75,6 @@ class TasksController extends Controller
                 return response()->json(['error' => 'An error occurred while retrieving tasks'], 500);
             }
         });
-
         return $result;
     }
 
@@ -136,7 +135,6 @@ class TasksController extends Controller
                 return response()->json(['error' => 'An error occurred while creating the task'], 500);
             }
         });
-
         return $result;
     }
 
@@ -163,7 +161,6 @@ class TasksController extends Controller
                 return response()->json(['error' => 'Task not found'], 404);
             }
         });
-
         return $result;
     }
 
@@ -224,7 +221,6 @@ class TasksController extends Controller
                 return response()->json(['error' => 'Task not found or unable to update'], 404);
             }
         });
-
         return $result;
     }
 
@@ -290,7 +286,6 @@ class TasksController extends Controller
                 return response()->json(['error' => 'Unable to delete task'], 500);
             }
         });
-
         return $result;
     }
 
@@ -318,7 +313,6 @@ class TasksController extends Controller
                 return response()->json(['error' => 'Unable to perform search'], 500);
             }
         });
-
         return $result;
     }
 
@@ -348,7 +342,6 @@ class TasksController extends Controller
                 return response()->json(['error' => 'Unable to perform sorting'], 500);
             }
         });
-
         return $result;
     }
 
@@ -375,7 +368,6 @@ class TasksController extends Controller
                 return response()->json(['error' => 'Unable to fetch tasks'], 500);
             }
         });
-
         return $result;
     }
 
@@ -408,7 +400,6 @@ class TasksController extends Controller
                 return response()->json(['error' => 'Unable to generate PDF'], 500);
             }
         });
-
         return $result;
     }
 

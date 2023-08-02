@@ -139,7 +139,6 @@ class AuthController extends Controller
         return $result;
     }
 
-
     /** 
      * @author : UDAY SONI
      * Method name: refresh
@@ -175,7 +174,6 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws Exception
      */
-
     protected function respondWithToken($token)
     {
         $result = DB::transaction(function () {
@@ -268,7 +266,6 @@ class AuthController extends Controller
         return $result;
     }
 
-
     /** 
      * @author : UDAY SONI
      * Method name: logout
@@ -331,7 +328,6 @@ class AuthController extends Controller
         return $result;
     }
 
-
     /** 
      * @author : UDAY SONI
      * Method name: resetPassword
@@ -378,8 +374,6 @@ class AuthController extends Controller
         return $result;
     }
 
-
-
     /** 
      * @author : UDAY SONI
      * Method name: getCountries
@@ -405,7 +399,6 @@ class AuthController extends Controller
         });
         return $result;
     }
-
 
     /** 
      * @author : UDAY SONI
