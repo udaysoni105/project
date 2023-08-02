@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,HttpHeaders,HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 @Injectable({
@@ -7,39 +7,59 @@ import { catchError } from 'rxjs/operators';
 })
 export class TaskService {
   private baseUrl = 'http://localhost:8000/api/tasks'; // Update with your API endpoint
-  private apiUrl = 'http://localhost:8000/api/projects'; 
+  private apiUrl = 'http://localhost:8000/api/projects';
   private userUrl = 'http://localhost:8000/api/users';
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllTasks(headers: HttpHeaders) {
     const url = `${this.baseUrl}`;
     return this.http.get<any[]>(url, { headers });
   }
+
   projectcreate(): Observable<any> {
     return this.http.get<any>(this.apiUrl);
   }
-  createTask(taskData: any, token: string,email:string): Observable<any> {
+
+  createTask(taskData: any, token: string, email: string): Observable<any> {
     let headers = new HttpHeaders()
-    headers = headers.append('Content-Type','application/json');
+    headers = headers.append('Content-Type', 'application/json');
     headers = headers.append('Permission', 'create_tasks');
     headers = headers.append('Authorization', `Bearer ${token}`);
     headers = headers.append('email', `${email}`);
 
-    const options = { headers: headers};
+    const options = { headers: headers };
     console.log(options);
-    return this.http.post<any>( this. baseUrl, taskData, options);
+    return this.http.post<any>(this.baseUrl, taskData, options);
 
   }
 
   getProjects(): Observable<any[]> {
-    const url = `${this.apiUrl}`; // Update with your API endpoint for projects
-    return this.http.get<any[]>(url);
+    const headers = this.getHeaders(); // Get authentication headers
+    const url = `${this.apiUrl}`;
+    return this.http.get<any[]>(url, { headers });
   }
 
   getUsers(): Observable<any[]> {
-    const url = `${this.userUrl}`;// Update with your API endpoint for users
-    return this.http.get<any[]>(url);
+    const headers = this.getHeaders(); // Get authentication headers
+    const url = `${this.userUrl}`;
+    return this.http.get<any[]>(url, { headers });
   }
+
+  private getHeaders(): HttpHeaders {
+    // Construct your headers here, including authorization token
+    const token = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type', 'application/json');
+    headers = headers.append('Permission', 'create_tasks');
+    headers = headers.append('Authorization', `Bearer ${token}`);
+    headers = headers.append('email', `${email}`);
+
+    return headers;
+  }
+
+
   gettaskById(taskId: string, headers: HttpHeaders): Observable<any> {
     return this.http.get(`${this.baseUrl}/${taskId}`, { headers });
   }
@@ -56,6 +76,7 @@ export class TaskService {
   registertask(task: any): Observable<any> {
     return this.http.post<any>(this.baseUrl, task);
   }
+
   generatePDF(taskId: string): void {
     const url = `${this.baseUrl}/${taskId}/generate-pdf`;
     this.http.get(url, { responseType: 'blob' }).subscribe(

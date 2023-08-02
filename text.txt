@@ -42,3 +42,31 @@ state - password
 public function update (Request $request, $id) {
 Log::info('Admin::AdminProfileController::update::START');
 $result = DB::transaction(function () use ($request. Šid) {
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="card flex justify-content-center">task ID:
+      <p-autoComplete (completeMethod)="search($event)" [suggestions]="suggestions" type="text" id="project_id" name="project_id" formControlName="project_id"  field="name"></p-autoComplete>
+    </div>     
+    search(event: AutoCompleteCompleteEvent) {
+      // Make an HTTP request to your backend API
+      // this.http.get<any[]>('http://127.0.0.1:8000/api/tasks').subscribe(
+        this.taskService.getProjects().subscribe(
+        (response) => {
+          // Set the suggestions with the fetched data
+          this.suggestions = response;
+        },
+        (error) => {
+          console.error(error); // Handle error
+        }
+      );
+    }

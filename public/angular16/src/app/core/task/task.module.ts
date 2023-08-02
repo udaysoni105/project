@@ -31,7 +31,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ProgressBarModule } from 'primeng/progressbar';
-
+import { AutoCompleteModule } from 'primeng/autocomplete';
 @NgModule({
   declarations: [
     TaskCreateComponent,
@@ -63,7 +63,8 @@ import { ProgressBarModule } from 'primeng/progressbar';
     NgFor,
     MatInputModule,
     MatDatepickerModule,
-    ProgressBarModule
+    ProgressBarModule,
+    AutoCompleteModule
   ],
   providers: [TaskService],
   exports: [

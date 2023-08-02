@@ -165,8 +165,6 @@ class AuthController extends Controller
         return $result;
     }
 
-
-
     /** 
      * @author : UDAY SONI
      * Method name: respondWithToken
@@ -199,7 +197,6 @@ class AuthController extends Controller
         });
         return $result;
     }
-
 
     /** 
      * @author : UDAY SONI
@@ -297,7 +294,6 @@ class AuthController extends Controller
         });
         return $result;
     }
-
 
     /** 
      * @author : UDAY SONI

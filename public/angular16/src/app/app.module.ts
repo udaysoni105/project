@@ -59,7 +59,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-
+import { AutoCompleteModule } from 'primeng/autocomplete';
 const routes: Routes = [
   { path: 'register', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
@@ -120,7 +120,8 @@ const routes: Routes = [
     MatInputModule,
     ProgressBarModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    AutoCompleteModule
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
