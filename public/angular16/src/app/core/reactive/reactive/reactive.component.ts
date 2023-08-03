@@ -48,27 +48,20 @@ export class ReactiveComponent implements OnInit {
   //     }
   //   );
   // }
-  restoreProject(projectId: number) {
-    this.isLoading = true; // Set loading to true before the request
-    const index = this.softDeletedProjects.findIndex(project => project.id === projectId);
-    if (index !== -1) {
-      this.softDeletedProjects.splice(index, 1); // Remove the project from the array
-
-      this.reactiveService.restoreProject(projectId).subscribe(
-        (response) => {
-          console.log('Project restored successfully', response);
-          // After restoring, do not need to reload the soft-deleted projects as the restored project was already removed
-          this.isLoading = false; // Set loading to false after the response is received
-        },
-        (error) => {
-          console.error('Failed to restore project', error);
-          this.isLoading = false; // Set loading to false even on error
+  restoreProject(id: number) {
+    this.reactiveService.restoreProject(id).subscribe(
+      (response) => {
+        console.log('Project restored successfully',response);
+        // Mark the project as restored
+        const restoredProject = this.softDeletedProjects.find(project => project.id === id);
+        if (restoredProject) {
+          restoredProject.isRestored = true;
         }
-      );
-    } else {
-      console.warn('Project not found in softDeletedProjects array.'); // Optionally, you can show a warning if the project is not found
-      this.isLoading = false; // Set loading to false since there's no need to make a restore request
-    }
+      },
+      (error) => {
+        console.error('Error restoring project:', error);
+      }
+    );
   }
 
 }

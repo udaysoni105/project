@@ -52,16 +52,18 @@ class TasksController extends Controller
                 $matchedPermission = $rolePermissions->firstWhere('name', $permission);
                 info('user has permission: ' . $matchedPermission->name);
 
-                // Check if the user is an admin or a project manager
-                $isAdmin = $user->hasRole('Admin');
-                $isProjectManager = $user->hasRole('projectManager');
-
-                if ($isAdmin || $isProjectManager) {
-                    // If the user is an admin or project manager, fetch all tasks
-                    $tasks = Task::all();
+                if ($user->hasRole('Admin') || $user->hasRole('projectManager')) {
+                    // If the user is an admin or project manager, fetch all tasks with project names
+                    $tasks = Task::join('projects', 'tasks.project_id', '=', 'projects.id')
+                        ->select('tasks.*', 'projects.name as projectName')
+                        ->get();
                 } else {
-                    // If the user is a developer, fetch only assigned tasks
-                    $tasks = Task::with('Project', 'User')->where('user_id', $user->id)->get();
+                    // If the user is a developer, fetch only assigned tasks with project names
+                    $tasks = Task::with(['project', 'user'])
+                        ->where('user_id', $user->id)
+                        ->select('tasks.*', 'projects.name as projectName')
+                        ->join('projects', 'tasks.project_id', '=', 'projects.id')
+                        ->get();
                 }
 
                 Log::info("Controller::TasksController::index::END");
@@ -86,57 +88,63 @@ class TasksController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $result = DB::transaction(function () use ($request) {
-            try {
-                Log::info("Controller::TasksController::store::START");
-                $permission = $request->header('permission');
-                $user = auth()->user();
-
-                //$userRole = UserRole::where('user_id', $user['id'])->first();
-                $userRole = UserRole::where('user_id', $user->id)->first();
-
-
-                $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
-                    $query->select('permission_id')
-                        ->from('role_has_permissions')
-                        ->where('role_id', $userRole->role_id);
-                })->get();
-
-                $hasPermission = $rolePermissions->contains('name', $permission);
-
-                if (!$hasPermission) {
-                    info('Unauthorized');
-                }
-
-                $matchedPermission = $rolePermissions->firstWhere('name', $permission);
-                info('user has permission: ' . $matchedPermission->name);
-
-                //  Validate the request data
-                $validator = Validator::make($request->all(), [
-                    'name' => 'required',
-                    'description' => 'required',
-                    'start_date' => 'required|date',
-                    'end_date' => 'required|date|after:start_date',
-                ]);
-                if ($validator->fails()) {
-                    return response()->json(['errors' => $validator->errors()], 400);
-                }
-
-                // Create a new task
-                $task = Task::create($request->all());
-                Log::info("Controller::TasksController::store::END");
-                return response()->json(['message' => 'Task created successfully', 'task' => $task]);
-            } catch (\Exception $ex) {
-                // Log the exception if needed
-                Log::error("Error in creating task: " . $ex->getMessage());
-
-                // Return an error response
-                return response()->json(['error' => 'An error occurred while creating the task'], 500);
+{
+    $result = DB::transaction(function () use ($request) {
+        try {
+            Log::info("Controller::TasksController::store::START");
+            $permission = $request->header('permission');
+            $user = auth()->user();
+            
+            $userRole = UserRole::where('user_id', $user->id)->first();
+            
+            $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+                $query->select('permission_id')
+                    ->from('role_has_permissions')
+                    ->where('role_id', $userRole->role_id);
+            })->get();
+            
+            $hasPermission = $rolePermissions->contains('name', $permission);
+            
+            if (!$hasPermission) {
+                info('Unauthorized');
             }
-        });
-        return $result;
-    }
+            
+            $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+            info('user has permission: ' . $matchedPermission->name);
+            
+            // Validate the request data
+            $validator = Validator::make($request->all(), [
+                'name' => 'required',
+                'description' => 'required',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after:start_date',
+                'user_id'=> 'required|array',
+            ]);
+            
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 400);
+            }
+            
+            // Loop through user_id values and create a task for each user
+            foreach ($request->user_id as $userId) {
+                $task = new Task($request->except('user_id'));
+                $task->user_id = $userId;
+                $task->save();
+            }
+            
+            Log::info("Controller::TasksController::store::END");
+            return response()->json(['message' => 'Tasks created successfully', 'task' => $task]);
+        } catch (\Exception $ex) {
+            // Log the exception if needed
+            Log::error("Error in creating tasks: " . $ex->getMessage());
+            
+            // Return an error response
+            return response()->json(['error' => 'An error occurred while creating the tasks'], 500);
+        }
+    });
+    
+    return $result;
+}
 
     /** 
      * @author : UDAY SONI

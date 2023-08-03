@@ -42,7 +42,7 @@
           <th>DESCRIPTION</th>
           <th>START DATE</th>
           <th>END DATE</th>
-          <th>ACTIONS</th>
+          <th>SOFT DELETE</th>
           <th>EDIT</th>
         </tr>
       </ng-template>
@@ -54,7 +54,7 @@
           <td>{{ project.start_date }}</td>
           <td>{{ project.end_date }}</td>
           <td>
-            <p-button (click)="softDeleteProject(project.id)" class="btn btn-primary">Soft Delete</p-button>
+            <p-button (click)="softDeleteProject(project.id)" class="btn btn-primary">Delete</p-button>
           </td>
           <td>
             <p-button [routerLink]="['/project-edit', project.id]" class="btn btn-primary">Edit Project</p-button>

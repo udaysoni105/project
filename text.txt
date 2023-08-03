@@ -70,3 +70,63 @@ $result = DB::transaction(function () use ($request. Šid) {
         }
       );
     }
+
+
+
+
+
+
+    public function store(Request $request)
+    {
+        $result = DB::transaction(function () use ($request) {
+            try {
+                Log::info("Controller::TasksController::store::START");
+                $permission = $request->header('permission');
+                $user = auth()->user();
+
+                //$userRole = UserRole::where('user_id', $user['id'])->first();
+                $userRole = UserRole::where('user_id', $user->id)->first();
+
+
+                $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+                    $query->select('permission_id')
+                        ->from('role_has_permissions')
+                        ->where('role_id', $userRole->role_id);
+                })->get();
+
+                $hasPermission = $rolePermissions->contains('name', $permission);
+
+                if (!$hasPermission) {
+                    info('Unauthorized');
+                }
+
+                $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+                info('user has permission: ' . $matchedPermission->name);
+
+                //  Validate the request data
+                $validator = Validator::make($request->all(), [
+                    'name' => 'required',
+                    'description' => 'required',
+                    'start_date' => 'required|date',
+                    'end_date' => 'required|date|after:start_date',
+                    'user_id' => 'required|array',
+                ]);
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 400);
+                }
+
+                // Create a new task
+                $task = Task::create($request->all());
+
+                Log::info("Controller::TasksController::store::END");
+                return response()->json(['message' => 'Task created successfully', 'task' => $task]);
+            } catch (\Exception $ex) {
+                // Log the exception if needed
+                Log::error("Error in creating task: " . $ex->getMessage());
+
+                // Return an error response
+                return response()->json(['error' => 'An error occurred while creating the task'], 500);
+            }
+        });
+        return $result;
+    }

@@ -20,6 +20,7 @@ export class TaskTableComponent implements OnInit {
     { name: 'Pending' },
     { name: 'completed' }
   ];
+  userRoles: string[] = [];
   loading: boolean = false;
   constructor(
     private taskService: TaskService,
@@ -58,9 +59,12 @@ export class TaskTableComponent implements OnInit {
       (error) => {
         // Handle the error here
         console.error(error);
-
+        this.loading = false; // Stop loading on error
       }
     );
+  }
+  isAdminOrProjectManager(): boolean {
+    return this.userRoles.includes('Admin') || this.userRoles.includes('projectManager');
   }
 
 
@@ -81,6 +85,7 @@ export class TaskTableComponent implements OnInit {
     this.taskService.deletetask(id, headers).subscribe(
       (response) => {
         console.log('task hard deleted successfully');
+        this.loading = false; // Stop loading when the data is fetched
         this.loadTasks();
         this.tasks = this.tasks.filter((task) => task.id !== id);
         this.messageService.add({
@@ -94,6 +99,7 @@ export class TaskTableComponent implements OnInit {
       },
       (error) => {
         console.log('Soft delete failed:', error);
+        this.loading = false; // Stop loading when the data is fetched
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -120,6 +126,7 @@ export class TaskTableComponent implements OnInit {
     return this.tasks.map((task) => task.status);
   }
   updateTaskStatus(task: any, newStatus: string): void {
+    this.loading = true;
     const jwtToken = localStorage.getItem('token');
     if (!jwtToken) {
       console.error('JWT token not found in local storage. Please log in.');
@@ -136,6 +143,8 @@ export class TaskTableComponent implements OnInit {
       (response) => {
         console.log('Task status updated successfully');
         task.status = newStatus; // Update the status in the tasks array on success
+        this.loading = false; // Stop loading when the data is fetched
+        this.loadTasks();
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
@@ -144,6 +153,7 @@ export class TaskTableComponent implements OnInit {
       },
       (error) => {
         console.log('Failed to update task status:', error);
+        this.loading = false; // Stop loading when the data is fetched
         this.messageService.add({
           severity: 'error',
           summary: 'Error',

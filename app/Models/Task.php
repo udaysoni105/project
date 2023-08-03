@@ -48,12 +48,6 @@ class Task extends Model
     {
         return $this->belongsTo(Project::class);
     }
-
-    // Define the relationship between Task and User (Many-to-One)
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
     public function tasks()
     {
         return $this->belongsToMany(Task::class, 'user_task');
@@ -62,6 +56,7 @@ class Task extends Model
     {
         return $this->belongsToMany(User::class, 'user_task');
     }
+    // Define the relationship between Task and User (Many-to-One)
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

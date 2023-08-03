@@ -41,7 +41,7 @@
           <th>END DATE</th>
           <th>HARD DELETE</th>
           <th>EDIT</th>
-          <th>ProjectId</th>
+          <th>Project NAME</th>
           <th>PDF</th>
           <th>STATUS</th>
         </tr>
@@ -59,7 +59,15 @@
           <td>
             <p-button [routerLink]="['/task-edit', task.id]" class="btn btn-primary">Edit Task</p-button>
           </td>
-          <td>{{ task.project_id}}</td>
+          <!-- <td>{{ task.projectName }}</td> -->
+          <td>
+            <ng-container *ngIf="isAdminOrProjectManager(); else projectName">
+              {{ task.project_id }}
+            </ng-container>
+            <ng-template #projectName>
+              {{ task.projectName }}
+            </ng-template>
+          </td>
           <td>
             <p-button (click)="generatePDF(task.id)" class="btn btn-primary">Generate PDF</p-button>
           </td>

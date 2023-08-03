@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Auth;
 class ProjectsController extends Controller
 {
     /** 
+     * 
      * @author : UDAY SONI
      * Method name: index
      * Display a listing of the resource.
@@ -57,7 +58,6 @@ class ProjectsController extends Controller
 
                 $projects = Project::all();
 
-                // $projects = Project::all();
                 Log::info("Controller::ProjectsController::index::END");
                 return response()->json($projects);
             } catch (\Exception $ex) {
@@ -84,7 +84,6 @@ class ProjectsController extends Controller
                 $permission = $request->header('permission');
                 $user = auth()->user();
 
-                //$userRole = UserRole::where('user_id', $user['id'])->first();
                 $userRole = UserRole::where('user_id', $user->id)->first();
 
                 $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
@@ -102,7 +101,6 @@ class ProjectsController extends Controller
                 $matchedPermission = $rolePermissions->firstWhere('name', $permission);
                 info('user has permission: ' . $matchedPermission->name);
 
-                //  Validate the request data
                 $validator = Validator::make($request->all(), [
                     'name' => 'required',
                     'description' => 'required',
@@ -113,7 +111,6 @@ class ProjectsController extends Controller
                     return response()->json(['errors' => $validator->errors()], 400);
                 }
 
-                //  Create a new project
                 $project = Project::create($request->all());
                 Log::info("Controller::ProjectsController::store::END");
                 return response()->json(['message' => 'Project created successfully', 'project' => $project]);
@@ -185,7 +182,6 @@ class ProjectsController extends Controller
                 $matchedPermission = $rolePermissions->firstWhere('name', $permission);
                 info('user has permission: ' . $matchedPermission->name);
 
-                // Validate the request data
                 $validator = Validator::make($request->all(), [
                     'name' => 'required',
                     'description' => 'required',
@@ -214,6 +210,7 @@ class ProjectsController extends Controller
      * @author : UDAY SONI
      * Method name: destroy
      * Remove the specified resource from storage.
+     * soft delete logic here, using the $id parameter
      *
      * @return \Illuminate\Http\Response
      */
@@ -225,7 +222,6 @@ class ProjectsController extends Controller
                 $permission = $request->header('permission');
                 $user = auth()->user();
 
-                //$userRole = UserRole::where('user_id', $user['id'])->first();
                 $userRole = UserRole::where('user_id', $user->id)->first();
 
                 $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
@@ -243,16 +239,14 @@ class ProjectsController extends Controller
                 $matchedPermission = $rolePermissions->firstWhere('name', $permission);
                 info('user has permission: ' . $matchedPermission->name);
 
-                // Perform the soft delete logic here, using the $id parameter
                 $project = Project::find($id);
                 if (!$project) {
                     return response()->json(['message' => 'Project not found'], 404);
                 }
 
-                // Perform the soft delete
                 $project->delete();
                 Log::info("Controller::ProjectsController::destroy::END");
-                // Optionally, return a success response or any additional data
+
                 return response()->json(['message' => 'Project soft deleted successfully']);
             } catch (\Exception $ex) {
                 Log::error("Error in ProjectsController::destroy: " . $ex->getMessage());
@@ -306,10 +300,9 @@ class ProjectsController extends Controller
                 Log::info("Controller::ProjectsController::getProjects::END");
                 return response()->json($projects);
             } catch (\Exception $ex) {
-                // Log the exception if needed
+
                 Log::error("Error in retrieving projects: " . $ex->getMessage());
 
-                // Return an error response
                 return response()->json(['error' => 'An error occurred while retrieving projects'], 500);
             }
         });
@@ -383,7 +376,6 @@ class ProjectsController extends Controller
                 $permission = $request->header('permission');
                 $user = auth()->user();
 
-                //$userRole = UserRole::where('user_id', $user['id'])->first();
                 $userRole = UserRole::where('user_id', $user->id)->first();
 
                 $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
@@ -404,10 +396,9 @@ class ProjectsController extends Controller
                 Log::info("Controller::ProjectsController::softDeletedProjects::END");
                 return response()->json($projects);
             } catch (\Exception $ex) {
-                // Log the exception if needed
+
                 Log::error("Error in retrieving soft-deleted projects: " . $ex->getMessage());
 
-                // Return an error response
                 return response()->json(['error' => 'An error occurred while retrieving soft-deleted projects'], 500);
             }
         });
@@ -434,7 +425,6 @@ class ProjectsController extends Controller
                 $permission = $request->header('permission');
                 $user = auth()->user();
 
-                //$userRole = UserRole::where('user_id', $user['id'])->first();
                 $userRole = UserRole::where('user_id', $user->id)->first();
 
                 $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
@@ -448,6 +438,7 @@ class ProjectsController extends Controller
                 if (!$hasPermission) {
                     info('Unauthorized');
                 }
+
                 $matchedPermission = $rolePermissions->firstWhere('name', $permission);
                 info('user has permission: ' . $matchedPermission->name);
 
@@ -455,10 +446,9 @@ class ProjectsController extends Controller
                 Log::info("Controller::ProjectsController::restore::END");
                 return response()->json(['message' => 'Project restored successfully'], 200);
             } catch (\Exception $ex) {
-                // Log the exception if needed
+
                 Log::error("Error in restoring project: " . $ex->getMessage());
 
-                // Return an error response
                 return response()->json(['error' => 'An error occurred during project restoration'], 500);
             }
         });

@@ -67,6 +67,7 @@ class AuthController extends Controller
                     ['name' => $request->name],
                     ['email' => $request->email],
                     ['password' => bcrypt($request->password)],
+                    // ['email_verified_at' =>!empty($request->Text) ? $request->Text : 'N.A'],
                     ['country' => $request->country],
                     ['state' => $request->state],
                     ['is_verified' => 0]

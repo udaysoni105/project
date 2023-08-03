@@ -61,7 +61,6 @@ export class LoginComponent implements OnInit {
           summary: 'Error',
           detail: 'user is not associated'});
           setTimeout(() => {
-            this.router.navigate(['/registration']);
         },1500 );
       }
     );

@@ -15,6 +15,7 @@ export class TaskCreateComponent implements OnInit {
   projects: SelectItem[] = [];
   users: SelectItem[] = [];
   projectOptions: SelectItem[] = [];
+  loading: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -30,7 +31,7 @@ export class TaskCreateComponent implements OnInit {
       start_date: ['', Validators.required],
       end_date: ['', Validators.required],
       project_id: ['', Validators.required],
-      user_id: ['', Validators.required]
+      user_id: [[], Validators.required]
     });
 
     this.fetchProjects();
@@ -66,21 +67,26 @@ export class TaskCreateComponent implements OnInit {
   }
 
   createtask(): void {
+    this.loading = true;
     console.log(this.taskForm);
-
+  
     const token = localStorage.getItem('token');
     const email = localStorage.getItem('email');
-
+  
     if (token !== null && email !== null) {
       const task = this.taskForm.value;
-      task.user_id = task.user_id.join(',');
-      this.taskService.createTask(this.taskForm.value, token, email).subscribe(
+  
+ // Convert user_id to an array if it's not already
+ task.user_id = Array.isArray(task.user_id) ? task.user_id : [task.user_id];
+  
+      this.taskService.createTask(task, token, email).subscribe(
         (response) => {
           console.log('Task created successfully', response);
           // Reset the form
           this.taskForm.reset();
+          this.loading = false; // Stop loading when the data is fetched
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is created' });
-
+  
           // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
           setTimeout(() => {
             this.router.navigate(['/tasks']);
@@ -88,6 +94,7 @@ export class TaskCreateComponent implements OnInit {
         },
         (error) => {
           console.error('Failed to create task', error);
+          this.loading = false; // Stop loading when the data is fetched
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -97,4 +104,5 @@ export class TaskCreateComponent implements OnInit {
       );
     }
   }
+  
 }
