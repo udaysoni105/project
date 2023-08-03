@@ -373,6 +373,7 @@ class ProjectsController extends Controller
             try {
                 Log::info("Controller::ProjectsController::softDeletedProjects::START");
                 $projects = Project::withTrashed()->get();
+                return response()->json($projects);
                 $permission = $request->header('permission');
                 $user = auth()->user();
 
@@ -394,7 +395,7 @@ class ProjectsController extends Controller
                 info('user has permission: ' . $matchedPermission->name);
 
                 Log::info("Controller::ProjectsController::softDeletedProjects::END");
-                return response()->json($projects);
+                
             } catch (\Exception $ex) {
 
                 Log::error("Error in retrieving soft-deleted projects: " . $ex->getMessage());
@@ -418,31 +419,31 @@ class ProjectsController extends Controller
             try {
                 Log::info("Controller::ProjectsController::restore::START");
                 $project = Project::withTrashed()->find($id);
-
+                $project->restore();
                 if (!$project) {
                     return response()->json(['message' => 'Project not found or already restored'], 404);
                 }
                 $permission = $request->header('permission');
-                $user = auth()->user();
+                // $user = auth()->user();
 
-                $userRole = UserRole::where('user_id', $user->id)->first();
+                // $userRole = UserRole::where('user_id', $user->id)->first();
 
-                $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
-                    $query->select('permission_id')
-                        ->from('role_has_permissions')
-                        ->where('role_id', $userRole->role_id);
-                })->get();
+                // $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+                //     $query->select('permission_id')
+                //         ->from('role_has_permissions')
+                //         ->where('role_id', $userRole->role_id);
+                // })->get();
 
-                $hasPermission = $rolePermissions->contains('name', $permission);
+                // $hasPermission = $rolePermissions->contains('name', $permission);
 
-                if (!$hasPermission) {
-                    info('Unauthorized');
-                }
+                // if (!$hasPermission) {
+                //     info('Unauthorized');
+                // }
 
-                $matchedPermission = $rolePermissions->firstWhere('name', $permission);
-                info('user has permission: ' . $matchedPermission->name);
+                // $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+                // info('user has permission: ' . $matchedPermission->name);
 
-                $project->restore();
+
                 Log::info("Controller::ProjectsController::restore::END");
                 return response()->json(['message' => 'Project restored successfully'], 200);
             } catch (\Exception $ex) {

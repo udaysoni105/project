@@ -38,10 +38,10 @@ Route::group(['middleware' => 'api'], function ($router) {
 
 
 //project
-Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
+// Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
 Route::delete('projects/{id}', [ProjectsController::class, 'softDelete'])->name('projects.softDelete');
 Route::put('/projects/{id}/restore',[ProjectsController::class,  'restore']);
-Route::delete('projects/{id}/soft-deleted', [ProjectsController::class, 'softDeletedProjects'])->name('projects.softDeletedProjects');
+Route::get('projects/{id}/soft-deleted', [ProjectsController::class, 'softDeletedProjects'])->name('projects.softDeletedProjects');
 
 Route::group(['middleware' => 'auth'], function ($router) {
     // Additional routes for searching, sorting, and pagination
@@ -51,7 +51,7 @@ Route::group(['middleware' => 'auth'], function ($router) {
 
     Route::get('/projects', [ProjectsController::class, 'index'])->name('projects.index');
     Route::get('/projects/{id}', [ProjectsController::class, 'show'])->name('projects.show');
-    // Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
+    Route::delete('/projects/{id}/soft-deleted', [ProjectsController::class, 'update'])->name('projects.update');
     Route::post('/projects', [ProjectsController::class,'store'])->name('projects.store');
 });
 

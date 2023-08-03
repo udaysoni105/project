@@ -130,3 +130,131 @@ $result = DB::transaction(function () use ($request. Šid) {
         });
         return $result;
     }
+
+
+
+
+
+
+
+
+     /** 
+     * @author : UDAY SONI
+     * Method name: getSortedProjects
+     * Soft Delete a project for specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function softDelete($id)
+    {
+        $result = DB::transaction(function () use ($id) {
+            try {
+                Log::info("Controller::ProjectsController::softDelete::START");
+                $project = Project::find($id);
+                $project->delete();
+                Log::info("Controller::ProjectsController::softDelete::END");
+                return response()->json(['message' => 'Project soft deleted successfully', 'project' => $project]);
+            } catch (\Exception $ex) {
+                Log::error("Error in ProjectsController::softDelete: " . $ex->getMessage());
+                return response()->json(['error' => 'An error occurred while softDelete projects'], 500);
+            }
+        });
+        return $result;
+    }
+
+    /** 
+     * @author : UDAY SONI
+     * Method name: getSortedProjects
+     * Fetch all projects, including soft-deleted ones for specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function softDeletedProjects(Request $request)
+    {
+        $result = DB::transaction(function () use ($request) {
+            try {
+                Log::info("Controller::ProjectsController::softDeletedProjects::START");
+                $projects = Project::withTrashed()->get();
+                return response()->json($projects);
+                $permission = $request->header('permission');
+                $user = auth()->user();
+
+                $userRole = UserRole::where('user_id', $user->id)->first();
+
+                $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+                    $query->select('permission_id')
+                        ->from('role_has_permissions')
+                        ->where('role_id', $userRole->role_id);
+                })->get();
+
+                $hasPermission = $rolePermissions->contains('name', $permission);
+
+                if (!$hasPermission) {
+                    info('Unauthorized');
+                }
+
+                $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+                info('user has permission: ' . $matchedPermission->name);
+
+                Log::info("Controller::ProjectsController::softDeletedProjects::END");
+
+            } catch (\Exception $ex) {
+
+                Log::error("Error in retrieving soft-deleted projects: " . $ex->getMessage());
+
+                return response()->json(['error' => 'An error occurred while retrieving soft-deleted projects'], 500);
+            }
+        });
+        return $result;
+    }
+
+    /** 
+     * @author : UDAY SONI
+     * Method name: getSortedProjects
+     * Restore a soft-deleted project for specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function restore(Request $request, $id)
+    {
+        $result = DB::transaction(function () use ($id, $request) {
+            try {
+                Log::info("Controller::ProjectsController::restore::START");
+                $project = Project::withTrashed()->find($id);
+
+                if (!$project) {
+                    return response()->json(['message' => 'Project not found or already restored'], 404);
+                }
+                $permission = $request->header('permission');
+                $user = auth()->user();
+
+                $userRole = UserRole::where('user_id', $user->id)->first();
+
+                $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+                    $query->select('permission_id')
+                        ->from('role_has_permissions')
+                        ->where('role_id', $userRole->role_id);
+                })->get();
+
+                $hasPermission = $rolePermissions->contains('name', $permission);
+
+                if (!$hasPermission) {
+                    info('Unauthorized');
+                }
+
+                $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+                info('user has permission: ' . $matchedPermission->name);
+
+                $project->restore();
+                Log::info("Controller::ProjectsController::restore::END");
+                return response()->json(['message' => 'Project restored successfully'], 200);
+            } catch (\Exception $ex) {
+
+                Log::error("Error in restoring project: " . $ex->getMessage());
+
+                return response()->json(['error' => 'An error occurred during project restoration'], 500);
+            }
+        });
+        return $result;
+    }
+}
