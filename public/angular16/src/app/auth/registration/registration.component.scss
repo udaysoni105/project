@@ -1,89 +1,63 @@
-/* Define styles for the registration form */
-h1 {
-  text-align: center;
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 93vh;
+  background-color: #f4f4f4;
 }
 
-form {
+.registration-box {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
-  background-size: cover;
-  background-position: center;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-}
-
-label {
-  font-weight: bold;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-  width: 100%;
-  padding: 8px;
-  margin-top: 4px;
+  justify-content: center;
+  background-color: white;
   border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
   border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 800px;
+  max-width: 90%; /* Add max-width for responsiveness */
 
-  &:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
   }
 
-  &:hover {
-    background-color: #0056b3;
-  }
-}
-.form-group {
-  margin-bottom: 15px;
+  form {
+    display: flex;
+    flex-direction: column;
+    width: 55%; /* Set the form width to 100% */
+    max-width: 800px; /* Set a maximum width if needed */
+    margin: 0 auto; /* Center the form horizontally */
 
-  label {
-    display: block;
-    font-weight: bold;
-  }
+    .form-group {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      div {
+        // margin-bottom: 20px;
+        display: flex;
+        align-items: center;
 
-  select,
-  input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-  }
+        label {
+          min-width: 80px; /* Set a minimum width for the labels */
+          margin-bottom: 5px;
+          font-weight: bold;
+          margin-right: 15px;
+        }
 
-  select {
-    appearance: none;
-    background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23000' viewBox='0 0 16 16'%3E%3Cpath d='M15.8 5.05l-6.5-5C9.06-.2 8.94-.2 8.7.05l-6.5 5C2.07 5.26 2 5.38 2 5.5s.07.24.2.35l1.5 1.5C3.81 7.88 4 8.18 4 8.5V14c0 .28.22.5.5.5s.5-.22.5-.5V9.79l2.65 2.65c.14.14.34.22.55.2.2-.02.37-.14.45-.32l2.5-6c.12-.29-.05-.61-.34-.72-.29-.12-.61.05-.72.34L9.4 8.18l-2.65-2.65c-.14-.14-.34-.22-.55-.2-.2.02-.37.14-.45.32l-2.5 6c-.12.29.05.61.34.72.29.12.61-.05.72-.34L6.6 9.82l1.65 3.18c.1.19.31.32.55.32.21 0 .41-.08.55-.2l2.5-2.5c.12-.13.2-.3.2-.5s-.08-.37-.2-.5zM8 1.23L11.27 5H4.73L8 1.23z'/%3E%3C/svg%3E")
-      no-repeat right 8px center;
-    background-size: 14px;
-  }
-
-  button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
+        input {
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          width: 100%;
+          margin-bottom: 10px;
+          max-width: 600px; /* Adjust the max-width to your preference */
+          margin-bottom: 10px;
+        }
+      }
+    }
   }
 }
+

@@ -12,6 +12,7 @@ import { MessageService } from 'primeng/api';
 
 export class ProjectCreateComponent implements OnInit {
   projectForm!: FormGroup;
+  loading: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -31,6 +32,7 @@ export class ProjectCreateComponent implements OnInit {
   }
 
   createProject() {
+    this.loading = true;
     console.log(this.projectForm);
 
     const token = localStorage.getItem('token');
@@ -43,6 +45,7 @@ export class ProjectCreateComponent implements OnInit {
           (response) => {
             console.log('Project created successfully', response);
             this.projectForm.reset();
+            this.loading = false; // Stop loading when the data is fetched
             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is created' });
 
             // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
@@ -52,6 +55,7 @@ export class ProjectCreateComponent implements OnInit {
           },
           (error) => {
             console.error('Failed to create project', error);
+            this.loading = false; // Stop loading when the data is fetched
             this.messageService.add({
               severity: 'error',
               summary: 'Error',

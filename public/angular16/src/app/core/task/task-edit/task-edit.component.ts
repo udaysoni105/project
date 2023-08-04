@@ -4,6 +4,8 @@ import { TaskService } from '../task.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
+import { SelectItem } from 'primeng/api';
+
 @Component({
   selector: 'app-task-edit',
   templateUrl: './task-edit.component.html',
@@ -14,6 +16,8 @@ export class TaskEditComponent implements OnInit {
   taskId!: string;
   tasks: any[] = [];
   loading: boolean = false;
+  users: SelectItem[] = [];
+  projectOptions: SelectItem[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -31,13 +35,26 @@ export class TaskEditComponent implements OnInit {
       end_date: ['', Validators.required],
       // completed: [false],
       project_id: ['', Validators.required],
-      // user_id:['',Validators.required]
+      user_id:[[],Validators.required]
     });
 
     this.route.params.subscribe((params) => {
       this.taskId = params['id'];
       this.loadTaskDetails();
     });
+    this.route.data.subscribe((data: any) => {
+      if (data['taskAndUsers']) { // Access the property using ['propertyName']
+        const { taskDetails, users } = data['taskAndUsers'];
+        this.taskForm.patchValue(taskDetails);
+        this.users = users.map((user: any) => ({
+          label: user.name,
+          value: user.id
+        }));
+        this.loading = false;
+      }
+    });
+    this.fetchProjects();
+    this.fetchUsers();
   }
 
   loadTaskDetails(): void {
@@ -55,6 +72,10 @@ export class TaskEditComponent implements OnInit {
       taskId: this.taskId,
       Permission: 'update_tasks' // Add the Permission header with the desired value
     });
+    const task = this.taskForm.value;
+  
+    // Convert user_id to an array if it's not already
+    task.user_id = Array.isArray(task.user_id) ? task.user_id : [task.user_id];
 
     // Make the API call with the headers and task ID
     this.taskService.gettaskById(this.taskId, headers).subscribe(
@@ -68,6 +89,36 @@ export class TaskEditComponent implements OnInit {
       (error) => {
         // Handle the error here
         console.error(error);
+      }
+    );
+  }
+  fetchProjects(): void {
+    this.taskService.getProjects().subscribe(
+      (projects) => {
+        this.projectOptions = projects.map((project) => ({
+          label: project.name,
+          value: project.id,
+        }));
+      },
+      (error) => {
+        console.error('Error fetching projects:', error);
+      }
+    );
+  }
+
+  fetchUsers(): void {
+    this.loading = true;
+    this.taskService.getUsers().subscribe(
+      (users) => {
+        this.users = users.map((user: any) => ({
+          label: user.name,
+          value: user.id, // Adjust this based on your actual user data structure
+        }));
+        this.loading = false; // Stop loading when the data is fetched
+      },
+      (error) => {
+        console.error('Error fetching users:', error);
+        this.loading = false; // Stop loading when the data is fetched
       }
     );
   }
@@ -88,7 +139,10 @@ export class TaskEditComponent implements OnInit {
         Authorization: `Bearer ${jwtToken}`,
         Permission: 'update_tasks' // Add the Permission header with the desired value
       });
-  
+      const task = this.taskForm.value;
+
+      task.user_id = Array.isArray(task.user_id) ? task.user_id : [task.user_id];
+
       this.taskService.updateTask(this.taskId, taskData, headers).subscribe(
         (response) => {
           console.log('task updated successfully', response);

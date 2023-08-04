@@ -3,54 +3,60 @@
     Created on: July 13, 2023
     Note: Design for create task Page. 
 -->
-<h2>Task Registration Form</h2>
-<p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
-<div class="loading-container" *ngIf="loading">
-  <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
-</div>
-<form [formGroup]="taskForm" (ngSubmit)="createtask()">
-  <div class="form-group">
-    <div>
-      <label for="name">Name: </label>
-      <input type="text" id="name" name="name" formControlName="name" required>
+<div class="container">
+  <div class="task-Create-box">
+    <h1>Task Create Form</h1>
+    <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
+    <div class="loading-container" *ngIf="loading">
+      <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
     </div>
+    <form [formGroup]="taskForm" (ngSubmit)="createtask()">
+      <div class="form-group">
+        <div>
+          <label for="name">Name*: </label>
+          <input type="text" id="name" name="name" formControlName="name" pInputText required>
+        </div>
 
-    <div>
-      <label for="description">Description: </label>
-      <textarea id="description" name="description" formControlName="description"></textarea>
-    </div>
+        <div>
+          <label for="description">Description: </label>
+          <textarea id="description" name="description" formControlName="description" pInputTextarea></textarea>
+        </div>
 
-    <div>
-      <label for="start_date">Start Date: </label>
-      <input type="date" id="start_date" name="start_date" formControlName="start_date" required>
-    </div>
+        <div>
+          <label for="start_date">Start Date*: </label>
+          <input type="date" id="start_date" name="start_date" formControlName="start_date" pCalendar required>
+        </div>
 
-    <div>
-      <label for="end_date">End Date: </label>
-      <input type="date" id="end_date" name="end_date" formControlName="end_date" required>
-    </div>
+        <div>
+          <label for="end_date">End Date*: </label>
+          <input type="date" id="end_date" name="end_date" formControlName="end_date" pCalendar required>
+        </div>
 
-    <div>
-      <mat-form-field>
-        <mat-label>Project: </mat-label>
-        <mat-select formControlName="project_id" required >
-          <mat-option *ngFor="let project of projectOptions" [value]="project.value">
-            {{ project.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field>
-        <mat-label>User: </mat-label>
-        <mat-select formControlName="user_id" required multiple>
-          <mat-option *ngFor="let user of users" [value]="user.value">
-            {{ user.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+        <div>
+          <label for="Project">Project*: </label>
+          <mat-form-field>
+            <mat-label>Project</mat-label>
+            <mat-select formControlName="project_id" required>
+              <mat-option *ngFor="let project of projectOptions" [value]="project.value">
+                {{ project.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <label for="User">User: </label>
+          <mat-form-field>
+            <mat-label>User</mat-label>
+            <mat-select formControlName="user_id" required multiple>
+              <mat-option *ngFor="let user of users" [value]="user.value">
+                {{ user.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <p-button type="submit" [disabled]="taskForm.invalid">Register Task</p-button>
+    </form>
   </div>
-
-  <p-button type="submit" [disabled]="taskForm.invalid">Register Task</p-button>
-</form>
+</div>

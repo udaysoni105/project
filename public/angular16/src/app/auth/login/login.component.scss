@@ -1,65 +1,82 @@
-h1 {
-  text-align: center;
-}
-
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 93vh;
+  background-color: #f4f4f4;
 }
 
 .login-box {
+  background-color: white;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
   width: 400px;
-}
 
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  div {
+  h1 {
+    text-align: center;
     margin-bottom: 20px;
-
-    label {
-      margin-right: 10px;
-      font-weight: bold;
-    }
-
-    input {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      width: 100%;
-    }
   }
 
-  button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+  form {
+    display: flex;
+    flex-direction: column;
 
-    &:hover {
-      background-color: #0056b3;
+    div {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+
+      label {
+        min-width: 80px;
+        margin-right: 10px;
+        font-weight: bold;
+      }
+
+      input {
+        flex: 1;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+      }
+    }
+
+    .forgot-password-link {
+      text-align: right;
+      margin-top: 10px;
+
+      a {
+        color: blue;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .register-link {
+      text-align: center;
+      cursor: pointer;
+      margin-left: 40px;
+      margin-top: 10px;
+
+      p {
+        margin: 50; /* Remove default margins from the <p> tag */
+        text-align: center;
+      }
+
+      a {
+        color: blue;
+        text-decoration: none;
+        display: inline-block; /* Add this to make the link centered */
+        margin-top: 10px; /* Add some top margin for spacing */
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
   }
-  .register-link {
-    color: blue;
-  }
-  
 }
-

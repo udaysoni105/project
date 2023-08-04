@@ -46,16 +46,12 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('role', role);
         this.users = { email: '', password: '' };
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'login successfully' });
-
-        // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
         },1500 );
       },
       (error) => {
         console.error(error);
-        // this.router.navigate(['/registration']);
-        // console.log("user is not registered");
         this.messageService.add({
           severity: 'error',
           summary: 'Error',

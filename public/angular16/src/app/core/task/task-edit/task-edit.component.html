@@ -3,36 +3,71 @@
     Created on: July 13, 2023
     Note: Design for edit task Page. 
 -->
-<h2>Edit Task</h2>
-<p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
-<div class="loading-container" *ngIf="loading">
-  <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+<div class="container">
+  <div class="task-form">
+    <h1>Task Edit Form</h1>
+    <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
+    <div class="loading-container" *ngIf="loading">
+      <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+    </div>
+    <form class="form" (ngSubmit)="onUpdate()" [formGroup]="taskForm">
+      <div class="form-group">
+        <label for="name">Name*: </label>
+        <input type="text" id="name" name="name" pInputText formControlName="name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description: </label>
+        <textarea id="description" name="description" pInputTextarea formControlName="description"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="start_date">Start Date*: </label>
+        <input type="date" id="start_date" name="start_date" pCalendar formControlName="start_date" required>
+      </div>
+
+      <div class="form-group">
+        <label for="end_date">End Date*: </label>
+        <input type="date" id="end_date" name="end_date" pCalendar formControlName="end_date" required>
+      </div>
+
+      <!-- <div class="form-group">
+        <label for="project_id">Project ID: </label>
+        <input type="text" id="project_id" name="project_id" formControlName="project_id" required>
+      </div>
+
+
+      <div class="form-group">
+        <label for="user_id">User ID: </label>
+        <input type="text" id="user_id" name="user_id" formControlName="user_id" required>
+      </div> -->
+
+      <div>
+        <label for="Project">Project*: </label>
+        <mat-form-field>
+          <mat-label>Project </mat-label>
+          <mat-select formControlName="project_id" required>
+            <mat-option *ngFor="let project of projectOptions" [value]="project.value">
+              {{ project.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <label for="user_id">Users*: </label>
+        <mat-form-field>
+          <mat-label>Users </mat-label>
+          <mat-select formControlName="user_id" required multiple>
+            <mat-option *ngFor="let user of users" [value]="user.value">
+              {{ user.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      
+
+      <p-button type="submit" >Update Task</p-button>
+    </form>
+  </div>
 </div>
-<form class="task-form" (ngSubmit)="onUpdate()" [formGroup]="taskForm">
-  <div class="form-group">
-    <label for="name">Name</label>
-    <input type="text" id="name" name="name" pInputText formControlName="name" required>
-  </div>
-
-  <div class="form-group">
-    <label for="description">Description</label>
-    <textarea id="description" name="description" pInputTextarea formControlName="description"></textarea>
-  </div>
-
-  <div class="form-group">
-    <label for="start_date">Start Date</label>
-    <input type="date" id="start_date" name="start_date" pCalendar formControlName="start_date" required>
-  </div>
-
-  <div class="form-group">
-    <label for="end_date">End Date</label>
-    <input type="date" id="end_date" name="end_date" pCalendar formControlName="end_date" required>
-  </div>
-
-  <div class="form-group">
-    <label for="project_id">Project ID</label>
-    <input type="text" id="project_id" name="project_id" formControlName="project_id" required>
-  </div>
-  
-  <p-button type="submit" [disabled]="!taskForm.valid" class="btn btn-primary btn-block btn-lg">Update Task</p-button>
-</form>

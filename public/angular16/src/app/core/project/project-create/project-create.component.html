@@ -3,29 +3,31 @@
     Created on: July 13, 2023
     Note: Design for create project Page. 
 -->
-<p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
-<h2>Register Form</h2>
-
-<form (ngSubmit)="createProject()" [formGroup]="projectForm">
-  <div>
-    <label for="name">Name: </label>
-    <input type="text" id="name" formControlName="name" required>
+<div class="container">
+  <div class="registration-box">
+    <h1>Project Create Form</h1>
+    <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
+    <div class="loading-container" *ngIf="loading">
+      <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+    </div>
+    <form (ngSubmit)="createProject()" [formGroup]="projectForm">
+      <div>
+        <label for="name">Name*: </label>
+        <input type="text" id="name" formControlName="name" pInputText required>
+      </div>
+      <div>
+        <label for="description">Description: </label>
+        <textarea type="text" id="description" formControlName="description" pInputTextarea required></textarea>
+      </div>
+      <div>
+        <label for="start_date">Start Date*: </label>
+        <input type="date" id="start_date" formControlName="start_date" pCalendar required>
+      </div>
+      <div>
+        <label for="end_date">End Date*: </label>
+        <input type="date" id="end_date" formControlName="end_date" pCalendar required>
+      </div>
+      <p-button type="submit" [disabled]="projectForm.invalid">Create Project</p-button>
+    </form>
   </div>
-  <div>
-    <label for="description">Description: </label>
-    <input type="text" id="description" formControlName="description" required>
-  </div>
-  <div>
-    <label for="start_date">Start Date: </label>
-    <input type="date" id="start_date" formControlName="start_date" required>
-  </div>
-  <div>
-    <label for="end_date">End Date: </label>
-    <input type="date" id="end_date" formControlName="end_date" required>
-  </div>
-  <!-- <div>
-      <label for="status">Status: </label>
-      <input type="text" id="status" formControlName="status" required>
-    </div> -->
-  <p-button type="submit">Create Project</p-button>
-</form>
+</div>

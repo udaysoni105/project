@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Token } from '@angular/compiler';
 import { MessageService } from 'primeng/api';
 import { ReactiveService } from '../../reactive/reactive.service';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-project-table',
   templateUrl: './project-table.component.html',
@@ -21,7 +21,8 @@ export class ProjectTableComponent {
   constructor(
     private projectService: ProjectService,
     private messageService: MessageService,
-    private reactiveService: ReactiveService
+    private reactiveService: ReactiveService,
+    private router:Router
   ) { }
 
   ngOnInit() {
@@ -55,8 +56,12 @@ export class ProjectTableComponent {
       },
       (error) => {
         // Handle the error here
-        console.error(error);
+        console.log(error);
         this.loading = false; // Stop loading when the data is fetched
+        if (error.status === 403) {
+          // Unauthorized or Forbidden
+          this.router.navigate(['/**']); // Navigate to the custom 404 page
+        }
       }
     );
   }
@@ -102,7 +107,6 @@ export class ProjectTableComponent {
   }
 
   getProjects(): void {
-    this.loading = true;
     this.projectService.getProjects().subscribe(
       (response) => {
         this.projects = response;
@@ -124,16 +128,14 @@ export class ProjectTableComponent {
   // }
 
   onSearch(): void {
-    this.loading = true;
     this.projectService.searchProjects(this.searchQuery).subscribe(
       (response) => {
         console.log('Search Response:', response);
         this.projects = response.data; // Extract the 'data' array from the response
-        this.loading = false; // Stop loading when the data is fetched
       },
       (error) => {
         console.log(error);
-        this.loading = false; // Stop loading when the data is fetched
+
       }
     );
   }
@@ -147,11 +149,9 @@ export class ProjectTableComponent {
       this.projectService.getSortedProjects(column, direction).subscribe(
         (response) => {
           this.projects = response;
-          this.loading = false; // Stop loading when the data is fetched
         },
         (error) => {
           console.log(error);
-          this.loading = false; // Stop loading when the data is fetched
         }
       );
     }

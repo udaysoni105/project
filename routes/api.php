@@ -24,10 +24,12 @@ use App\Http\Controllers\UserController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 //user
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/me', [AuthController::class, 'me']);
 Route::post('/refresh', [AuthController::class, 'refresh']);
+
 Route::group(['middleware' => 'api'], function ($router) {
     Route::match(['get', 'post'], '/login', [AuthController::class, 'login'])->name('login');
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -38,7 +40,6 @@ Route::group(['middleware' => 'api'], function ($router) {
 
 
 //project
-// Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
 Route::delete('projects/{id}', [ProjectsController::class, 'softDelete'])->name('projects.softDelete');
 Route::put('/projects/{id}/restore',[ProjectsController::class,  'restore']);
 Route::get('projects/{id}/soft-deleted', [ProjectsController::class, 'softDeletedProjects'])->name('projects.softDeletedProjects');
@@ -51,10 +52,9 @@ Route::group(['middleware' => 'auth'], function ($router) {
 
     Route::get('/projects', [ProjectsController::class, 'index'])->name('projects.index');
     Route::get('/projects/{id}', [ProjectsController::class, 'show'])->name('projects.show');
-    Route::delete('/projects/{id}/soft-deleted', [ProjectsController::class, 'update'])->name('projects.update');
+    Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
     Route::post('/projects', [ProjectsController::class,'store'])->name('projects.store');
 });
-
 
 //tasks
 Route::put('/tasks/{id}', [TasksController::class, 'update'])->name('tasks.update');

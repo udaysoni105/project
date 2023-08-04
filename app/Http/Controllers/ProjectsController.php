@@ -208,56 +208,6 @@ class ProjectsController extends Controller
 
     /** 
      * @author : UDAY SONI
-     * Method name: destroy
-     * Remove the specified resource from storage.
-     * soft delete logic here, using the $id parameter
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request, $id)
-    {
-        $result = DB::transaction(function () use ($request, $id) {
-            try {
-                Log::info("Controller::ProjectsController::destroy::START");
-                $permission = $request->header('permission');
-                $user = auth()->user();
-
-                $userRole = UserRole::where('user_id', $user->id)->first();
-
-                $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
-                    $query->select('permission_id')
-                        ->from('role_has_permissions')
-                        ->where('role_id', $userRole->role_id);
-                })->get();
-
-                $hasPermission = $rolePermissions->contains('name', $permission);
-
-                if (!$hasPermission) {
-                    info('Unauthorized');
-                }
-
-                $matchedPermission = $rolePermissions->firstWhere('name', $permission);
-                info('user has permission: ' . $matchedPermission->name);
-
-                $project = Project::find($id);
-                if (!$project) {
-                    return response()->json(['message' => 'Project not found'], 404);
-                }
-
-                $project->delete();
-                Log::info("Controller::ProjectsController::destroy::END");
-
-                return response()->json(['message' => 'Project soft deleted successfully']);
-            } catch (\Exception $ex) {
-                Log::error("Error in ProjectsController::destroy: " . $ex->getMessage());
-                return response()->json(['error' => 'An error occurred while soft deleting the project'], 500);
-            }
-        });
-        return $result;
-    }
-
-    /** 
-     * @author : UDAY SONI
      * Method name: searchProjects
      * searchProjects the specified resource from storage.
      *
@@ -373,28 +323,29 @@ class ProjectsController extends Controller
             try {
                 Log::info("Controller::ProjectsController::softDeletedProjects::START");
                 $projects = Project::withTrashed()->get();
-                return response()->json($projects);
-                $permission = $request->header('permission');
-                $user = auth()->user();
-
-                $userRole = UserRole::where('user_id', $user->id)->first();
-
-                $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
-                    $query->select('permission_id')
-                        ->from('role_has_permissions')
-                        ->where('role_id', $userRole->role_id);
-                })->get();
-
-                $hasPermission = $rolePermissions->contains('name', $permission);
-
-                if (!$hasPermission) {
-                    info('Unauthorized');
-                }
-
-                $matchedPermission = $rolePermissions->firstWhere('name', $permission);
-                info('user has permission: ' . $matchedPermission->name);
-
                 Log::info("Controller::ProjectsController::softDeletedProjects::END");
+                return response()->json($projects);
+                // $permission = $request->header('permission');
+                // $user = auth()->user();
+
+                // $userRole = UserRole::where('user_id', $user->id)->first();
+
+                // $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+                //     $query->select('permission_id')
+                //         ->from('role_has_permissions')
+                //         ->where('role_id', $userRole->role_id);
+                // })->get();
+
+                // $hasPermission = $rolePermissions->contains('name', $permission);
+
+                // if (!$hasPermission) {
+                //     info('Unauthorized');
+                // }
+
+                // $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+                // info('user has permission: ' . $matchedPermission->name);
+
+
                 
             } catch (\Exception $ex) {
 

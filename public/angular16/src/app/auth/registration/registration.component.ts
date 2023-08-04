@@ -14,7 +14,7 @@ import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from
 export class RegistrationComponent implements OnInit {
   registrationForm!: FormGroup;
   user: any = {};
-  formGroup!: FormGroup; 
+  formGroup!: FormGroup;
   countries: any[] = [];
   states: any[] = [];
   // selectedCountryCode: string | undefined;
@@ -25,7 +25,7 @@ export class RegistrationComponent implements OnInit {
     private authService: AuthService,
     private http: HttpClient,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // this.fetchCountries();
@@ -39,7 +39,7 @@ export class RegistrationComponent implements OnInit {
     }, {
       // validator: this.passwordMatchValidator // Custom validator to check password match
     });
-  
+
     // this.authService.getCountries().subscribe(
     //   (countries: Country[]) => {
     //     this.countries = countries;
@@ -49,7 +49,7 @@ export class RegistrationComponent implements OnInit {
     //   }
     // );
   }
-    // Custom validator function to check if passwords match
+  // Custom validator function to check if passwords match
 
 
   register() {
@@ -64,7 +64,7 @@ export class RegistrationComponent implements OnInit {
         // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
         setTimeout(() => {
           this.router.navigate(['/login']);
-        },1500 );
+        }, 1500);
       },
       error => {
         // Registration failed

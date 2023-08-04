@@ -88,63 +88,63 @@ class TasksController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-{
-    $result = DB::transaction(function () use ($request) {
-        try {
-            Log::info("Controller::TasksController::store::START");
-            $permission = $request->header('permission');
-            $user = auth()->user();
-            
-            $userRole = UserRole::where('user_id', $user->id)->first();
-            
-            $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
-                $query->select('permission_id')
-                    ->from('role_has_permissions')
-                    ->where('role_id', $userRole->role_id);
-            })->get();
-            
-            $hasPermission = $rolePermissions->contains('name', $permission);
-            
-            if (!$hasPermission) {
-                info('Unauthorized');
+    {
+        $result = DB::transaction(function () use ($request) {
+            try {
+                Log::info("Controller::TasksController::store::START");
+                $permission = $request->header('permission');
+                $user = auth()->user();
+
+                $userRole = UserRole::where('user_id', $user->id)->first();
+
+                $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+                    $query->select('permission_id')
+                        ->from('role_has_permissions')
+                        ->where('role_id', $userRole->role_id);
+                })->get();
+
+                $hasPermission = $rolePermissions->contains('name', $permission);
+
+                if (!$hasPermission) {
+                    info('Unauthorized');
+                }
+
+                $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+                info('user has permission: ' . $matchedPermission->name);
+
+                // Validate the request data
+                $validator = Validator::make($request->all(), [
+                    'name' => 'required',
+                    'description' => 'required',
+                    'start_date' => 'required|date',
+                    'end_date' => 'required|date|after:start_date',
+                    'user_id' => 'required|array',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 400);
+                }
+
+                // Loop through user_id values and create a task for each user
+                foreach ($request->user_id as $userId) {
+                    $task = new Task($request->except('user_id'));
+                    $task->user_id = $userId;
+                    $task->save();
+                }
+
+                Log::info("Controller::TasksController::store::END");
+                return response()->json(['message' => 'Tasks created successfully', 'task' => $task]);
+            } catch (\Exception $ex) {
+                // Log the exception if needed
+                Log::error("Error in creating tasks: " . $ex->getMessage());
+
+                // Return an error response
+                return response()->json(['error' => 'An error occurred while creating the tasks'], 500);
             }
-            
-            $matchedPermission = $rolePermissions->firstWhere('name', $permission);
-            info('user has permission: ' . $matchedPermission->name);
-            
-            // Validate the request data
-            $validator = Validator::make($request->all(), [
-                'name' => 'required',
-                'description' => 'required',
-                'start_date' => 'required|date',
-                'end_date' => 'required|date|after:start_date',
-                'user_id'=> 'required|array',
-            ]);
-            
-            if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 400);
-            }
-            
-            // Loop through user_id values and create a task for each user
-            foreach ($request->user_id as $userId) {
-                $task = new Task($request->except('user_id'));
-                $task->user_id = $userId;
-                $task->save();
-            }
-            
-            Log::info("Controller::TasksController::store::END");
-            return response()->json(['message' => 'Tasks created successfully', 'task' => $task]);
-        } catch (\Exception $ex) {
-            // Log the exception if needed
-            Log::error("Error in creating tasks: " . $ex->getMessage());
-            
-            // Return an error response
-            return response()->json(['error' => 'An error occurred while creating the tasks'], 500);
-        }
-    });
-    
-    return $result;
-}
+        });
+
+        return $result;
+    }
 
     /** 
      * @author : UDAY SONI
@@ -184,6 +184,7 @@ class TasksController extends Controller
         $result = DB::transaction(function () use ($request, $id, $task) {
             try {
                 Log::info("Controller::TasksController::update::START");
+
                 $permission = $request->header('permission');
                 $user = auth()->user();
 
@@ -210,16 +211,21 @@ class TasksController extends Controller
                     'description' => 'required',
                     'start_date' => 'required|date',
                     'end_date' => 'required|date|after:start_date',
+                    // 'user_id'=> 'required|array',
                 ]);
 
                 if ($validator->fails()) {
                     return response()->json(['errors' => $validator->errors()], 400);
                 }
-                // Update the task
-                $task = Task::findOrFail($id);
-                $task->update($request->all());
+                // Loop through user_id values and create a task for each user
+                foreach ($request->user_id as $userId) {
+                    $task = new Task($request->except('user_id'));
+                    $task->user_id = $userId;
+                    $task->save();
+                }
 
                 Log::info("Controller::TasksController::update::END");
+
                 return response()->json(['message' => 'Task updated successfully', 'Task' => $task]);
             } catch (\Exception $ex) {
                 // Log the exception if needed
@@ -410,30 +416,4 @@ class TasksController extends Controller
         });
         return $result;
     }
-
-    // /** 
-    //  * @author : UDAY SONI
-    //  * Method name: assignTaskToDeveloper
-    //  * assignTaskToDeveloper the tasks in user.
-    //  *
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function assignTaskToDeveloper(Request $request, Task $task)
-    // {
-    //     // Check if the user has project manager role
-    //     if (!auth()->user()->hasRole('project_manager')) {
-    //         return response()->json(['message' => 'Unauthorized'], 403);
-    //     }
-
-    //     // Validate the request data (e.g., the selected developer ID)
-    //     $request->validate([
-    //         'developer_id' => 'required|exists:users,id',
-    //     ]);
-
-    //     // Assign the task to the selected developer
-    //     $task->developer_id = $request->input('developer_id');
-    //     $task->save();
-
-    //     return response()->json(['message' => 'Task assigned successfully']);
-    // }
 }
