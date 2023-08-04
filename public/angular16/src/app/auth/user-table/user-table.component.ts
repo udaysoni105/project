@@ -4,6 +4,8 @@ import { Table } from 'primeng/table';
 import { SortEvent } from 'primeng/api';
 import { User } from './user';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-table',
@@ -19,10 +21,16 @@ export class UserTableComponent implements OnInit {
   @ViewChild('table') table!: Table;
 
   loading: boolean = false;
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService,    
+    private messageService: MessageService,
+    private router:Router) { }
 
   ngOnInit() {
     this.loadUsers();
+  }
+
+  displayNA(value: any): string {
+    return value !== null && value !== undefined ? value : 'N.A';
   }
 
   loadUsers() {
@@ -50,9 +58,19 @@ export class UserTableComponent implements OnInit {
         this.loading = false; // Stop loading when the data is fetched
       },
       (error) => {
-        // Handle the error here
-        console.error(error);
-      }
+        console.log('Soft delete failed:', error);
+        this.loading = false;
+        if (error.status === 404) {
+            this.router.navigate(['/**']); // Navigate to the custom 404 page
+        } else {
+          this.router.navigate(['/**']);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Failed to softDelete project',
+            });
+        }
+    }
     );
   }
 

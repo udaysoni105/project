@@ -12,7 +12,7 @@
     </div>
     <form (ngSubmit)="createProject()" [formGroup]="projectForm">
       <div>
-        <label for="name">Name*: </label>
+        <label for="name">Name* </label>
         <input type="text" id="name" formControlName="name" pInputText required>
       </div>
       <div>
@@ -20,11 +20,11 @@
         <textarea type="text" id="description" formControlName="description" pInputTextarea required></textarea>
       </div>
       <div>
-        <label for="start_date">Start Date*: </label>
+        <label for="start_date">Start Date* </label>
         <input type="date" id="start_date" formControlName="start_date" pCalendar required>
       </div>
       <div>
-        <label for="end_date">End Date*: </label>
+        <label for="end_date">End Date* </label>
         <input type="date" id="end_date" formControlName="end_date" pCalendar required>
       </div>
       <p-button type="submit" [disabled]="projectForm.invalid">Create Project</p-button>

@@ -60,6 +60,8 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { JsonPipe } from './pipename.pipe';
+
 const routes: Routes = [
   { path: 'register', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
@@ -90,7 +92,8 @@ const routes: Routes = [
     MainComponent,
     ProfileComponent,
     UserchecktableComponent,
-    ReactiveComponent
+    ReactiveComponent,
+    JsonPipe
   ],
   imports: [
     BrowserModule,

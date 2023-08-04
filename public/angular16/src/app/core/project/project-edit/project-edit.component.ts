@@ -30,8 +30,7 @@ export class ProjectEditComponent implements OnInit {
       name: ['', Validators.required],
       description: [''],
       start_date: ['', Validators.required],
-      end_date: ['', Validators.required],
-      status: ['', Validators.required]
+      end_date: ['', Validators.required]
     });
 
     this.route.params.subscribe((params) => {

@@ -25,7 +25,7 @@ export class ProjectCreateComponent implements OnInit {
   ngOnInit(): void {
     this.projectForm = this.formBuilder.group({
       name: ['', Validators.required],
-      description: ['', Validators.required],
+      description: [''],
       start_date: ['', Validators.required],
       end_date: ['', Validators.required]
     });

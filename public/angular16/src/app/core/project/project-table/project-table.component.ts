@@ -54,15 +54,30 @@ export class ProjectTableComponent {
         this.loading = false; // Stop loading when the data is fetched
 
       },
+      // (error) => {
+      //   // Handle the error here
+      //   console.log(error);
+      //   this.loading = false; // Stop loading when the data is fetched
+      //   if (error.status === 403) {
+      //     // Unauthorized or Forbidden
+      //     this.router.navigate(['/**']); // Navigate to the custom 404 page
+      //   }
+      // }
       (error) => {
-        // Handle the error here
-        console.log(error);
-        this.loading = false; // Stop loading when the data is fetched
-        if (error.status === 403) {
-          // Unauthorized or Forbidden
-          this.router.navigate(['/**']); // Navigate to the custom 404 page
+        console.log('Soft delete failed:', error);
+        this.loading = false;
+        if (error.status === 404) {
+            this.router.navigate(['/**']); // Navigate to the custom 404 page
+        } else {
+          this.router.navigate(['/**']);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Failed to softDelete project',
+            });
         }
-      }
+    }
+    
     );
   }
 

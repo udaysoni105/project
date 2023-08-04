@@ -45,10 +45,23 @@ export class TaskCreateComponent implements OnInit {
           label: project.name,
           value: project.id,
         }));
-      },
-      (error) => {
-        console.error('Error fetching projects:', error);
-      }
+      }  ,      (error) => {
+        console.error('Failed to create task', error);
+        this.loading = false;
+        if (error.status === 404) {
+            this.router.navigate(['/**']); // Navigate to the custom 404 page
+        } else {
+          this.router.navigate(['/**']);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Failed to softDelete project',
+            });
+        }
+    },
+      // (error) => {
+      //   console.error('Error fetching projects:', error);
+      // }
     );
   }
 

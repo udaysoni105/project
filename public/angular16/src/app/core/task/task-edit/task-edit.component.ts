@@ -23,9 +23,9 @@ export class TaskEditComponent implements OnInit {
     private formBuilder: FormBuilder,
     private taskService: TaskService,
     private route: ActivatedRoute,
-    private router:Router,
-    private messageService: MessageService 
-  ) {}
+    private router: Router,
+    private messageService: MessageService
+  ) { }
 
   ngOnInit(): void {
     this.taskForm = this.formBuilder.group({
@@ -33,9 +33,8 @@ export class TaskEditComponent implements OnInit {
       description: [''],
       start_date: ['', Validators.required],
       end_date: ['', Validators.required],
-      // completed: [false],
       project_id: ['', Validators.required],
-      user_id:[[],Validators.required]
+      user_id: [[]]
     });
 
     this.route.params.subscribe((params) => {
@@ -73,7 +72,7 @@ export class TaskEditComponent implements OnInit {
       Permission: 'update_tasks' // Add the Permission header with the desired value
     });
     const task = this.taskForm.value;
-  
+
     // Convert user_id to an array if it's not already
     task.user_id = Array.isArray(task.user_id) ? task.user_id : [task.user_id];
 
@@ -82,7 +81,7 @@ export class TaskEditComponent implements OnInit {
       (response) => {
         // Handle the response here
         console.log(response);
-        this.tasks = response; 
+        this.tasks = response;
         this.taskForm.patchValue(response); // Update the form with the task data
         this.loading = false; // Stop loading when the data is fetched
       },
@@ -99,9 +98,19 @@ export class TaskEditComponent implements OnInit {
           label: project.name,
           value: project.id,
         }));
-      },
-      (error) => {
-        console.error('Error fetching projects:', error);
+      }, (error) => {
+        console.error('Failed to create task', error);
+        this.loading = false;
+        if (error.status === 404) {
+          this.router.navigate(['/**']); // Navigate to the custom 404 page
+        } else {
+          this.router.navigate(['/**']);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to softDelete project',
+          });
+        }
       }
     );
   }
@@ -129,12 +138,12 @@ export class TaskEditComponent implements OnInit {
       const taskData = this.taskForm.value;
       const jwtToken = localStorage.getItem('token');
       const email = localStorage.getItem('email');
-  
+
       if (!jwtToken) {
         console.error('JWT token not found in local storage. Please log in.');
         return;
       }
-      
+
       const headers = new HttpHeaders({
         Authorization: `Bearer ${jwtToken}`,
         Permission: 'update_tasks' // Add the Permission header with the desired value
@@ -153,7 +162,7 @@ export class TaskEditComponent implements OnInit {
           // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
           setTimeout(() => {
             this.router.navigate(['/tasks']);
-          },1500 );
+          }, 1500);
         },
         (error) => {
           console.error('Failed to update task', error);

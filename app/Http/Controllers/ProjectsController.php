@@ -103,7 +103,7 @@ class ProjectsController extends Controller
 
                 $validator = Validator::make($request->all(), [
                     'name' => 'required',
-                    'description' => 'required',
+                    'description' => '',
                     'start_date' => 'required|date',
                     'end_date' => 'required|date|after:start_date',
                 ]);
@@ -184,7 +184,7 @@ class ProjectsController extends Controller
 
                 $validator = Validator::make($request->all(), [
                     'name' => 'required',
-                    'description' => 'required',
+                    'description' => '',
                     'start_date' => 'required|date',
                     'end_date' => 'required|date|after:start_date',
                 ]);
@@ -346,7 +346,7 @@ class ProjectsController extends Controller
                 // info('user has permission: ' . $matchedPermission->name);
 
 
-                
+
             } catch (\Exception $ex) {
 
                 Log::error("Error in retrieving soft-deleted projects: " . $ex->getMessage());

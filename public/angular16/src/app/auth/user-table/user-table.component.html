@@ -44,9 +44,9 @@
           <td>{{ user.id }}</td>
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
-          <td>{{ user.email_verified_at }}</td>
-          <td>{{ user.country }}</td>
-          <td>{{ user.state }}</td>
+          <td>{{ displayNA(user.email_verified_at) }}</td>
+          <td>{{ displayNA(user.country) }}</td>
+          <td>{{ displayNA(user.state) }}</td>
           <td>{{ user.isverify }}</td>
         </tr>
       </ng-template>

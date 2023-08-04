@@ -12,7 +12,7 @@
     </div>
     <form class="form" (ngSubmit)="onUpdate()" [formGroup]="taskForm">
       <div class="form-group">
-        <label for="name">Name*: </label>
+        <label for="name">Name* </label>
         <input type="text" id="name" name="name" pInputText formControlName="name" required>
       </div>
 
@@ -22,12 +22,12 @@
       </div>
 
       <div class="form-group">
-        <label for="start_date">Start Date*: </label>
+        <label for="start_date">Start Date* </label>
         <input type="date" id="start_date" name="start_date" pCalendar formControlName="start_date" required>
       </div>
 
       <div class="form-group">
-        <label for="end_date">End Date*: </label>
+        <label for="end_date">End Date* </label>
         <input type="date" id="end_date" name="end_date" pCalendar formControlName="end_date" required>
       </div>
 
@@ -43,7 +43,7 @@
       </div> -->
 
       <div>
-        <label for="Project">Project*: </label>
+        <label for="Project">Project* </label>
         <mat-form-field>
           <mat-label>Project </mat-label>
           <mat-select formControlName="project_id" required>
@@ -55,10 +55,10 @@
       </div>
 
       <div class="form-group">
-        <label for="user_id">Users*: </label>
+        <label for="user_id">Users* </label>
         <mat-form-field>
           <mat-label>Users </mat-label>
-          <mat-select formControlName="user_id" required multiple>
+          <mat-select formControlName="user_id" required >
             <mat-option *ngFor="let user of users" [value]="user.value">
               {{ user.label }}
             </mat-option>

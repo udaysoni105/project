@@ -115,7 +115,7 @@ class TasksController extends Controller
                 // Validate the request data
                 $validator = Validator::make($request->all(), [
                     'name' => 'required',
-                    'description' => 'required',
+                    'description' => '',
                     'start_date' => 'required|date',
                     'end_date' => 'required|date|after:start_date',
                     'user_id' => 'required|array',
@@ -208,7 +208,7 @@ class TasksController extends Controller
                 // Validate the request data
                 $validator = Validator::make($request->all(), [
                     'name' => 'required',
-                    'description' => 'required',
+                    'description' => '',
                     'start_date' => 'required|date',
                     'end_date' => 'required|date|after:start_date',
                     // 'user_id'=> 'required|array',
@@ -217,12 +217,12 @@ class TasksController extends Controller
                 if ($validator->fails()) {
                     return response()->json(['errors' => $validator->errors()], 400);
                 }
-                // Loop through user_id values and create a task for each user
+                // Loop through user_id values and update a task for each user
                 foreach ($request->user_id as $userId) {
-                    $task = new Task($request->except('user_id'));
-                    $task->user_id = $userId;
-                    $task->save();
+                    Task::where('user_id', $userId)
+                        ->update($request->except('user_id'));
                 }
+
 
                 Log::info("Controller::TasksController::update::END");
 
