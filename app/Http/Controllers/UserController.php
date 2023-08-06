@@ -59,6 +59,9 @@ class UserController extends Controller
                     return response()->json(['error' => 'Unauthorized'], 403);
                 }
 
+                $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+                info('user has permission: ' . $matchedPermission->name);
+
                 // Fetch users based on their roles
                 if (in_array($userRole->role->name, ['admin', 'project manager'])) {
                     // For admin and project manager roles, only fetch developers

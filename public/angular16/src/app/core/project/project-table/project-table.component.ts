@@ -140,26 +140,26 @@ export class ProjectTableComponent {
     );
   }
 
-  // onSearch(): void {
-  //   this.table.filter(this.searchQuery, 'name', 'contains');
-  // }
+  onSearch(): void {
+    this.table.filter(this.searchQuery, 'name', 'contains');
+  }
 
   // onSort(event: SortEvent): void {
   //   // Implement the sorting logic here
   // }
 
-  onSearch(): void {
-    this.projectService.searchProjects(this.searchQuery).subscribe(
-      (response) => {
-        console.log('Search Response:', response);
-        this.projects = response.data; // Extract the 'data' array from the response
-      },
-      (error) => {
-        console.log(error);
+  // onSearch(): void {
+  //   this.projectService.searchProjects(this.searchQuery).subscribe(
+  //     (response) => {
+  //       console.log('Search Response:', response);
+  //       this.projects = response.data; // Extract the 'data' array from the response
+  //     },
+  //     (error) => {
+  //       console.log(error);
 
-      }
-    );
-  }
+  //     }
+  //   );
+  // }
 
   onSort(event: SortEvent): void {
     this.loading = true;
