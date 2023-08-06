@@ -30,11 +30,11 @@ export class DashboardComponent {
     this.getStartedClickCount++;
 
     if (this.getStartedClickCount === 1) {
-      this.tableToShow = 'projects';
-      this.router.navigateByUrl('/projects'); // Navigate to the users page
-    } else if (this.getStartedClickCount === 2) {
       this.tableToShow = 'tasks';
       this.router.navigateByUrl('/tasks'); // Navigate to the users page
+    } else if (this.getStartedClickCount === 2) {
+      this.tableToShow = 'projects';
+      this.router.navigateByUrl('/projects'); // Navigate to the users page
     } else if (this.getStartedClickCount === 3) {
       this.tableToShow = 'users';
       this.router.navigateByUrl('/users'); // Navigate to the users page

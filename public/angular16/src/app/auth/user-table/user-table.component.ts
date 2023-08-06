@@ -60,17 +60,22 @@ export class UserTableComponent implements OnInit {
       (error) => {
         console.log('Soft delete failed:', error);
         this.loading = false;
+      
         if (error.status === 404) {
-            this.router.navigate(['/**']); // Navigate to the custom 404 page
+          this.router.navigate(['temporary-error']);
         } else {
-          this.router.navigate(['/**']);
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Failed to softDelete project',
-            });
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to softDelete project',
+          });
+          this.router.navigate(['temporary-error']);
         }
-    }
+      
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 5000); // 5 seconds delay
+      }
     );
   }
 

@@ -24,7 +24,6 @@
     flex-direction: column;
 
     div {
-      margin-bottom: 20px;
       display: flex;
       align-items: center;
 
@@ -33,6 +32,21 @@
         margin-right: 10px;
         font-weight: bold;
       }
+      .error-message {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+        white-space: normal; /* Allow line breaks for error messages */
+      }
+      
+      .input-container {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 5px; 
+        width: 100%;
+      }
+      
+
 
       input {
         flex: 1;
@@ -43,13 +57,25 @@
       }
     }
 
+    .forgot-password-container {
+      display: flex;
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+      height: 100vh; /* Adjust as needed */
+    }
+
     .forgot-password-link {
+      color: blue; /* Adjust link color as needed */
+      text-decoration: underline;
+      cursor: pointer;
       text-align: right;
+      margin-left: 130px;
       margin-top: 10px;
 
       a {
         color: blue;
         text-decoration: none;
+        text-align: center;
 
         &:hover {
           text-decoration: underline;

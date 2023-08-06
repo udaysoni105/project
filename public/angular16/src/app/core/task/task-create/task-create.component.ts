@@ -45,23 +45,25 @@ export class TaskCreateComponent implements OnInit {
           label: project.name,
           value: project.id,
         }));
-      }  ,      (error) => {
-        console.error('Failed to create task', error);
+      }  , (error) => {
+        console.log('Soft delete failed:', error);
         this.loading = false;
+      
         if (error.status === 404) {
-            this.router.navigate(['/**']); // Navigate to the custom 404 page
+          this.router.navigate(['temporary-error']);
         } else {
-          this.router.navigate(['/**']);
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Failed to softDelete project',
-            });
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to softDelete project',
+          });
+          this.router.navigate(['temporary-error']);
         }
-    },
-      // (error) => {
-      //   console.error('Error fetching projects:', error);
-      // }
+      
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 5000); // 5 seconds delay
+      }
     );
   }
 
@@ -74,7 +76,23 @@ export class TaskCreateComponent implements OnInit {
         }));
       },
       (error) => {
-        console.error('Error fetching users:', error);
+        console.log('Soft delete failed:', error);
+        this.loading = false;
+      
+        if (error.status === 404) {
+          this.router.navigate(['temporary-error']);
+        } else {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to softDelete project',
+          });
+          this.router.navigate(['temporary-error']);
+        }
+      
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 5000); // 5 seconds delay
       }
     );
   }

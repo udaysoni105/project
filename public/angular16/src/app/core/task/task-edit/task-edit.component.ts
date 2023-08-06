@@ -86,8 +86,23 @@ export class TaskEditComponent implements OnInit {
         this.loading = false; // Stop loading when the data is fetched
       },
       (error) => {
-        // Handle the error here
-        console.error(error);
+        console.log('Soft delete failed:', error);
+        this.loading = false;
+      
+        if (error.status === 404) {
+          this.router.navigate(['temporary-error']);
+        } else {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to softDelete project',
+          });
+          this.router.navigate(['temporary-error']);
+        }
+      
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 5000); // 5 seconds delay
       }
     );
   }
@@ -99,18 +114,23 @@ export class TaskEditComponent implements OnInit {
           value: project.id,
         }));
       }, (error) => {
-        console.error('Failed to create task', error);
+        console.log('Soft delete failed:', error);
         this.loading = false;
+      
         if (error.status === 404) {
-          this.router.navigate(['/**']); // Navigate to the custom 404 page
+          this.router.navigate(['temporary-error']);
         } else {
-          this.router.navigate(['/**']);
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
             detail: 'Failed to softDelete project',
           });
+          this.router.navigate(['temporary-error']);
         }
+      
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 5000); // 5 seconds delay
       }
     );
   }
@@ -126,8 +146,23 @@ export class TaskEditComponent implements OnInit {
         this.loading = false; // Stop loading when the data is fetched
       },
       (error) => {
-        console.error('Error fetching users:', error);
-        this.loading = false; // Stop loading when the data is fetched
+        console.log('Soft delete failed:', error);
+        this.loading = false;
+      
+        if (error.status === 404) {
+          this.router.navigate(['temporary-error']);
+        } else {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to softDelete project',
+          });
+          this.router.navigate(['temporary-error']);
+        }
+      
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 5000); // 5 seconds delay
       }
     );
   }

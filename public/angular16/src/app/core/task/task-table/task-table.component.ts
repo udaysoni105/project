@@ -57,10 +57,25 @@ export class TaskTableComponent implements OnInit {
         this.loading = false; // Stop loading when the data is fetched
       },
       (error) => {
-        // Handle the error here
-        console.error(error);
-        this.loading = false; // Stop loading on error
+        console.log('Soft delete failed:', error);
+        this.loading = false;
+      
+        if (error.status === 404) {
+          this.router.navigate(['temporary-error']);
+        } else {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to softDelete project',
+          });
+          this.router.navigate(['temporary-error']);
+        }
+      
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 5000); // 5 seconds delay
       }
+      
     );
   }
   isAdminOrProjectManager(): boolean {
@@ -84,7 +99,7 @@ export class TaskTableComponent implements OnInit {
 
     this.taskService.deletetask(id, headers).subscribe(
       (response) => {
-        console.log('task hard deleted successfully');
+        console.log('task hard deleted successfully',response);
         this.loading = false; // Stop loading when the data is fetched
         this.loadTasks();
         this.tasks = this.tasks.filter((task) => task.id !== id);
@@ -141,7 +156,7 @@ export class TaskTableComponent implements OnInit {
     const updatedTask = { ...task, status: newStatus };
     this.taskService.updateTask(task.id, updatedTask, headers).subscribe(
       (response) => {
-        console.log('Task status updated successfully');
+        console.log('Task status updated successfully',response);
         task.status = newStatus; // Update the status in the tasks array on success
         this.loading = false; // Stop loading when the data is fetched
         this.loadTasks();

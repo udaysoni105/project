@@ -123,6 +123,20 @@
           border-radius: 5px;
           width: 100%;
         }
+
+        .error-message {
+          color: red;
+          font-size: 14px;
+          margin-top: 5px;
+          white-space: normal;
+        }
+  
+        .input-container {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 5px;
+          width: 100%;
+        }
         
 
         mat-form-field {

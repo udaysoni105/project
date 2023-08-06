@@ -217,16 +217,24 @@ class TasksController extends Controller
                 if ($validator->fails()) {
                     return response()->json(['errors' => $validator->errors()], 400);
                 }
+
+                //status changes
+                // Fetch the task by its ID
+                $task = Task::findOrFail($id);
+
+                // Update the task's information
+                $task->update($request->all());
+
+                //user_id multiple
                 // Loop through user_id values and update a task for each user
                 foreach ($request->user_id as $userId) {
                     Task::where('user_id', $userId)
                         ->update($request->except('user_id'));
                 }
 
+            Log::info("Controller::TasksController::update::END");
 
-                Log::info("Controller::TasksController::update::END");
-
-                return response()->json(['message' => 'Task updated successfully', 'Task' => $task]);
+            return response()->json(['message' => 'Task updated successfully', 'Task' => $task]);
             } catch (\Exception $ex) {
                 // Log the exception if needed
                 Log::error("Error in updating task: " . $ex->getMessage());
@@ -237,6 +245,7 @@ class TasksController extends Controller
         });
         return $result;
     }
+
 
     /** 
      * @author : UDAY SONI
