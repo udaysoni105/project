@@ -153,9 +153,9 @@ class TasksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,string $id)
+    public function show(Request $request, string $id)
     {
-        $result = DB::transaction(function () use ($request,$id) {
+        $result = DB::transaction(function () use ($request, $id) {
             try {
                 Log::info("Controller::TasksController::show::START");
                 $permission = $request->header('permission');
@@ -227,12 +227,19 @@ class TasksController extends Controller
 
                 // Validate the request data
                 $validator = Validator::make($request->all(), [
-                    'name' => 'required',
+                    'name' => '',
                     'description' => '',
-                    'start_date' => 'required|date',
-                    'end_date' => 'required|date|after:start_date',
-                    // 'user_id'=> 'required|array',
+                    'start_date' => '',
+                    'end_date' => '',
+                    'user_id' => 'array',
                 ]);
+
+                // 'name' => 'required',
+                //     'description' => '',
+                //     'start_date' => 'required|date',
+                //     'end_date' => 'required|date|after:start_date',
+                //     // 'user_id'=> 'required|array',
+                // ]);
 
                 if ($validator->fails()) {
                     return response()->json(['errors' => $validator->errors()], 400);
@@ -240,21 +247,27 @@ class TasksController extends Controller
 
                 //status changes
                 // Fetch the task by its ID
+                // $task = Task::findOrFail($id);
+
+                // // Update the task's information
+                // $task->update($request->all());
+
                 $task = Task::findOrFail($id);
 
-                // Update the task's information
-                $task->update($request->all());
-
-                //user_id multiple
-                // Loop through user_id values and update a task for each user
-                foreach ($request->user_id as $userId) {
-                    Task::where('user_id', $userId)
-                        ->update($request->except('user_id'));
+                // Check if user IDs need to be updated
+                if ($request->has('user_id')) {
+                    $userIds = $request->user_id;
+                    if (is_array($userIds)) {
+                        $task->users()->sync($userIds); // Assuming you have a many-to-many relationship named "users"
+                    }
+                    $task->update($request->except('user_id'));
+                } else {
+                    $task->update($request->all());
                 }
 
-            Log::info("Controller::TasksController::update::END");
+                Log::info("Controller::TasksController::update::END");
 
-            return response()->json(['message' => 'Task updated successfully', 'Task' => $task]);
+                return response()->json(['message' => 'Task updated successfully', 'Task' => $task]);
             } catch (\Exception $ex) {
                 // Log the exception if needed
                 Log::error("Error in updating task: " . $ex->getMessage());

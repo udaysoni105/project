@@ -150,14 +150,14 @@ export class TaskEditComponent implements OnInit {
         this.loading = false;
       
         if (error.status === 404) {
-          this.router.navigate(['temporary-error']);
+          this.router.navigate(['Not Found']);
         } else {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
             detail: 'Failed to softDelete project',
           });
-          this.router.navigate(['temporary-error']);
+          this.router.navigate(['Not Found']);
         }
       
         setTimeout(() => {
