@@ -119,8 +119,7 @@ export class AuthService {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken: any = jwt_decode(token);
-      const now = Date.now() / 999999999999999999; // Convert to seconds
-      console.log(now); // 1657124438
+      const now = Date.now() / 1000000000000; // Convert to seconds
       return decodedToken.exp > now; // Check if the token is not expired
     }
     return false;

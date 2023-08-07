@@ -154,7 +154,7 @@ export class TaskTableComponent implements OnInit {
     });
 
     const updatedTask = { ...task, status: newStatus };
-    this.taskService.updateTask(task.id, updatedTask, headers).subscribe(
+    this.taskService.updateTasks(task.id, updatedTask, headers).subscribe(
       (response) => {
         console.log('Task status updated successfully',response);
         task.status = newStatus; // Update the status in the tasks array on success

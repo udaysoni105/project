@@ -9,6 +9,7 @@ export class TaskService {
   private baseUrl = 'http://localhost:8000/api/tasks'; // Update with your API endpoint
   private apiUrl = 'http://localhost:8000/api/projects';
   private userUrl = 'http://localhost:8000/api/users';
+  private basUrl = 'http://localhost:8000/api/tasks';
   constructor(private http: HttpClient) { }
 
   getAllTasks(headers: HttpHeaders) {
@@ -66,6 +67,9 @@ export class TaskService {
 
   updateTask(taskId: string, taskData: any, headers: HttpHeaders): Observable<any> {
     return this.http.put(`${this.baseUrl}/${taskId}`, taskData, { headers });
+  }
+  updateTasks(taskId: string, taskData: any, headers: HttpHeaders): Observable<any> {
+    return this.http.put(`${this.basUrl}/${taskId}`, taskData, { headers });
   }
 
   deletetask(taskId: string, headers: HttpHeaders): Observable<any> {

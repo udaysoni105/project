@@ -58,6 +58,7 @@ Route::group(['middleware' => 'auth'], function ($router) {
 
 //tasks
 Route::put('/tasks/{id}', [TasksController::class, 'update'])->name('tasks.update');
+Route::put('/task/{id}', [TasksController::class, 'updatetask'])->name('tasks.updatetask');
 Route::get('tasks/{id}/generate-pdf', [TasksController::class, 'generatePDF'])->name('generatePDF');
 Route::group(['middleware' => 'auth'], function ($router) {
         // Additional routes for searching, sorting, and pagination

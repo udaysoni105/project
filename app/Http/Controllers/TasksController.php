@@ -238,25 +238,25 @@ class TasksController extends Controller
                     return response()->json(['errors' => $validator->errors()], 400);
                 }
 
-                //status changes
-                // Fetch the task by its ID
-                $task = Task::findOrFail($id);
-
-                // Update the task's information
-                $task->update($request->all());
-
+                // //status changes
+                // // Fetch the task by its ID
                 // $task = Task::findOrFail($id);
 
-                // // Check if user IDs need to be updated
-                // if ($request->has('user_id')) {
-                //     $userIds = $request->user_id;
-                //     if (is_array($userIds)) {
-                //         $task->users()->sync($userIds); 
-                //     }
-                //     $task->update($request->except('user_id'));
-                // } else {
-                //     $task->update($request->all());
-                // }
+                // // Update the task's information
+                // $task->update($request->all());
+
+                $task = Task::findOrFail($id);
+
+                // Check if user IDs need to be updated
+                if ($request->has('user_id')) {
+                    $userIds = $request->user_id;
+                    if (is_array($userIds)) {
+                        $task->users()->sync($userIds); 
+                    }
+                    $task->update($request->except('user_id'));
+                } else {
+                    $task->update($request->all());
+                }
 
                 Log::info("Controller::TasksController::update::END");
 
@@ -267,6 +267,38 @@ class TasksController extends Controller
 
                 // Return an error response
                 return response()->json(['error' => 'Task not found or unable to update'], 404);
+            }
+        });
+        return $result;
+    }
+
+    /** 
+     * @author : UDAY SONI
+     * Method name: updatetask
+     * status the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updatetask($id, Request $request)
+    {
+        $result = DB::transaction(function () use ($request, $id) {
+            try {
+                Log::info("Controller::TasksController::updatetask::START");
+                // Fetch the task by its ID
+                $task = Task::findOrFail($id);
+
+                // Update the task's information
+                $task->update($request->all());
+
+                Log::info("Controller::TasksController::updatetask::END");
+                // Return a success response
+                return response()->json(['message' => 'Task updated successfully']);
+            } catch (\Exception $ex) {
+                // Log the exception if needed
+                Log::error("Error in deleting task: " . $ex->getMessage());
+
+                // Return an error response
+                return response()->json(['error' => 'Unable to delete task'], 500);
             }
         });
         return $result;
