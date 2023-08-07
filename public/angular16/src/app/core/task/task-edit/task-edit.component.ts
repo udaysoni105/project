@@ -18,6 +18,7 @@ export class TaskEditComponent implements OnInit {
   loading: boolean = false;
   users: SelectItem[] = [];
   projectOptions: SelectItem[] = [];
+  
 
   constructor(
     private formBuilder: FormBuilder,
