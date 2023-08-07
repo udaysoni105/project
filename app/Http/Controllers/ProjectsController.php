@@ -401,7 +401,8 @@ class ProjectsController extends Controller
                 if (!$project) {
                     return response()->json(['message' => 'Project not found or already restored'], 404);
                 }
-                $permission = $request->header('permission');
+                $project->restore();
+                // $permission = $request->header('permission');
                 // $user = auth()->user();
 
                 // $userRole = UserRole::where('user_id', $user->id)->first();

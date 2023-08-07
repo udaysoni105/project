@@ -70,20 +70,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { Component, OnInit } from '@angular/core';
 import { ReactiveService } from '../reactive.service';
 import { MessageService } from 'primeng/api';
@@ -96,7 +82,7 @@ import { Router } from '@angular/router';
 export class ReactiveComponent implements OnInit {
   softDeletedProjects: any[] = [];
   isLoading: boolean = false; // New loading flag
-  constructor(       private router: Router, private messageService: MessageService ,private reactiveService: ReactiveService) { }
+  constructor(private router: Router, private messageService: MessageService ,private reactiveService: ReactiveService) { }
 
   ngOnInit(): void {
     this.loadSoftDeletedProjects(50);

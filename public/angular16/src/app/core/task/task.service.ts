@@ -9,7 +9,7 @@ export class TaskService {
   private baseUrl = 'http://localhost:8000/api/tasks'; // Update with your API endpoint
   private apiUrl = 'http://localhost:8000/api/projects';
   private userUrl = 'http://localhost:8000/api/users';
-  private basUrl = 'http://localhost:8000/api/tasks';
+  private basUrl = 'http://localhost:8000/api/task';
   constructor(private http: HttpClient) { }
 
   getAllTasks(headers: HttpHeaders) {
@@ -47,6 +47,32 @@ export class TaskService {
   }
 
   private getHeaders(): HttpHeaders {
+    // Construct your headers here, including authorization token
+    const token = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type', 'application/json');
+    headers = headers.append('Permission', 'update_tasks');
+    headers = headers.append('Authorization', `Bearer ${token}`);
+    headers = headers.append('email', `${email}`);
+
+    return headers;
+  }
+
+  getProject(): Observable<any[]> {
+    const headers = this.getHeader(); // Get authentication headers
+    const url = `${this.apiUrl}`;
+    return this.http.get<any[]>(url, { headers });
+  }
+
+  getUser(): Observable<any[]> {
+    const headers = this.getHeader(); // Get authentication headers
+    const url = `${this.userUrl}`;
+    return this.http.get<any[]>(url, { headers });
+  }
+
+  private getHeader(): HttpHeaders {
     // Construct your headers here, including authorization token
     const token = localStorage.getItem('token');
     const email = localStorage.getItem('email');

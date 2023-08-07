@@ -125,12 +125,25 @@ class TasksController extends Controller
                     return response()->json(['errors' => $validator->errors()], 400);
                 }
 
-                // Loop through user_id values and create a task for each user
+                // // Loop through user_id values and create a task for each user
+                // foreach ($request->user_id as $userId) {
+                //     $task = new Task($request->except('user_id'));
+                //     $task->user_id = $userId;
+                //     $task->save();
+                // }
+
                 foreach ($request->user_id as $userId) {
                     $task = new Task($request->except('user_id'));
                     $task->user_id = $userId;
                     $task->save();
+                
+                    // Add the task to the user_task table
+                    DB::table('user_task')->insert([
+                        'task_id' => $task->id,
+                        'user_id' => $userId,
+                    ]);
                 }
+                
 
                 Log::info("Controller::TasksController::store::END");
                 return response()->json(['message' => 'Tasks created successfully', 'task' => $task]);

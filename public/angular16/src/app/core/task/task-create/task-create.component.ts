@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TaskService } from '../task.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { SelectItem } from 'primeng/api';
 
@@ -21,6 +21,7 @@ export class TaskCreateComponent implements OnInit {
     private formBuilder: FormBuilder,
     private taskService: TaskService,
     private router: Router,
+    private route: ActivatedRoute,
     private messageService: MessageService
   ) { }
 
@@ -33,13 +34,23 @@ export class TaskCreateComponent implements OnInit {
       project_id: ['', Validators.required],
       user_id: [[], Validators.required]
     });
-
-    this.fetchProjects();
-    this.fetchUsers();
+    this.route.data.subscribe((data: any) => {
+      if (data['taskAndUsers']) { // Access the property using ['propertyName']
+        const { taskDetails, users } = data['taskAndUsers'];
+        this.taskForm.patchValue(taskDetails);
+        this.users = users.map((user: any) => ({
+          label: user.name,
+          value: user.id
+        }));
+        this.loading = false;
+      }
+    });
+    this.fetchProject();
+    this.fetchUser();
   }
 
-  fetchProjects(): void {
-    this.taskService.getProjects().subscribe(
+  fetchProject(): void {
+    this.taskService.getProject().subscribe(
       (projects) => {
         this.projectOptions = projects.map((project) => ({
           label: project.name,
@@ -67,8 +78,8 @@ export class TaskCreateComponent implements OnInit {
     );
   }
 
-  fetchUsers(): void {
-    this.taskService.getUsers().subscribe(
+  fetchUser(): void {
+    this.taskService.getUser().subscribe(
       (users) => {
         this.users = users.map((user: any) => ({
           label: user.name,
