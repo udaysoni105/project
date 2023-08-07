@@ -9,18 +9,23 @@ import { Router } from '@angular/router';
 })
 export class LogoutComponent {
   constructor(private http: HttpClient,private authService: AuthService,private router: Router) {}
-
-  logout(): void {
-    this.authService.logout().subscribe(
-      response => {
-        console.log('Logout successful', response);
-        // Handle successful logout
-        this.router.navigate(['home'])
-      },
-      error => {
-        console.error('Logout failed', error);
-        // Handle logout error
-      }
-    );
+  ngOnInit(): void {
+    this.authService.logout(); // Call the logout method
   }
+  logout(): void {
+    this.authService.logout();
+  }
+  // logout(): void {
+  //   this.authService.logout().subscribe(
+  //     response => {
+  //       console.log('Logout successful', response);
+  //       // Handle successful logout
+  //       this.router.navigate(['home'])
+  //     },
+  //     error => {
+  //       console.error('Logout failed', error);
+  //       // Handle logout error
+  //     }
+  //   );
+  // }
 }
