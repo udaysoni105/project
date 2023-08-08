@@ -293,34 +293,34 @@ class ProjectsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function softDelete(Request $request,$id)
+    public function softDelete(Request $request, $id)
     {
-        $result = DB::transaction(function () use ($request,$id) {
+        $result = DB::transaction(function () use ($request, $id) {
             try {
                 Log::info("Controller::ProjectsController::softDelete::START");
                 $permission = $request->header('permission');
 
                 $user = auth()->user();
 
-        
+
                 //$userRole = UserRole::where('user_id', $user['id'])->first();
                 $userRole = UserRole::where('user_id', $user->id)->first();
-        
 
-        
+
+
                 $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
                     $query->select('permission_id')
                         ->from('role_has_permissions')
                         ->where('role_id', $userRole->role_id);
                 })->get();
 
-        
+
                 $hasPermission = $rolePermissions->contains('name', $permission);
-        
+
                 if (!$hasPermission) {
                     info('Unauthorized');
                 }
-        
+
                 $matchedPermission = $rolePermissions->firstWhere('name', $permission);
                 info('User has permission: ' . $matchedPermission->name);
 
@@ -349,7 +349,7 @@ class ProjectsController extends Controller
         $result = DB::transaction(function () use ($request) {
             try {
                 Log::info("Controller::ProjectsController::softDeletedProjects::START");
-                $projects = Project::withTrashed()->get();
+                $projects = Project::onlyTrashed()->get();
                 Log::info("Controller::ProjectsController::softDeletedProjects::END");
                 return response()->json($projects);
                 // $permission = $request->header('permission');

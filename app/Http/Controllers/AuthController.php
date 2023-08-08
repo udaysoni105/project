@@ -49,7 +49,7 @@ class AuthController extends Controller
                 Log::info("Controller::AuthController::register::START");
                 $validator = Validator::make($request->all(), [
                     'name' => 'required',
-                    'email' => 'required|email|unique:users',
+                    'email' => 'required|email|unique:users|ends_with:.com',
                     'password' => 'required|min:6|confirmed',
                     'country' => 'required',
                     'state' => 'required',

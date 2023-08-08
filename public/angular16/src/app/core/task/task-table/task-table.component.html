@@ -59,7 +59,6 @@
           <td>
             <p-button [routerLink]="['/task-edit', task.id]" class="btn btn-primary">Edit Task</p-button>
           </td>
-          <!-- <td>{{ task.projectName }}</td> -->
           <td>
             <ng-container *ngIf="isAdminOrProjectManager(); else projectName">
               {{ task.project_id }}

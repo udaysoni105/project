@@ -41,7 +41,7 @@ Route::group(['middleware' => 'api'], function ($router) {
 
 //project
 Route::delete('projects/{id}', [ProjectsController::class, 'softDelete'])->name('projects.softDelete');
-Route::put('/projects/{id}/restore',[ProjectsController::class,  'restore']);
+Route::put('/projects/{id}/restore', [ProjectsController::class,  'restore']);
 Route::get('projects/{id}/soft-deleted', [ProjectsController::class, 'softDeletedProjects'])->name('projects.softDeletedProjects');
 
 Route::group(['middleware' => 'auth'], function ($router) {
@@ -53,7 +53,7 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::get('/projects', [ProjectsController::class, 'index'])->name('projects.index');
     Route::get('/projects/{id}', [ProjectsController::class, 'show'])->name('projects.show');
     Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
-    Route::post('/projects', [ProjectsController::class,'store'])->name('projects.store');
+    Route::post('/projects', [ProjectsController::class, 'store'])->name('projects.store');
 });
 
 //tasks
@@ -61,8 +61,8 @@ Route::put('/tasks/{id}', [TasksController::class, 'update'])->name('tasks.updat
 Route::put('/task/{id}', [TasksController::class, 'updatetask'])->name('tasks.updatetask');
 Route::get('tasks/{id}/generate-pdf', [TasksController::class, 'generatePDF'])->name('generatePDF');
 Route::group(['middleware' => 'auth'], function ($router) {
-        // Additional routes for searching, sorting, and pagination
-    Route::get('/tasks', [TasksController::class, 'getTasks'])->name('tasks.getTasks');//pagination
+    // Additional routes for searching, sorting, and pagination
+    Route::get('/tasks', [TasksController::class, 'getTasks'])->name('tasks.getTasks'); //pagination
     Route::get('/tasks/search', [TasksController::class, 'search'])->name('tasks.search');
     Route::get('/tasks/sorted', [TasksController::class, 'sorted'])->name('tasks.sorted');
 
@@ -76,7 +76,7 @@ Route::group(['middleware' => 'auth'], function ($router) {
 Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/countries', [AuthController::class, 'getCountries']);
     Route::get('/states/{country}', [AuthController::class, 'getStates']);
-    });
+});
 
 //user
 Route::group(['middleware' => 'auth'], function ($router) {
@@ -84,5 +84,4 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::post('/users', [UserController::class, 'store']);
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
-    });
-    
+});

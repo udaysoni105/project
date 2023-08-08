@@ -56,10 +56,10 @@ export class TaskCreateComponent implements OnInit {
           label: project.name,
           value: project.id,
         }));
-      }  , (error) => {
+      }, (error) => {
         console.log('Soft delete failed:', error);
         this.loading = false;
-      
+
         if (error.status === 404) {
           this.router.navigate(['Not Found']);
         } else {
@@ -70,7 +70,7 @@ export class TaskCreateComponent implements OnInit {
           });
           this.router.navigate(['Not Found']);
         }
-      
+
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
         }, 5000); // 5 seconds delay
@@ -89,7 +89,7 @@ export class TaskCreateComponent implements OnInit {
       (error) => {
         console.log('Soft delete failed:', error);
         this.loading = false;
-      
+
         if (error.status === 404) {
           this.router.navigate(['Not Found']);
         } else {
@@ -100,27 +100,27 @@ export class TaskCreateComponent implements OnInit {
           });
           this.router.navigate(['Not Found']);
         }
-      
+
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
         }, 5000); // 5 seconds delay
       }
     );
   }
-  
+
   createtask(): void {
     this.loading = true;
     console.log(this.taskForm);
-  
+
     const token = localStorage.getItem('token');
     const email = localStorage.getItem('email');
-  
+
     if (token !== null && email !== null) {
       const task = this.taskForm.value;
-  
- // Convert user_id to an array if it's not already
- task.user_id = Array.isArray(task.user_id) ? task.user_id : [task.user_id];
-  
+
+      // Convert user_id to an array if it's not already
+      task.user_id = Array.isArray(task.user_id) ? task.user_id : [task.user_id];
+
       this.taskService.createTask(task, token, email).subscribe(
         (response) => {
           console.log('Task created successfully', response);
@@ -128,7 +128,7 @@ export class TaskCreateComponent implements OnInit {
           this.taskForm.reset();
           this.loading = false; // Stop loading when the data is fetched
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is created' });
-  
+
           // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
           setTimeout(() => {
             this.router.navigate(['/tasks']);
@@ -146,5 +146,5 @@ export class TaskCreateComponent implements OnInit {
       );
     }
   }
-  
+
 }

@@ -18,7 +18,7 @@ export class TaskEditComponent implements OnInit {
   loading: boolean = false;
   users: SelectItem[] = [];
   projectOptions: SelectItem[] = [];
-  
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -89,7 +89,7 @@ export class TaskEditComponent implements OnInit {
       (error) => {
         console.log('Soft delete failed:', error);
         this.loading = false;
-      
+
         if (error.status === 404) {
           this.router.navigate(['temporary-error']);
         } else {
@@ -100,7 +100,7 @@ export class TaskEditComponent implements OnInit {
           });
           this.router.navigate(['temporary-error']);
         }
-      
+
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
         }, 5000); // 5 seconds delay
@@ -117,7 +117,7 @@ export class TaskEditComponent implements OnInit {
       }, (error) => {
         console.log('Soft delete failed:', error);
         this.loading = false;
-      
+
         if (error.status === 404) {
           this.router.navigate(['temporary-error']);
         } else {
@@ -128,7 +128,7 @@ export class TaskEditComponent implements OnInit {
           });
           this.router.navigate(['temporary-error']);
         }
-      
+
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
         }, 5000); // 5 seconds delay
@@ -149,7 +149,7 @@ export class TaskEditComponent implements OnInit {
       (error) => {
         console.log('Soft delete failed:', error);
         this.loading = false;
-      
+
         if (error.status === 404) {
           this.router.navigate(['Not Found']);
         } else {
@@ -160,7 +160,7 @@ export class TaskEditComponent implements OnInit {
           });
           this.router.navigate(['Not Found']);
         }
-      
+
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
         }, 5000); // 5 seconds delay

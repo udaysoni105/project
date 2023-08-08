@@ -16,6 +16,10 @@ export class TaskService {
     const url = `${this.baseUrl}`;
     return this.http.get<any[]>(url, { headers });
   }
+  searchTasks(searchQuery: string, headers: HttpHeaders): Observable<any> {
+    const url = `${this.baseUrl}/search?searchQuery=${searchQuery}`
+    return this.http.get(url, { headers });
+  }
 
   projectcreate(): Observable<any> {
     return this.http.get<any>(this.apiUrl);

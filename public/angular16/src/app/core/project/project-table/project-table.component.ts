@@ -22,7 +22,7 @@ export class ProjectTableComponent {
     private projectService: ProjectService,
     private messageService: MessageService,
     private reactiveService: ReactiveService,
-    private router:Router
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -66,7 +66,7 @@ export class ProjectTableComponent {
       (error) => {
         console.log('Soft delete failed:', error);
         this.loading = false;
-      
+
         if (error.status === 404) {
           this.router.navigate(['Not Found']);
         } else {
@@ -77,13 +77,13 @@ export class ProjectTableComponent {
           });
           this.router.navigate(['Not Found']);
         }
-      
+
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
         }, 5000); // 5 seconds delay
       }
-      
-    
+
+
     );
   }
 
@@ -140,9 +140,9 @@ export class ProjectTableComponent {
     );
   }
 
-  onSearch(): void {
-    this.table.filter(this.searchQuery, 'name', 'contains');
-  }
+  // onSearch(): void {
+  //   this.table.filter(this.searchQuery, 'name', 'contains');
+  // }
 
   // onSort(event: SortEvent): void {
   //   // Implement the sorting logic here
@@ -160,6 +160,31 @@ export class ProjectTableComponent {
   //     }
   //   );
   // }
+  onSearch(): void {
+    const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      email: 'email',
+      Permission: 'view_project', // Add the Permission header with the desired value
+    });
+
+
+    this.projectService.searchProjects(this.searchQuery, headers).subscribe(
+      (response) => {
+        console.log('Search Response:', response);
+        this.projects = response.data; // Extract the 'data' array from the response
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
 
   onSort(event: SortEvent): void {
     this.loading = true;

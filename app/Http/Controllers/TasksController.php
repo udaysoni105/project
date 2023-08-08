@@ -136,14 +136,14 @@ class TasksController extends Controller
                     $task = new Task($request->except('user_id'));
                     $task->user_id = $userId;
                     $task->save();
-                
+
                     // Add the task to the user_task table
                     DB::table('user_task')->insert([
                         'task_id' => $task->id,
                         'user_id' => $userId,
                     ]);
                 }
-                
+
 
                 Log::info("Controller::TasksController::store::END");
                 return response()->json(['message' => 'Tasks created successfully', 'task' => $task]);
@@ -264,7 +264,7 @@ class TasksController extends Controller
                 if ($request->has('user_id')) {
                     $userIds = $request->user_id;
                     if (is_array($userIds)) {
-                        $task->users()->sync($userIds); 
+                        $task->users()->sync($userIds);
                     }
                     $task->update($request->except('user_id'));
                 } else {
@@ -395,8 +395,12 @@ class TasksController extends Controller
         $result = DB::transaction(function () use ($request) {
             try {
                 Log::info("Controller::TasksController::search::START");
-                $searchQuery = $request->input('q');
-                $tasks = Task::where('title', 'like', "%$searchQuery%")->get();
+                $searchQuery = $request->input('searchQuery');
+
+                $tasks = Task::where('name', 'LIKE', "%$searchQuery%")
+                    ->orWhere('description', 'LIKE', "%$searchQuery%")
+                    ->paginate(5);
+
                 Log::info("Controller::TasksController::search::END");
                 return response()->json($tasks);
             } catch (\Exception $ex) {

@@ -59,11 +59,6 @@ class Task extends Model
     // Define the relationship between Task and User (Many-to-One)
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id','user_task');
+        return $this->belongsTo(User::class, 'user_id');
     }
-//     public function users()
-// {
-//     return $this->belongsToMany(User::class);
-// }
-
 }

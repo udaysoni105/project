@@ -59,7 +59,7 @@ export class TaskTableComponent implements OnInit {
       (error) => {
         console.log('Soft delete failed:', error);
         this.loading = false;
-      
+
         if (error.status === 404) {
           this.router.navigate(['Not Found']);
         } else {
@@ -70,14 +70,15 @@ export class TaskTableComponent implements OnInit {
           });
           this.router.navigate(['Not Found']);
         }
-      
+
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
         }, 5000); // 5 seconds delay
       }
-      
+
     );
   }
+
   isAdminOrProjectManager(): boolean {
     return this.userRoles.includes('Admin') || this.userRoles.includes('projectManager');
   }
@@ -99,7 +100,7 @@ export class TaskTableComponent implements OnInit {
 
     this.taskService.deletetask(id, headers).subscribe(
       (response) => {
-        console.log('task hard deleted successfully',response);
+        console.log('task hard deleted successfully', response);
         this.loading = false; // Stop loading when the data is fetched
         this.loadTasks();
         this.tasks = this.tasks.filter((task) => task.id !== id);
@@ -124,22 +125,40 @@ export class TaskTableComponent implements OnInit {
     );
   }
 
-  // onSearch(): void {
-  //   this.table.filter(this.searchQuery, 'name', 'contains');
-  // }
   onSearch(): void {
-    if (typeof this.searchQuery === 'string') {
-      this.searchQuery = this.searchQuery.trim();
+    const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
     }
-    this.table.filter(this.searchQuery, 'name', 'contains');
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      email: 'email',
+      Permission: 'view_tasks', // Add the Permission header with the desired value
+    });
+
+
+    this.taskService.searchTasks(this.searchQuery, headers).subscribe(
+      (response) => {
+        console.log('Search Response:', response);
+        this.tasks = response.data; // Extract the 'data' array from the response
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 
   generatePDF(taskId: string): void {
     this.taskService.generatePDF(taskId);
   }
+
   getStatusOptions(): string[] {
     return this.tasks.map((task) => task.status);
   }
+
   updateTaskStatus(task: any, newStatus: string): void {
     this.loading = true;
     const jwtToken = localStorage.getItem('token');
@@ -156,7 +175,7 @@ export class TaskTableComponent implements OnInit {
     const updatedTask = { ...task, status: newStatus };
     this.taskService.updateTasks(task.id, updatedTask, headers).subscribe(
       (response) => {
-        console.log('Task status updated successfully',response);
+        console.log('Task status updated successfully', response);
         task.status = newStatus; // Update the status in the tasks array on success
         this.loading = false; // Stop loading when the data is fetched
         this.loadTasks();

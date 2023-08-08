@@ -9,34 +9,34 @@ import { catchError } from 'rxjs/operators';
 export class ProjectService {
   private baseUrl = 'http://localhost:8000/api/projects';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllProjects(headers: HttpHeaders) {
     const url = `${this.baseUrl}`;
     return this.http.get<any[]>(url, { headers });
   }
 
-  createProject(projectData: any, token: string,email:string): Observable<any> {
+  createProject(projectData: any, token: string, email: string): Observable<any> {
     let headers = new HttpHeaders()
-    headers = headers.append('Content-Type','application/json');
+    headers = headers.append('Content-Type', 'application/json');
     headers = headers.append('Permission', 'create_project');
     headers = headers.append('Authorization', `Bearer ${token}`);
     headers = headers.append('email', `${email}`);
 
-    const options = { headers: headers};
+    const options = { headers: headers };
     console.log(options);
-    return this.http.post<any>( this. baseUrl, projectData, options);
+    return this.http.post<any>(this.baseUrl, projectData, options);
 
   }
 
-  searchProjects(searchQuery: string): Observable<any> {
-    // const headers = this.createHeaders();
-    return this.http.get(`${this.baseUrl}/search?searchQuery=${searchQuery}`, {  });
+  searchProjects(searchQuery: string, headers: HttpHeaders): Observable<any> {
+    const url = `${this.baseUrl}/search?searchQuery=${searchQuery}`
+    return this.http.get(url, { headers });
   }
 
   getSortedProjects(column: string, direction: string): Observable<any> {
     // const headers = this.createHeaders();
-    return this.http.get(`${this.baseUrl}/sorted?column=${column}&direction=${direction}`, {  });
+    return this.http.get(`${this.baseUrl}/sorted?column=${column}&direction=${direction}`, {});
   }
   getProjects(): Observable<any> {
     return this.http.get(`${this.baseUrl}`);

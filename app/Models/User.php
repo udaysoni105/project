@@ -90,19 +90,12 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(Project::class, 'user_project');
     }
-
-    // Define the relationship between User and Task (One-to-Many)
-    // public function tasks()
-    // {
-    //     return $this->hasMany(Task::class);
-    // }
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_task');
     }
     public function tasks()
-{
-    return $this->belongsToMany(Task::class, 'user_task');
-}
-
+    {
+        return $this->belongsToMany(Task::class, 'user_task');
+    }
 }
