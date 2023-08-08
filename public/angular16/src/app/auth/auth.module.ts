@@ -36,7 +36,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ProfileComponent } from './profile/profile.component';
 import { ErrorComponent } from './error/error.component';
-
+import { MatSelectModule } from '@angular/material/select';
 @NgModule({
   declarations: [
     AppComponent,
@@ -76,7 +76,8 @@ import { ErrorComponent } from './error/error.component';
     InputTextareaModule,
     CalendarModule,
     PasswordModule,
-    RouterModule
+    RouterModule,
+    MatSelectModule
   ],
   providers: [AuthService],
   exports: [

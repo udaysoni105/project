@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { HttpClient } from '@angular/common/http';
-// import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 
@@ -17,8 +16,9 @@ export class RegistrationComponent implements OnInit {
   formGroup!: FormGroup;
   countries: any[] = [];
   states: any[] = [];
-  // selectedCountryCode: string | undefined;
-  // selectedStateCode: string | undefined;
+  selectedCountryCode: string = '';
+  selectedStateCode: string = '';
+
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
@@ -28,7 +28,6 @@ export class RegistrationComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.fetchCountries();
     this.registrationForm = this.formBuilder.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -36,21 +35,28 @@ export class RegistrationComponent implements OnInit {
       password_confirmation: ['', Validators.required],
       country: ['', Validators.required],
       state: ['', Validators.required]
-    }, {
-      // validator: this.passwordMatchValidator // Custom validator to check password match
     });
+    this.authService.getCountries().subscribe((data: any) => {
+      console.log(data); // Check the data structure in the browser console
 
-    // this.authService.getCountries().subscribe(
-    //   (countries: Country[]) => {
-    //     this.countries = countries;
-    //   },
-    //   (error) => {
-    //     console.error('Failed to fetch countries:', error);
-    //   }
-    // );
+      // Transform the object into an array of objects
+      this.countries = Object.keys(data).map(key => ({ alpha2Code: key, name: data[key] }));
+    });
   }
-  // Custom validator function to check if passwords match
 
+  onCountryChange(): void {
+    console.log('Selected Country Code:', this.selectedCountryCode); // Debug line
+    // Fetch states based on the selected country
+    if (this.selectedCountryCode) {
+      this.authService.getStates(this.selectedCountryCode).subscribe((data: any) => {
+        console.log('Fetched States:', data); // Debug line
+        // Transform the associative array into an array of objects
+        this.states = Object.keys(data).map(key => ({ alpha2Code: key, name: data[key] }));
+      });
+    } else {
+      this.states = [];
+    }
+  }
 
   register() {
     this.authService.register(this.registrationForm.value).subscribe(
@@ -77,70 +83,4 @@ export class RegistrationComponent implements OnInit {
       }
     );
   }
-  // register() {
-  //   this.authService.register(this.registrationForm.value).subscribe(
-  //     response => {
-  //       // Registration successful
-  //       console.log('User registered successfully', response);
-  //       // Redirect to the desired path
-  //       this.router.navigate(['/login']);
-  //     },
-  //     error => {
-  //       // Registration failed
-  //       console.log('Registration failed:', error);
-  //       // Display error message to the user
-  //       // Log the detailed error message
-  //       if (error && error.error && error.error.message) {
-  //         console.error('Error message:', error.error.message);
-  //       }
-  //     }
-  //   );
-  // }
-
-  // onCountryChange() {
-  //   if (this.selectedCountry) {
-  //     // Make an HTTP request to fetch the states based on the selected country
-  //     this.http.get<State[]>(`/api/states/${this.selectedCountry.code}`).subscribe(states => {
-  //       this.states = states;
-  //     });
-  //   } else {
-  //     this.states = [];
-  //   }
-  // }
-  // onCountryChange(selectedCountryCode: string) {
-  //   // Make an HTTP request to fetch the states based on the selected country
-  //   this.authService.getStates(selectedCountryCode).subscribe(
-  //     (states: State[]) => {
-  //       this.states = states;
-  //     },
-  //     (error) => {
-  //       console.error('Failed to fetch states:', error);
-  //     }
-  //   );
-  // }
-  // fetchCountries() {
-  //   this.authService.getCountries().subscribe(
-  //     (data) => {
-  //       this.countries = data;
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching countries:', error);
-  //     }
-  //   );
-  // }
-
-  // fetchStates() {
-  //   if (this.selectedCountryCode) {
-  //     this.authService.getStates(this.selectedCountryCode).subscribe(
-  //       (data) => {
-  //         this.states = data;
-  //       },
-  //       (error) => {
-  //         console.error('Error fetching states:', error);
-  //       }
-  //     );
-  //   } else {
-  //     this.states = [];
-  //   }
-  // }
 }

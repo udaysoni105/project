@@ -16,13 +16,10 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, user);
   }
 
-  // login(credentials: any): Observable<any> {
-  //   return this.http.post(`${this.apiUrl}/login`, credentials);
-  // }
-
   // logout(): Observable<any> {
     // return this.http.post(`${this.apiUrl}/logout`, {});
   // }  
+  
   IsLoggedIn(): boolean {
     const token = localStorage.getItem('token');
     if (token) {
@@ -40,6 +37,7 @@ export class AuthService {
   //     { email, password }
   //   );
   // }
+
   // login(email: string, password: string): Observable<any> {
   //   return this.http.post<{ access_token: string }>(
   //     `${this.apiUrl}/login`,
@@ -53,14 +51,11 @@ export class AuthService {
   login(email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, { email, password });
   }
-  
 
   logout(): void {
     localStorage.removeItem('token');
     this.router.navigate(['/login']); // Redirect to login page
   }
-
-
 
   confirmPassword(token: string): Observable<any> {
     const url = `${this.apiUrl}/confirm-email`;
@@ -87,19 +82,14 @@ export class AuthService {
     const url = `${this.apiUrl}/send-reset-link`;
     return this.http.post(url, { email });
   }
-  // getAllUsers(): Observable<any> {
-  //   return this.http.get(`${this.apiUrl}/users`, {});
-  // }
+
   getAllUsers(headers: HttpHeaders) {
     const url = `${this.apiUrl}/users`;
     return this.http.get<any[]>(url, { headers });
   }
+
   // IsLoggedIn(){
   //   return !!localStorage.getItem('token');
-  // }
-  // login(email: string, password: string): Observable<any> {
-  //   // Make the HTTP POST request with the provided email and password
-  //   return this.http.post<{ access_token: string }>(`${this.apiUrl}/login`, { email, password });
   // }
   
   getUserProfile(token: string) {
@@ -108,13 +98,18 @@ export class AuthService {
     };
     return this.http.get(`${this.apiUrl}/profile`, { headers });
   }
-  getCountries(): Observable<any> {
-    return this.http.get('/api/countries');
+  getCountries(): Observable<any[]> {
+    // Replace with your actual API endpoint to fetch countries
+    const apiUrl = `${this.apiUrl}/countries`;
+    return this.http.get<any[]>(apiUrl);
   }
 
-  getStates(countryCode: string): Observable<any> {
-    return this.http.get(`/api/states/${countryCode}`);
+  getStates(countryCode: string): Observable<any[]> {
+    // Replace with your actual API endpoint to fetch states
+    const apiUrl = `${this.apiUrl}/states/${countryCode}`;
+    return this.http.get<any[]>(apiUrl);
   }
+  
   isTokenValid(): boolean {
     const token = localStorage.getItem('token');
     if (token) {
@@ -125,15 +120,3 @@ export class AuthService {
     return false;
   }
 }
-// login(credentials: { email: string, password: string }, token: string) {
-//   let headers = new HttpHeaders();
-//   headers = headers.append('Content-Type', 'application/json');
-//   headers = headers.append('permission', 'viewtask');
-//   headers = headers.append('authentication', `Bearer {$token}`);
-//   const httpOptions = { headers: headers };
-//   console.log(httpOptions);
-  
-//   const data = { ...credentials }; // Spread the credentials object
-
-//   return this.http.post(`${this.apiUrl}/login`, data, httpOptions);
-// }

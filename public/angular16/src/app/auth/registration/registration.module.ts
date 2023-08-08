@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
+import { MatSelectModule } from '@angular/material/select';
 @NgModule({
   declarations: [],
   imports: [
@@ -15,7 +16,8 @@ import { DropdownModule } from 'primeng/dropdown';
     // FormBuilder,
     // Validators,
     ReactiveFormsModule,
-    DropdownModule
+    DropdownModule,
+    MatSelectModule
   ]
 })
 export class RegistrationModule { }

@@ -59,9 +59,6 @@ class AuthController extends Controller
                     return response()->json($validator->errors()->toJson(), 400);
                 }
 
-                // $countries = CountryState::getCountries();
-                // $states = CountryState::getStates($request->country);
-
                 $user = User::create(array_merge(
                     $validator->validated(),
                     ['name' => $request->name],
@@ -72,6 +69,11 @@ class AuthController extends Controller
                     ['state' => $request->state],
                     ['is_verified' => 0]
                 ));
+
+                $countries = CountryState::getCountries();
+                info($countries);
+                $states = CountryState::getStates($request->country);
+                info($states);
 
                 // Assign the "developer" role to the registered user
                 $developerRole = Role::where('name', 'developer')->first();
@@ -390,9 +392,14 @@ class AuthController extends Controller
         $result = DB::transaction(function () {
             try {
                 Log::info("Controller::AuthController::getCountries::START");
+                // $countries = CountryState::getCountries();
                 $countries = CountryState::getCountries();
-                Log::info("Controller::AuthController::getCountries::END");
+                info($countries);
+                // Log::info(json_encode($countries)); // Log the data before returning
                 return response()->json($countries);
+
+                // return response()->json($countries);
+                Log::info("Controller::AuthController::getCountries::END");
             } catch (\Exception $ex) {
                 Log::error("Error in UserController::getCountries: " . $ex->getMessage());
                 return response()->json(['error' => 'An error occurred while fetching countries'], 500);
@@ -413,12 +420,14 @@ class AuthController extends Controller
      */
     public function getStates($countryCode)
     {
-        $result = DB::transaction(function () {
+        $result = DB::transaction(function () use ($countryCode) {
             try {
                 Log::info("Controller::AuthController::getStates::START");
                 $states = CountryState::getStates($countryCode);
-                Log::info("Controller::AuthController::getStates::END");
+                info($states);
+                Log::info(json_encode($states)); // Log the data before returning
                 return response()->json($states);
+                Log::info("Controller::AuthController::getStates::END");
             } catch (\Exception $ex) {
                 Log::error("Error in UserController::getStates: " . $ex->getMessage());
                 return response()->json(['error' => 'An error occurred while fetching states'], 500);

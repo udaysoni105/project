@@ -8,7 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\TasksController;
 use App\Http\Controllers\UserController;
-
+use App\Http\Controllers\CountryStateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,10 +73,15 @@ Route::group(['middleware' => 'auth'], function ($router) {
 });
 
 //country
-Route::group(['middleware' => 'auth:api'], function () {
-    Route::get('/countries', [AuthController::class, 'getCountries']);
-    Route::get('/states/{country}', [AuthController::class, 'getStates']);
-});
+// Route::group(['middleware' => 'auth:api'], function () {
+//     Route::get('/countries', [AuthController::class, 'getCountries'])->name('tasks.getCountries');
+//     Route::get('/states/{country}', [AuthController::class, 'getStates'])->name('tasks.getStates');
+// });
+
+
+Route::get('/countries', [AuthController::class, 'getCountries'])->name('auth.getCountries');
+// Route::get('/states/{countryCode}', [AuthController::class, 'getStates'])->name('auth.getStates');
+Route::get('/states/{countryCode}', [AuthController::class, 'getStates'])->name('auth.getStates');
 
 //user
 Route::group(['middleware' => 'auth'], function ($router) {

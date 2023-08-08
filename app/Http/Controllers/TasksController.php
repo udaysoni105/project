@@ -264,7 +264,7 @@ class TasksController extends Controller
                 if ($request->has('user_id')) {
                     $userIds = $request->user_id;
                     if (is_array($userIds)) {
-                        $task->users()->sync($userIds);
+                        $task->users()->sync($userIds); 
                     }
                     $task->update($request->except('user_id'));
                 } else {
