@@ -264,7 +264,7 @@ class TasksController extends Controller
                 if ($request->has('user_id')) {
                     $userIds = $request->user_id;
                     if (is_array($userIds)) {
-                        $task->users()->sync($userIds); 
+                        $task->users()->sync($userIds);
                     }
                     $task->update($request->except('user_id'));
                 } else {
@@ -298,6 +298,26 @@ class TasksController extends Controller
             try {
                 Log::info("Controller::TasksController::updatetask::START");
                 // Fetch the task by its ID
+                $permission = $request->header('permission');
+                $user = auth()->user();
+
+                $userRole = UserRole::where('user_id', $user->id)->first();
+
+                $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+                    $query->select('permission_id')
+                        ->from('role_has_permissions')
+                        ->where('role_id', $userRole->role_id);
+                })->get();
+
+                $hasPermission = $rolePermissions->contains('name', $permission);
+
+                if (!$hasPermission) {
+                    info('Unauthorized');
+                }
+
+                $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+                info('user has permission: ' . $matchedPermission->name);
+
                 $task = Task::findOrFail($id);
 
                 // Update the task's information
@@ -481,23 +501,31 @@ class TasksController extends Controller
         $result = DB::transaction(function () use ($id) {
             try {
                 Log::info("Controller::TasksController::generatePDF::START");
-                // Code to generate and download the PDF based on the $id parameter
-                $task = Task::find($id); // Assuming you have a Task model
+
+                // Find the task based on the provided $id
+                $task = Task::find($id);
                 if (!$task) {
                     return response()->json(['error' => 'Task not found'], 404);
                 }
 
-                $pdf = PDF::loadView('pdf_view', compact('task'));
-                Log::info("Controller::TasksController::generatePDF::END");
+                // Load the view and generate the PDF
+                $pdf = PDF::loadView('invoice', compact('task'));
+
+                // Log the successful PDF generation
+                Log::info("PDF generated successfully for task $id");
+
+                // Download the PDF with a custom filename
                 return $pdf->download('task_' . $id . '.pdf');
+                Log::info("Controller::TasksController::generatePDF::END");
             } catch (\Exception $ex) {
                 // Log the exception if needed
                 Log::error("Error in generating PDF for task $id: " . $ex->getMessage());
 
-                // Return an error response
+                // Alternatively, return an error JSON response
                 return response()->json(['error' => 'Unable to generate PDF'], 500);
             }
         });
+
         return $result;
     }
 }
