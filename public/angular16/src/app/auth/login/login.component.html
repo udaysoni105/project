@@ -5,44 +5,45 @@
 -->
 <div class="container">
   <div class="login-box">
-    <h1>Login Page</h1>
+    <div class="card-header">Login Page</div>
     <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
-
-    <form [formGroup]="loginForm" (ngSubmit)="login()">
-      <div>
-        <label for="email">EMAIL: </label>
-        <div class="input-container">
-          <input type="email" id="email" formControlName="email" pInputText 
-            class="input-error">
-          <div *ngIf="
+    <div class="card-body">
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <div>
+          <label for="email">EMAIL: </label>
+          <div class="input-container">
+            <input type="email" id="email" formControlName="email" pInputText class="input-error">
+            <div *ngIf="
         loginForm.controls['email'].invalid && loginForm.controls['email'].touched
       " class="error-message">
-            The email field is required.
+              The email field is required.
+            </div>
           </div>
         </div>
-      </div>
-      <div>
-        <label for="password">PASSWORD: </label>
-        <div class="input-container">
-        <input type="password" id="password" formControlName="password" pInputText
-          class="input-error">
-        <div *ngIf="
+        <div>
+          <label for="password">PASSWORD: </label>
+          <div class="input-container">
+            <input type="password" id="password" formControlName="password" pPassword class="input-error">
+            <div *ngIf="
         loginForm.controls['password'].invalid && loginForm.controls['password'].touched
       " class="error-message">
-          The password field is required.
+              The password field is required.
+            </div>
+          </div>
         </div>
+
+        <div class="forgot-password-link"> <a id="forgot" href="/email" data-bs-toggle="modal"
+            data-bs-target="#exampleModal" class="font-weight-bold" name="email" (click)="forgotPassword()">Forgot
+            password?</a>
         </div>
-      </div>
 
-      <div class="forgot-password-link">
-        <a href="/email" name="email" (click)="forgotPassword()">Forgot Password?</a>
-      </div>
+        <div class="register-link">
+          <p>Don't have an account? <a (click)="navigateToRegistration()" class="register-link">Sign Up</a></p>
+        </div>
 
-      <div class="register-link">
-        <p>Don't have an account? <a (click)="navigateToRegistration()" class="register-link">Register here</a></p>
-      </div>
+        <p-button type="submit" [disabled]="loginForm.invalid">Login</p-button>
+      </form>
 
-      <p-button type="submit" [disabled]="loginForm.invalid">Login</p-button>
-    </form>
+    </div>
   </div>
 </div>

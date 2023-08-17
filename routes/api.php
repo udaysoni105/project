@@ -8,7 +8,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\TasksController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\CountryStateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,18 +25,29 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 //user
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/me', [AuthController::class, 'me']);
-Route::post('/refresh', [AuthController::class, 'refresh']);
+Route::group(['middleware' => 'auth'], function ($router) {
+    Route::get('/users', [UserController::class, 'index']);
+    Route::post('/users', [UserController::class, 'store']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+});
 
 Route::group(['middleware' => 'api'], function ($router) {
     Route::match(['get', 'post'], '/login', [AuthController::class, 'login'])->name('login');
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/forgot-password/{token}', [AuthController::class, 'forgotPassword']);
     Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
-    Route::post('/resetpassword', [ResetPasswordController::class, 'resetPassword']);
+    Route::post('/resetpassword', [AuthController::class, 'resetPassword']);
     Route::get('/profile', [AuthController::class, 'profile']);
 });
 
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/me', [AuthController::class, 'me']);
+Route::post('/refresh', [AuthController::class, 'refresh']);
+
+//countries
+Route::get('/countries', [AuthController::class, 'getCountries'])->name('auth.getCountries');
+Route::get('/states/{countryCode}', [AuthController::class, 'getStates'])->name('auth.getStates');
 
 //project
 Route::delete('projects/{id}', [ProjectsController::class, 'softDelete'])->name('projects.softDelete');
@@ -72,21 +82,3 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::delete('/tasks/{id}', [TasksController::class, 'destroy'])->name('tasks.destroy');
 });
 
-//country
-// Route::group(['middleware' => 'auth:api'], function () {
-//     Route::get('/countries', [AuthController::class, 'getCountries'])->name('tasks.getCountries');
-//     Route::get('/states/{country}', [AuthController::class, 'getStates'])->name('tasks.getStates');
-// });
-
-
-Route::get('/countries', [AuthController::class, 'getCountries'])->name('auth.getCountries');
-// Route::get('/states/{countryCode}', [AuthController::class, 'getStates'])->name('auth.getStates');
-Route::get('/states/{countryCode}', [AuthController::class, 'getStates'])->name('auth.getStates');
-
-//user
-Route::group(['middleware' => 'auth'], function ($router) {
-    Route::get('/users', [UserController::class, 'index']);
-    Route::post('/users', [UserController::class, 'store']);
-    Route::put('/users/{id}', [UserController::class, 'update']);
-    Route::delete('/users/{id}', [UserController::class, 'destroy']);
-});

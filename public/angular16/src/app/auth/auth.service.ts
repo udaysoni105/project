@@ -16,10 +16,6 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, user);
   }
 
-  // logout(): Observable<any> {
-    // return this.http.post(`${this.apiUrl}/logout`, {});
-  // }  
-  
   IsLoggedIn(): boolean {
     const token = localStorage.getItem('token');
     if (token) {
@@ -31,23 +27,6 @@ export class AuthService {
     return false;
   }
 
-  // login(email: string, password: string): Observable<any> {
-  //   return this.http.post<{ access_token: string }>(
-  //     `${this.apiUrl}/login`,
-  //     { email, password }
-  //   );
-  // }
-
-  // login(email: string, password: string): Observable<any> {
-  //   return this.http.post<{ access_token: string }>(
-  //     `${this.apiUrl}/login`,
-  //     { email, password }
-  //   ).pipe(
-  //     tap(response => {
-  //       localStorage.setItem('token', response.access_token);
-  //     })
-  //   );
-  // }
   login(email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, { email, password });
   }
@@ -56,6 +35,9 @@ export class AuthService {
     localStorage.removeItem('token');
     this.router.navigate(['/login']); // Redirect to login page
   }
+  // logout(): Observable<any> {
+  // return this.http.post(`${this.apiUrl}/logout`, {});
+  // }  
 
   confirmPassword(token: string): Observable<any> {
     const url = `${this.apiUrl}/confirm-email`;
@@ -69,20 +51,6 @@ export class AuthService {
     return this.http.put(url, payload);
   }
 
-  resetPassword(email: string): Observable<any> {
-    const url = `${this.apiUrl}/reset-password`;
-    return this.http.post(url, { email });
-  }
-
-  forgotPassword(email: string) {
-    // Send a POST request to the Laravel forgot password endpoint
-  }
-
-  sendResetLink(email: string): Observable<any> {
-    const url = `${this.apiUrl}/send-reset-link`;
-    return this.http.post(url, { email });
-  }
-
   getAllUsers(headers: HttpHeaders) {
     const url = `${this.apiUrl}/users`;
     return this.http.get<any[]>(url, { headers });
@@ -91,7 +59,7 @@ export class AuthService {
   // IsLoggedIn(){
   //   return !!localStorage.getItem('token');
   // }
-  
+
   getUserProfile(token: string) {
     const headers = {
       Authorization: `Bearer ${token}`
@@ -109,7 +77,7 @@ export class AuthService {
     const apiUrl = `${this.apiUrl}/states/${countryCode}`;
     return this.http.get<any[]>(apiUrl);
   }
-  
+
   isTokenValid(): boolean {
     const token = localStorage.getItem('token');
     if (token) {
@@ -119,4 +87,30 @@ export class AuthService {
     }
     return false;
   }
+
+  sendPasswordResetLink(email: string): Observable<any> {
+    const url = `${this.apiUrl}/forgot-password`;
+    const data = { email }; // Make sure 'email' is included in the request payload
+    return this.http.post<any>(url, data);
+  }
+
+  // resetPassword(email: string, newPassword: string): Observable<any> {
+  //   const resetData = { email, newPassword };// Adjust the API endpoint based on your backend setup
+  //   const url = `${this.apiUrl}/resetpassword/`;
+  //   return this.http.post(url, resetData);
+  // }
+// auth.service.ts
+resetPassword(email: string, token: string, password: string, confirmPassword: string): Observable<any> {
+  const data = {
+    email: email,
+    token: token, // Include the token in the request
+    password: password,
+    password_confirmation: confirmPassword
+  };
+
+  return this.http.post(`${this.apiUrl}/resetpassword`, data);
+}
+
+
+
 }

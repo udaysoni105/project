@@ -87,7 +87,7 @@ class AuthController extends Controller
                 Log::info("Controller::AuthController::register::END");
                 return response()->json(['message' => 'User successful Registration', 'user' => $user], 201);
             } catch (\Exception $ex) {
-                Log::error("Error in UserController::register: " . $ex->getMessage());
+                Log::error("Error in AuthController::register: " . $ex->getMessage());
 
                 return response()->json(['error' => 'An error occurred during registration'], 500);
             }
@@ -227,7 +227,7 @@ class AuthController extends Controller
                 // Return the user's profile information
                 return response()->json(auth()->user());
             } catch (\Exception $ex) {
-                Log::error("Error in UserController::profile: " . $ex->getMessage());
+                Log::error("Error in AuthController::profile: " . $ex->getMessage());
 
                 return response()->json(['error' => 'An error occurred while retrieving the profile'], 500);
             }
@@ -261,7 +261,7 @@ class AuthController extends Controller
                 Log::info("Controller::AuthController::me::END");
                 return response()->json(auth()->user());
             } catch (\Exception $ex) {
-                Log::error("Error in UserController::me: " . $ex->getMessage());
+                Log::error("Error in AuthController::me: " . $ex->getMessage());
 
                 return response()->json(['error' => 'An error occurred while retrieving the profile'], 500);
             }
@@ -288,7 +288,7 @@ class AuthController extends Controller
                 Log::info("Controller::AuthController::logout::END");
                 return response()->json(['message' => 'Successfully logged out']);
             } catch (\Exception $ex) {
-                Log::error("Error in UserController::logout: " . $ex->getMessage());
+                Log::error("Error in AuthController::logout: " . $ex->getMessage());
                 return response()->json(['error' => 'An error occurred during logout'], 500);
             }
         });
@@ -307,28 +307,61 @@ class AuthController extends Controller
      */
     public function forgotPassword(Request $request)
     {
-        $result = DB::transaction(function () {
-            try {
-                Log::info("Controller::AuthController::forgotPassword::START");
-                // Validate input data
-                $request->validate([
-                    'email' => 'required|email',
-                ]);
+        try {
+            Log::info("Controller::AuthController::forgotPassword::START");
 
-                // Send password reset link
-                $status = Password::sendResetLink($request->only('email'));
-                Log::info("Controller::AuthController::forgotPassword::END");
-                // Return response based on the status
-                return $status === Password::RESET_LINK_SENT
-                    ? response()->json(['message' => 'Password reset link sent'])
-                    : response()->json(['message' => 'Unable to send password reset link'], 500);
-                // : response()->json(['error' => 'Unable to send reset link'], 400);
-            } catch (\Exception $ex) {
-                Log::error("Error in UserController::forgotPassword: " . $ex->getMessage());
-                return response()->json(['error' => 'An error occurred during forgot password process'], 500);
+            $request->validate([
+                'email' => 'required|email',
+            ]);
+
+            // Get the user based on the email from the reset link
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], 404);
             }
-        });
-        return $result;
+
+            // Generate a password reset token
+            // $token = Password::createToken($user);
+            $resetLink = url('http://localhost:4200/reset/' . $user->email);
+
+
+            // Generate the reset link
+
+            // Use the Mandrill/Mailchimp API to send the email
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, env('MANDRILL_PRODUCTION_URL'));
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+                'key' => env('MANDRILL_API_KEY'),
+                'template_name' => env('MANDRILL_name'),
+                'template_content' => [
+                    [
+                        'name' => 'link',
+                        'content' => $resetLink,
+                    ],
+                ],
+                'message' => [
+                    'to' => [
+                        [
+                            'email' => $user->email,
+                            'name' => $user->name,
+                        ],
+                    ],
+                ],
+            ]));
+
+            $result = curl_exec($ch);
+            $result = (array) json_decode($result);
+            curl_close($ch);
+
+            Log::info("Controller::AuthController::forgotPassword::END");
+            return response()->json(['message' => 'Password reset link sent']);
+        } catch (\Exception $ex) {
+            Log::error("Error in AuthController::forgotPassword: " . $ex->getMessage());
+            return response()->json(['error' => 'An error occurred during the forgot password process'], 500);
+        }
     }
 
     /** 
@@ -343,34 +376,31 @@ class AuthController extends Controller
      */
     public function resetPassword(Request $request)
     {
-        $result = DB::transaction(function () {
+        $result = DB::transaction(function () use ($request) {
             try {
                 Log::info("Controller::AuthController::resetPassword::START");
-                // Validate input data
+                Log::info('Reset Password Request:', $request->all());
                 $request->validate([
                     'email' => 'required|email',
-                    'password' => 'required|min:6',
-                    'token' => 'required',
+                    'password' => 'required|min:6|confirmed',
                 ]);
 
-                // Reset user's password
-                $status = Password::reset(
-                    $request->only('email', 'password', 'password_confirmation', 'token'),
-                    function ($user, $password) {
-                        $user->forceFill([
-                            'password' => Hash::make($password),
-                        ])->setRememberToken(Str::random(60));
+                // Get the user based on the email
+                $user = User::where('email', $request->email)->first();
 
-                        $user->save();
-                    }
-                );
+                if (!$user) {
+                    return response()->json(['error' => 'User not found'], 404);
+                }
+
+                // Reset the user's password
+                $user->password = bcrypt($request->password);
+                $user->save();
+
                 Log::info("Controller::AuthController::resetPassword::END");
-                // Return response based on the status
-                return $status === Password::PASSWORD_RESET
-                    ? response()->json(['message' => 'Password reset successful'])
-                    : response()->json(['message' => 'Unable to reset password'], 500);
+
+                return response()->json(['message' => 'Password reset successful']);
             } catch (\Exception $ex) {
-                Log::error("Error in UserController::resetPassword: " . $ex->getMessage());
+                Log::error("Error in AuthController::resetPassword: " . $ex->getMessage());
                 return response()->json(['error' => 'An error occurred during password reset process'], 500);
             }
         });
@@ -401,7 +431,7 @@ class AuthController extends Controller
                 // return response()->json($countries);
                 Log::info("Controller::AuthController::getCountries::END");
             } catch (\Exception $ex) {
-                Log::error("Error in UserController::getCountries: " . $ex->getMessage());
+                Log::error("Error in AuthController::getCountries: " . $ex->getMessage());
                 return response()->json(['error' => 'An error occurred while fetching countries'], 500);
             }
         });
@@ -429,7 +459,7 @@ class AuthController extends Controller
                 return response()->json($states);
                 Log::info("Controller::AuthController::getStates::END");
             } catch (\Exception $ex) {
-                Log::error("Error in UserController::getStates: " . $ex->getMessage());
+                Log::error("Error in AuthController::getStates: " . $ex->getMessage());
                 return response()->json(['error' => 'An error occurred while fetching states'], 500);
             }
         });

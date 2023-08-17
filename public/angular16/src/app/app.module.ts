@@ -27,7 +27,6 @@ import { TaskDeleteComponent } from './core/task/task-delete/task-delete.compone
 import { TaskDetailsComponent } from './core/task/task-details/task-details.component';
 import { TaskEditComponent } from './core/task/task-edit/task-edit.component';
 import { TaskTableComponent } from './core/task/task-table/task-table.component';
-import { ConfirmComponent } from './auth/password/confirm/confirm.component';
 import { EmailComponent } from './auth/password/email/email.component';
 import { ResetComponent } from './auth/password/reset/reset.component';
 import { DashboardComponent } from './auth/dashboard/dashboard.component';
@@ -84,7 +83,6 @@ const routes: Routes = [
     TaskDetailsComponent,
     TaskEditComponent,
     TaskTableComponent,
-    ConfirmComponent,
     EmailComponent,
     ResetComponent,
     DashboardComponent,

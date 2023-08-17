@@ -17,8 +17,8 @@ export class LoginComponent implements OnInit {
   // public formVali
   public isInValid !: boolean;
   error: string | null = null;
-  
-  constructor(private router: Router,private formBuilder: FormBuilder, private authService: AuthService,private http: HttpClient,private messageService: MessageService ){localStorage.clear()}
+
+  constructor(private router: Router, private formBuilder: FormBuilder, private authService: AuthService, private http: HttpClient, private messageService: MessageService) { localStorage.clear() }
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
@@ -31,15 +31,15 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
-  
+
     const email = this.loginForm.value.email;
     const password = this.loginForm.value.password;
-  
+
     this.authService.login(email, password).subscribe(
       (response: any) => {
         console.log(response);
         const token = response.access_token;
-        const role = response.user.role; 
+        const role = response.user.role;
         localStorage.setItem('token', token);
         localStorage.setItem('email', email);
         localStorage.setItem('password', password);
@@ -48,20 +48,21 @@ export class LoginComponent implements OnInit {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'login successfully' });
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
-        },1500 );
+        }, 1500);
       },
       (error) => {
         console.error(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'user is not associated'});
-          setTimeout(() => {
-        },1500 );
+          detail: 'user is not associated'
+        });
+        setTimeout(() => {
+        }, 1500);
       }
     );
   }
-  
+
   forgotPassword() {
     const data = {
       // email: this.email,

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { AuthService } from '../../auth.service';
 @Component({
   selector: 'app-email',
   templateUrl: './email.component.html',
@@ -9,9 +9,13 @@ import { Router } from '@angular/router';
 })
 export class EmailComponent implements OnInit {
   emailForm!: FormGroup;
-  statusMessage: string | null = null;
-
-  constructor(private formBuilder: FormBuilder,private router: Router) {}
+  email: string = '';
+  isRequestSent: boolean = false;
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private authservice: AuthService
+  ) { }
 
   ngOnInit() {
     this.emailForm = this.formBuilder.group({
@@ -23,8 +27,20 @@ export class EmailComponent implements OnInit {
     if (this.emailForm.invalid) {
       return;
     }
-    this.router.navigate(['/reset']);
-    // Handle sending password reset link logic here
-    this.statusMessage = 'Password reset link sent successfully.';
+  
+    const formData = this.emailForm.value;
+    this.email = formData.email; 
+  console.log(this.email);
+    this.authservice.sendPasswordResetLink(this.email).subscribe(
+      (response) => {
+        console.log('Password reset request sent:', response);
+        this.isRequestSent = true;
+        this.router.navigate(['/login']);
+      },
+      (error) => {
+        console.error('Error sending password reset request:', error);
+      }
+    );
   }
+  
 }

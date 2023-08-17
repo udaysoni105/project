@@ -6,7 +6,7 @@ import { authGuard } from './auth.guard';
 import { RegistrationComponent } from './registration/registration.component';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
-import { ConfirmComponent } from './password/confirm/confirm.component';
+// import { ConfirmComponent } from './password/confirm/confirm.component';
 import { EmailComponent } from './password/email/email.component';
 import { ResetComponent } from './password/reset/reset.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: 'registration', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
-  { path: 'confirm', component: ConfirmComponent },
+  // { path: 'confirm', component: ConfirmComponent },
   { path: 'email', component: EmailComponent },
   { path: 'reset', component: ResetComponent },
   { path: 'dashboard', component: DashboardComponent ,canActivate:[authGuard]},

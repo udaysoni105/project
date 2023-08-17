@@ -2,12 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { authGuard } from './auth/auth.guard';
-// import { ProjectGuard } from './core/project/project.guard';
 
 import { RegistrationComponent } from './auth/registration/registration.component';
 import { LoginComponent } from './auth/login/login.component';
 import { LogoutComponent } from './auth/logout/logout.component';
-import { ConfirmComponent } from './auth/password/confirm/confirm.component';
 import { EmailComponent } from './auth/password/email/email.component';
 import { ResetComponent } from './auth/password/reset/reset.component';
 import { DashboardComponent } from './auth/dashboard/dashboard.component';
@@ -35,9 +33,9 @@ const routes: Routes = [
   { path: 'registration', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
-  { path: 'confirm', component: ConfirmComponent },
   { path: 'email', component: EmailComponent },
   { path: 'reset', component: ResetComponent },
+  { path: 'reset/:email', component: ResetComponent },
   { path: 'dashboard', component: DashboardComponent ,canActivate:[authGuard]},
     {path: 'home',component:MainComponent},
     // { path: '',loadChildren:()=>import('./auth/dashboard/dashboard.module').then(a=>a.DashboardModule),canActivate:[authGuard]},
