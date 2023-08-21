@@ -24,6 +24,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/verify_email', [VerificationController::class, 'verifyEmail'])->name('verify.email');
+
 //user
 Route::group(['middleware' => 'auth'], function ($router) {
     Route::get('/users', [UserController::class, 'index']);

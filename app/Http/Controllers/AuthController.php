@@ -42,11 +42,12 @@ class AuthController extends Controller
      * @return JsonResponse
      * @throws Exception
      */
-    public function register(Request $request): JsonResponse
+    public function register(Request $request)
     {
         $result = DB::transaction(function () use ($request) {
             try {
                 Log::info("Controller::AuthController::register::START");
+
                 $validator = Validator::make($request->all(), [
                     'name' => 'required',
                     'email' => 'required|email|unique:users|ends_with:.com',
@@ -59,42 +60,89 @@ class AuthController extends Controller
                     return response()->json($validator->errors()->toJson(), 400);
                 }
 
-                $user = User::create(array_merge(
-                    $validator->validated(),
-                    ['name' => $request->name],
-                    ['email' => $request->email],
-                    ['password' => bcrypt($request->password)],
-                    // ['email_verified_at' =>!empty($request->Text) ? $request->Text : 'N.A'],
-                    ['country' => $request->country],
-                    ['state' => $request->state],
-                    ['is_verified' => 0]
-                ));
-
-                $countries = CountryState::getCountries();
-                info($countries);
-                $states = CountryState::getStates($request->country);
-                info($states);
+                $user = User::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password),
+                    'country' => $request->country,
+                    'state' => $request->state,
+                ]);
+                info($user);
 
                 // Assign the "developer" role to the registered user
                 $developerRole = Role::where('name', 'developer')->first();
                 if ($developerRole) {
                     $user->assignRole($developerRole);
                 }
+                info($developerRole);
 
-                // Send verification email
-                // Mail::to($user->email)->send(new VerificationEmail($user));
+                $serverUrl = url('http://localhost:8000/api');
+                info($serverUrl);
+
+                $encryptedEmail = bin2hex($user->email);
+                info($encryptedEmail);
+
+                $verificationLink = '<a href="' . $serverUrl . '/verify_email?key=' . $encryptedEmail .'" target="_blank">here</a>.';
+                info($verificationLink);
+
+                $toRecipientMailArr = [
+                    'to' => [
+                        [
+                            'email' => $user->email,
+                        ],
+                    ],
+                ];
+                info($toRecipientMailArr);
+
+                // Use the Mandrill/Mailchimp API to send the email
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, env('MANDRILL_PRODUCTION_URL'));
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+                    'key' => env('MANDRILL_API_KEY'),
+                    'template_name' => env('MANDRILL_NAMe'),
+                    'template_content' => [
+                        [
+                            'name' => 'username',
+                            'content' => $user->name,
+                        ],
+                        [
+                            'name' => 'useremail',
+                            'content' => $user->name,
+                        ],
+                        [
+                            'name' => 'link',
+                            'content' => $verificationLink,
+                        ],
+                    ],
+                    'message' => $toRecipientMailArr,
+                ]));
+
+                $curlResult = curl_exec($ch);
+                info($curlResult);
+
+                $curlResult = (array) json_decode($curlResult);
+                info($curlResult);
+
+                if (array_key_exists('error', $curlResult)) {
+                    Log::error('Admin::AuthController::register::' . $curlResult['error']);
+                    return response()->json(['error' => 'An error occurred while sending email'], 500);
+                }
+
+                curl_close($ch);
 
                 Log::info("Controller::AuthController::register::END");
-                return response()->json(['message' => 'User successful Registration', 'user' => $user], 201);
+                return response()->json(['message' => 'User successfully registered', 'user' => $user], 201);
             } catch (\Exception $ex) {
                 Log::error("Error in AuthController::register: " . $ex->getMessage());
-
                 return response()->json(['error' => 'An error occurred during registration'], 500);
             }
         });
 
         return $result;
     }
+
 
     /** 
      * @author : UDAY SONI
@@ -122,6 +170,9 @@ class AuthController extends Controller
 
                 // Get the user's role
                 $role = $user->roles->pluck('name')->first();
+                if ($role === 'developer' && $user->is_verified !== 1) {
+                    return response()->json(['error' => 'Developer must be verified'], 401);
+                }
                 Log::info("Controller::AuthController::login::END");
                 return response()->json([
                     'access_token' => $token,
@@ -216,7 +267,6 @@ class AuthController extends Controller
                 Log::info("Controller::AuthController::profile::START");
                 // Retrieve the authenticated user
                 $user = auth()->user();
-
 
                 // Check if the user is authenticated
                 if (!$user) {
@@ -325,7 +375,6 @@ class AuthController extends Controller
             // $token = Password::createToken($user);
             $resetLink = url('http://localhost:4200/reset/' . $user->email);
 
-
             // Generate the reset link
 
             // Use the Mandrill/Mailchimp API to send the email
@@ -422,14 +471,9 @@ class AuthController extends Controller
         $result = DB::transaction(function () {
             try {
                 Log::info("Controller::AuthController::getCountries::START");
-                // $countries = CountryState::getCountries();
                 $countries = CountryState::getCountries();
-                info($countries);
-                // Log::info(json_encode($countries)); // Log the data before returning
-                return response()->json($countries);
-
-                // return response()->json($countries);
                 Log::info("Controller::AuthController::getCountries::END");
+                return response()->json($countries);
             } catch (\Exception $ex) {
                 Log::error("Error in AuthController::getCountries: " . $ex->getMessage());
                 return response()->json(['error' => 'An error occurred while fetching countries'], 500);
@@ -454,10 +498,8 @@ class AuthController extends Controller
             try {
                 Log::info("Controller::AuthController::getStates::START");
                 $states = CountryState::getStates($countryCode);
-                info($states);
-                Log::info(json_encode($states)); // Log the data before returning
-                return response()->json($states);
                 Log::info("Controller::AuthController::getStates::END");
+                return response()->json($states);
             } catch (\Exception $ex) {
                 Log::error("Error in AuthController::getStates: " . $ex->getMessage());
                 return response()->json(['error' => 'An error occurred while fetching states'], 500);

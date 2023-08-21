@@ -15,16 +15,3 @@ use App\Http\Controllers\RegistrationController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-
-
-
-// Route::get('/home', [HomeController::class, 'index'])->name('home');
-// Auth::routes();
-
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-

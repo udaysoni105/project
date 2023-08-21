@@ -104,7 +104,9 @@ return [
             'throttle' => 60,
         ],
     ],
-
+    'verification' => [
+        'expire' => 120, // Adjust the expiration time as needed
+    ],
     /*
     |--------------------------------------------------------------------------
     | Password Confirmation Timeout

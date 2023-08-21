@@ -26,6 +26,9 @@ export class DashboardComponent {
     ];
   }
   
+  logout(): void {
+    this.authService.logout();
+  }
   handleGetStartedClick() {
     this.getStartedClickCount++;
 

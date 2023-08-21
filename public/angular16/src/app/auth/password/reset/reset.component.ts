@@ -39,7 +39,7 @@ export class ResetComponent implements OnInit {
     if (this.resetForm.valid) {
       const { password, confirmPassword } = this.resetForm.value;
       this.authService.resetPassword(this.email, this.token, password, confirmPassword).subscribe(
-        () => {
+        (response) => {
           // Password reset successful, navigate to login page
           this.router.navigate(['/login']);
         },

@@ -39,6 +39,7 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent ,canActivate:[authGuard]},
     {path: 'home',component:MainComponent},
     // { path: '',loadChildren:()=>import('./auth/dashboard/dashboard.module').then(a=>a.DashboardModule),canActivate:[authGuard]},
+    { path: 'api/login/verify_email', component: LoginComponent },
 
   { path: 'projects', component: ProjectTableComponent },
   { path: 'register-project', component: ProjectCreateComponent},
