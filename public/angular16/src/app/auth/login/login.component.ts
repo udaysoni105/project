@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(email, password).subscribe(
       (response: any) => {
-        console.log(response);
+        // console.log(response);
         const token = response.access_token;
         const role = response.user.role;
         localStorage.setItem('token', token);

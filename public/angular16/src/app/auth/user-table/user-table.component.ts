@@ -37,7 +37,7 @@ export class UserTableComponent implements OnInit {
     this.loading = true;
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
-    
+    // console.log(jwtToken);
     if (!jwtToken) {
       console.error('JWT token not found in local storage. Please log in.');
       return;
@@ -48,12 +48,13 @@ export class UserTableComponent implements OnInit {
       email: 'email',
       Permission: 'view_project' // Add the Permission header with the desired value
     });
+    // console.log(headers);
 
     // Make the API call with the headers
     this.authService.getAllUsers(headers).subscribe(
       (response) => {
         // Handle the response here
-        console.log(response);
+        // console.log(response);
         this.users = response; // Assuming the API returns an array of projects
         this.loading = false; // Stop loading when the data is fetched
       },
@@ -79,8 +80,33 @@ export class UserTableComponent implements OnInit {
     );
   }
 
+  // onSearch(): void {
+  //   this.table.filter(this.searchQuery, 'name', 'contains');
+  // }
   onSearch(): void {
-    this.table.filter(this.searchQuery, 'name', 'contains');
+    const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+    // console.log(jwtToken);
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      email: 'email'
+    });
+// console.log(headers);
+
+    this.authService.searchTasks(this.searchQuery, headers).subscribe(
+      (response) => {
+        // console.log('Search Response:', response);
+        this.users = response.data; // Extract the 'data' array from the response
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 
   // onSearch(): void {

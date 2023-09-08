@@ -34,6 +34,8 @@ export class ProjectTableComponent {
     this.loading = true;
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
+    // console.log(jwtToken);
+    // console.log(email);
     if (!jwtToken) {
       console.error('JWT token not found in local storage. Please log in.');
       return;
@@ -44,12 +46,12 @@ export class ProjectTableComponent {
       email: 'email',
       Permission: 'view_project', // Add the Permission header with the desired value
     });
-
+    // console.log(headers);
     // Make the API call with the headers
     this.projectService.getAllProjects(headers).subscribe(
       (response) => {
         // Handle the response here
-        console.log(response);
+        // console.log(response);
         this.projects = response; // Assuming the API returns an array of projects
         this.loading = false; // Stop loading when the data is fetched
 
@@ -102,9 +104,10 @@ export class ProjectTableComponent {
       Permission: 'delete_project', // Add the Permission header with the desired value
     });
 
+
     this.projectService.softDeleteProject(id, headers).subscribe(
       (response) => {
-        console.log('Project soft deleted successfully');
+        // console.log('Project soft deleted successfully');
 
         this.projects = this.projects.filter((project) => project.id !== id);
         // Show the success message using the MessageService
@@ -140,26 +143,6 @@ export class ProjectTableComponent {
     );
   }
 
-  // onSearch(): void {
-  //   this.table.filter(this.searchQuery, 'name', 'contains');
-  // }
-
-  // onSort(event: SortEvent): void {
-  //   // Implement the sorting logic here
-  // }
-
-  // onSearch(): void {
-  //   this.projectService.searchProjects(this.searchQuery).subscribe(
-  //     (response) => {
-  //       console.log('Search Response:', response);
-  //       this.projects = response.data; // Extract the 'data' array from the response
-  //     },
-  //     (error) => {
-  //       console.log(error);
-
-  //     }
-  //   );
-  // }
   onSearch(): void {
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
@@ -177,7 +160,7 @@ export class ProjectTableComponent {
 
     this.projectService.searchProjects(this.searchQuery, headers).subscribe(
       (response) => {
-        console.log('Search Response:', response);
+        // console.log('Search Response:', response);
         this.projects = response.data; // Extract the 'data' array from the response
       },
       (error) => {

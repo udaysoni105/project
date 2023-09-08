@@ -12,16 +12,20 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
+
   register(user: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, user);
+  }
+  uploadImage(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    return this.http.post(`${this.apiUrl}/store`, formData);
   }
 
   IsLoggedIn(): boolean {
     const token = localStorage.getItem('token');
     if (token) {
-      // Check token validity here (e.g., token expiration)
-      // You may need to decode the token and check the expiration date
-      // For now, let's assume a simple check for token presence
       return true;
     }
     return false;
@@ -31,13 +35,18 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/login`, { email, password });
   }
 
-  logout(): void {
-    localStorage.removeItem('token');
-    this.router.navigate(['/login']); // Redirect to login page
+  // logout(): void {
+  //   localStorage.removeItem('token');
+  //   this.router.navigate(['/login']); // Redirect to login page
+  // }
+  logout(): Observable<any> { 
+    console.log("log out auth service "); 
+    const token = localStorage.getItem('token'); 
+    console.log(token); 
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`); 
+    console.log(headers); 
+    return this.http.delete<any>(`${this.apiUrl}/auth/logout`, { headers }); 
   }
-  // logout(): Observable<any> {
-  // return this.http.post(`${this.apiUrl}/logout`, {});
-  // }  
 
   confirmPassword(token: string): Observable<any> {
     const url = `${this.apiUrl}/confirm-email`;
@@ -59,6 +68,18 @@ export class AuthService {
   // IsLoggedIn(){
   //   return !!localStorage.getItem('token');
   // }
+
+  createimage(payload: any, headers: HttpHeaders) {
+    const url = `${this.apiUrl}/upload/image`; // Replace with your Laravel image upload endpoint
+    // return this.http.post(url, formData, { headers });
+
+    return this.http.post(url, payload, { headers });
+  }
+  // }
+  deleteUserProfile(userId: number): Observable<any> {
+    const url = `${this.apiUrl}/destroy/{image}`; // Replace with your API endpoint for deleting a user profile
+    return this.http.delete(url);
+  }
 
   getUserProfile(token: string) {
     const headers = {
@@ -82,11 +103,31 @@ export class AuthService {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken: any = jwt_decode(token);
-      const now = Date.now() / 1000000000000; // Convert to seconds
+      const now = Date.now() / 9999999999999; // Convert to seconds
       return decodedToken.exp > now; // Check if the token is not expired
     }
     return false;
   }
+  // isTokenValid(): boolean {
+  //   const token = localStorage.getItem('token');
+  //   if (token) {
+  //     try {
+  //       const decodedToken: any = jwt_decode(token);
+
+  //       // Custom logic: Consider the token valid even if the 'exp' claim is missing
+  //       if (!decodedToken.exp) {
+  //         return true;
+  //       }
+
+  //       const now = Date.now() / 1000; // Convert to seconds
+  //       return decodedToken.exp > now; // Check if the token is not expired
+  //     } catch (error) {
+  //       console.error("Error decoding token:", error);
+  //     }
+  //   }
+  //   return false;
+  // }
+
 
   sendPasswordResetLink(email: string): Observable<any> {
     const url = `${this.apiUrl}/forgot-password`;
@@ -94,23 +135,18 @@ export class AuthService {
     return this.http.post<any>(url, data);
   }
 
-  // resetPassword(email: string, newPassword: string): Observable<any> {
-  //   const resetData = { email, newPassword };// Adjust the API endpoint based on your backend setup
-  //   const url = `${this.apiUrl}/resetpassword/`;
-  //   return this.http.post(url, resetData);
-  // }
-// auth.service.ts
-resetPassword(email: string, token: string, password: string, confirmPassword: string): Observable<any> {
-  const data = {
-    email: email,
-    token: token, // Include the token in the request
-    password: password,
-    password_confirmation: confirmPassword
-  };
+  resetPassword(email: string, token: string, password: string, confirmPassword: string): Observable<any> {
+    const data = {
+      email: email,
+      token: token, // Include the token in the request
+      password: password,
+      password_confirmation: confirmPassword
+    };
 
-  return this.http.post(`${this.apiUrl}/resetpassword`, data);
-}
-
-
-
+    return this.http.post(`${this.apiUrl}/resetpassword`, data);
+  }
+  searchTasks(searchQuery: string, headers: HttpHeaders): Observable<any> {
+    const url = `${this.apiUrl}/users/search?searchQuery=${searchQuery}`
+    return this.http.get(url, { headers });
+  }
 }

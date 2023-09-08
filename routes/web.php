@@ -15,3 +15,6 @@ use App\Http\Controllers\RegistrationController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('image', [ AuthController::class, 'imageUpload' ]);
+ 
+Route::post('store', [ AuthController::class, 'store' ]);

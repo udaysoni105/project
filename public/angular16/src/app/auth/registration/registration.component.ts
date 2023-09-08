@@ -37,7 +37,7 @@ export class RegistrationComponent implements OnInit {
       state: ['', Validators.required]
     });
     this.authService.getCountries().subscribe((data: any) => {
-      console.log(data); // Check the data structure in the browser console
+      // console.log(data); // Check the data structure in the browser console
 
       // Transform the object into an array of objects
       this.countries = Object.keys(data).map(key => ({ alpha2Code: key, name: data[key] }));
@@ -45,11 +45,11 @@ export class RegistrationComponent implements OnInit {
   }
 
   onCountryChange(): void {
-    console.log('Selected Country Code:', this.selectedCountryCode); // Debug line
+    // console.log('Selected Country Code:', this.selectedCountryCode); // Debug line
     // Fetch states based on the selected country
     if (this.selectedCountryCode) {
       this.authService.getStates(this.selectedCountryCode).subscribe((data: any) => {
-        console.log('Fetched States:', data); // Debug line
+        // console.log('Fetched States:', data); // Debug line
         // Transform the associative array into an array of objects
         this.states = Object.keys(data).map(key => ({ alpha2Code: key, name: data[key] }));
       });
@@ -63,7 +63,7 @@ export class RegistrationComponent implements OnInit {
       response => {
         // Registration successful
 
-        console.log('User registered successfully', response);
+        // console.log('User registered successfully', response);
         // Redirect to the desired path
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'register successfully' });
 

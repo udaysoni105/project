@@ -4,7 +4,7 @@ import { Router ,ActivatedRoute} from '@angular/router';
 import { AuthService } from '../../auth.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-reset',
   templateUrl: './reset.component.html',
@@ -20,6 +20,7 @@ export class ResetComponent implements OnInit {
     private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -41,11 +42,23 @@ export class ResetComponent implements OnInit {
       this.authService.resetPassword(this.email, this.token, password, confirmPassword).subscribe(
         (response) => {
           // Password reset successful, navigate to login page
-          this.router.navigate(['/login']);
+          // this.router.navigate(['/login']);
+          // this.users = { email: '', password: '' };
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'login successfully' });
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1500);
         },
         error => {
           console.error('Password reset error:', error);
           // Handle error, show appropriate message to the user
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'user is not associated'
+          });
+          setTimeout(() => {
+          }, 1500);
         }
       );
     }

@@ -18,7 +18,10 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\VerificationEmail;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
+const LOG_FILE_NAME = 'laravel.log';
 /** @author UDAY SONI
  *
  * Class name: AuthController
@@ -67,23 +70,18 @@ class AuthController extends Controller
                     'country' => $request->country,
                     'state' => $request->state,
                 ]);
-                info($user);
 
                 // Assign the "developer" role to the registered user
                 $developerRole = Role::where('name', 'developer')->first();
                 if ($developerRole) {
                     $user->assignRole($developerRole);
                 }
-                info($developerRole);
 
                 $serverUrl = url('http://localhost:8000/api');
-                info($serverUrl);
 
                 $encryptedEmail = bin2hex($user->email);
-                info($encryptedEmail);
 
-                $verificationLink = '<a href="' . $serverUrl . '/verify_email?key=' . $encryptedEmail .'" target="_blank">here</a>.';
-                info($verificationLink);
+                $verificationLink = '<a href="' . $serverUrl . '/verify_email?key=' . $encryptedEmail . '" target="_blank">here</a>.';
 
                 $toRecipientMailArr = [
                     'to' => [
@@ -92,7 +90,6 @@ class AuthController extends Controller
                         ],
                     ],
                 ];
-                info($toRecipientMailArr);
 
                 // Use the Mandrill/Mailchimp API to send the email
                 $ch = curl_init();
@@ -120,10 +117,8 @@ class AuthController extends Controller
                 ]));
 
                 $curlResult = curl_exec($ch);
-                info($curlResult);
 
                 $curlResult = (array) json_decode($curlResult);
-                info($curlResult);
 
                 if (array_key_exists('error', $curlResult)) {
                     Log::error('Admin::AuthController::register::' . $curlResult['error']);
@@ -250,6 +245,256 @@ class AuthController extends Controller
         return $result;
     }
 
+    // /** 
+    //  * @author : UDAY SONI
+    //  * Method name: imageUpload
+    //  * show user profile image s3 cloud link.
+    //  *
+    //  * @return \Illuminate\Http\Response
+    //  * @param  string $token
+    //  * @return \Illuminate\Http\JsonResponse
+    //  * @throws Exception
+    //  */
+    public function imageUpload()
+    {
+        Log::info("Controller::AuthController::imageUpload::START");
+        $url = 'https://s3-us-west-1.amazonaws.com/snapstics-staging-file-storage/images/user_logo/';
+        $images = [];
+        $files = Storage::disk('s3')->files('images');
+        foreach ($files as $file) {
+            $images[] = [
+                'name' => str_replace(' $url', '', $file),
+                'src' => $url . $file
+            ];
+        }
+        Log::info("Controller::AuthController::imageUpload::END");
+        return response()->json(compact('images'));
+    }
+
+    /** 
+     * @author : UDAY SONI
+     * Method name: store
+     * show user profile.
+     *
+     * @return \Illuminate\Http\Response
+     * @param  string $token
+     * @return \Illuminate\Http\JsonResponse
+     * @throws Exception
+     */
+
+    //  public function imageUploadPost(Request $request) {
+    //     $this->validate($request, [
+    //         'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    //     ]);
+    //     $imageName = $request->image->getClientOriginalName();
+    //     $filename = md5(uniqid(rand(), true)) . $imageName;
+    //     $url = '/images/user_logo/';
+    //     $image = $request->file('image');
+    //     $path = $url . $filename;
+    //     $t = Storage::disk('s3')->put($path, file_get_contents($image), 'public');
+    //     return view('image-display', compact('filename'));
+    // }
+
+    // public function imageUpload($filename) {
+    //     if (Storage::disk('s3')->exists('/images/user_logo/' . $filename)) {
+    //         $content = Storage::disk('s3')->get('/images/user_logo/' . $filename);
+    //         $image['image'] = $content;
+    //         $image_name = $filename;
+    //         file_put_contents("images/" . $filename, $image['image']);
+    //     }
+    //     return view('image-get', compact('filename'));
+    // }
+
+    public function upload(Request $request)
+    {
+        Log::info("Controller::AuthController::upload::START");
+
+        $file = $request['filename'];
+        info($file);
+
+        $filename = md5(uniqid(rand(), true)) . $file;
+        info($filename);
+
+        $filePath = '/images/user_logo/' . $filename;
+        info($filePath);
+
+        $dataFileName = 'https://s3-us-west-1.amazonaws.com/snapstics-staging-file-storage/images/user_logo/' . $filename;
+        info($dataFileName);
+
+        Storage::disk('s3')->put($filePath, base64_decode(($request['base64Image'])), 'public');
+
+        // Retrieve the 'email' header from the request
+        $emailHeader = $request->header('email');
+        info($emailHeader);
+
+        // Get the user based on the email from the reset link
+        $user = User::where('email', $emailHeader)->first();
+        info($user);
+
+        if ($user) {
+            // Update the user's image_filename and image_path in the database
+            $user->update([
+                'image_filename' => $filename,
+                'image_path' => $dataFileName
+            ]);
+            info('user update' . $user);
+            Log::info("Controller::AuthController::upload::END");
+
+            // Return the URL of the uploaded image
+            return response()->json([
+                'success' => true,
+                'message' => 'Image uploaded successfully',
+                'filename' => $filename,
+            ]);
+        } else {
+            // Handle the case where the user with the specified email was not found
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found with the provided email.',
+            ]);
+        }
+    }
+
+    //     public function upload(Request $request)
+    //     {
+    //         Log::info("Controller::AuthController::upload::START");
+
+    // // info($request);
+    //         // Retrieve the base64Image from the request
+    //         $base64Image = $request->input('base64Image');
+    //         // info($base64Image);    // Check if the base64Image is not empty
+    //         if (!empty($base64Image)) {
+    //             $encodedImage = base64_encode($base64Image);
+    // info('encode ==== '.$encodedImage);
+    //             // Generate a unique filename (you can use your existing logic here)
+    //             $filename = md5(uniqid(rand(), true)) . ($base64Image);
+    //             info('filename ====== ' .$filename);
+
+    //             $filePath = 'https://s3-us-west-1.amazonaws.com/snapstics-staging-file-storage/images/user_logo/' . $filename;
+    //             // info($filePath);
+
+    //             // file_put_contents($filePath, $filePath);
+    //             Storage::disk('s3')->put($filePath, base64_decode($filename), 'public');
+
+    //             // Return the URL of the uploaded image
+    //             // $s3Url = Storage::disk('s3')->url($path);
+    //             // info('Return the URL===' . $s3Url);
+
+    //             // Retrieve the 'email' header from the request
+    //             $emailHeader = $request->header('email');
+
+
+    //             // Get the user based on the email from the reset link
+    //             $user = User::where('email', $emailHeader)->first();
+    //             // info($user);
+    //             if ($user) {
+    //                 // Update the user's image_filename and image_path in the database
+    //                 $user->update([
+    //                     'image_filename' => $encodedImage,
+    //                     'image_path' => $filePath
+    //                 ]);
+    //                 info('update user' . $user);
+    //                 Log::info("Controller::AuthController::upload::END");
+
+    //                 // Return a success response if needed
+    //                 return response()->json([
+    //                     'success' => true,
+    //                     'message' => 'Image uploaded and processed successfully',
+    //                     'filename' => $filename,
+    //                     'file_path' => $filePath,
+    //                 ]);
+    //             } else {
+    //                 // Handle the case where the base64Image is empty or invalid
+    //                 return response()->json([
+    //                     'success' => false,
+    //                     'message' => 'Invalid or empty image data',
+    //                 ]);
+    //             }
+    //         }
+    //     }
+
+
+    // public function upload(Request $request)
+    // {
+    //     Log::info("Controller::AuthController::upload::START");
+    //     $file = $request->file('image');
+    //     info('file' . $file);
+
+    //     // Check if the file upload was successful
+    //     if ($file->isValid()) {
+    //         $filename = md5(uniqid(rand(), true)) . '.' . $file->getClientOriginalExtension();
+    //         info('filename' . $filename);
+    //         $filePath = 'https://s3-us-west-1.amazonaws.com/snapstics-staging-file-storage/images/user_logo/' . $filename;
+    //         info('filepath' . $filePath);
+
+    //         // Upload the image to S3
+    //         Storage::disk('s3')->put($filePath, $file->get());
+
+
+    //         // Retrieve the 'email' header from the request
+    //         $emailHeader = $request->header('email');
+
+    //         // Get the user based on the email from the reset link
+    //         $user = User::where('email', $emailHeader)->first();
+
+    //         // Update the user's image_filename and image_path in the database
+    //         $user->update([
+    //             'image_filename' => $filename,
+    //             'image_path' => $filePath
+    //         ]);
+    //         info('user create' . $user);
+    //         Log::info("Controller::AuthController::upload::END");
+
+    //         // Return the URL of the uploaded image
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Image uploaded successfully',
+    //             'filename' => $filename,
+    //         ]);
+    //     } else {
+    //         // Handle the case where the file upload failed
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'File upload failed.',
+    //         ]);
+    //     }
+    // }
+
+    /** 
+     * @author : UDAY SONI
+     * Method name: destroy
+     * destroy user profile images.
+     *
+     * @return \Illuminate\Http\Response
+     * @param  string $token
+     * @return \Illuminate\Http\JsonResponse
+     * @throws Exception
+     */
+    public function destroy(Request $request, int $id)
+    {
+        Log::info("Controller::AuthController::destroy::START");
+        $images = User::find($id);
+        $images->delete();
+
+        $path = 'images/' . $images->olduserimagelogo;
+        if (Storage::disk('s3')->exists($path)) {
+            Storage::disk('s3')->delete($path);
+        }
+        Log::info("Controller::AuthController::destroy::END");
+        return response()->json([
+            'success' => true,
+            'message' => 'Image deleted successfully',
+        ]);
+    }
+    // public function destroy($images)
+    // {
+    //     Log::info("Controller::AuthController::destroy::START");
+    //     Storage::disk('s3')->delete('images/' . $images);
+
+    //     Log::info("Controller::AuthController::destroy::END");
+    //     return back()->withSuccess('Image was deleted successfully');
+    // }
+
     /** 
      * @author : UDAY SONI
      * Method name: profile
@@ -329,11 +574,12 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws Exception
      */
-    public function logout()
+    public function logout(Request $request)
     {
         $result = DB::transaction(function () {
             try {
                 Log::info("Controller::AuthController::logout::START");
+                JWTAuth::invalidate(JWTAuth::getToken());
                 auth()->logout();
                 Log::info("Controller::AuthController::logout::END");
                 return response()->json(['message' => 'Successfully logged out']);

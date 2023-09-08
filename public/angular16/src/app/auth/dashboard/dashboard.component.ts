@@ -13,7 +13,7 @@ export class DashboardComponent {
   items: MenuItem[] = []; // Initialize items as an empty array
   getStartedClickCount: number = 0; // Variable to track the number of button clicks
 
-  constructor(private authService: AuthService,private router: Router,private route: ActivatedRoute) {}
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.items = [
@@ -22,13 +22,20 @@ export class DashboardComponent {
       { label: 'Tasks', routerLink: '/tasks', icon: 'pi pi-fw pi-pencil' },
       { label: 'Team', routerLink: '/users', icon: 'pi pi-fw pi-file' },
       { label: 'Logout', routerLink: '/home', icon: 'pi pi-fw pi-cog' },
-      { label: 'profile', routerLink: '/profile', icon: 'pi pi-fw pi-user' }
+      { label: 'profile', routerLink: '/profile', icon: 'pi pi-fw pi-user', }
     ];
   }
-  
-  logout(): void {
-    this.authService.logout();
+
+  logout(): void { 
+    this.authService.logout().subscribe(
+      () => { localStorage.removeItem('token'); 
+      this.router.navigate(['/login']); 
+    }, 
+    (error: any) => { 
+      console.error('Logout error:', error); 
+    }); 
   }
+
   handleGetStartedClick() {
     this.getStartedClickCount++;
 

@@ -8,7 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\TasksController;
 use App\Http\Controllers\UserController;
-
+use App\Http\Controllers\VerificationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,17 +26,24 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/verify_email', [VerificationController::class, 'verifyEmail'])->name('verify.email');
 
+Route::get('/images', [AuthController::class,'imageUpload'])->name('images.upload'); 
+Route::post('/store', [AuthController::class,'store'])->name('images.store'); 
+Route::delete('/destroy/{image}', [AuthController::class,'destroy'])->name('images.destroy'); 
+Route::post('/upload/image', [AuthController::class,'upload'])->name('upload.image');
+Route::get('/receive/{image}',[AuthController::class,'imageUploads']);
+
 //user
 Route::group(['middleware' => 'auth'], function ($router) {
     Route::get('/users', [UserController::class, 'index']);
     Route::post('/users', [UserController::class, 'store']);
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
+    Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
 });
 
 Route::group(['middleware' => 'api'], function ($router) {
     Route::match(['get', 'post'], '/login', [AuthController::class, 'login'])->name('login');
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::delete('/logout', [AuthController::class, 'logout']);
     Route::get('/forgot-password/{token}', [AuthController::class, 'forgotPassword']);
     Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
     Route::post('/resetpassword', [AuthController::class, 'resetPassword']);
@@ -83,4 +90,3 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::post('/tasks', [TasksController::class, 'store'])->name('tasks.store');
     Route::delete('/tasks/{id}', [TasksController::class, 'destroy'])->name('tasks.destroy');
 });
-

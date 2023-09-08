@@ -251,13 +251,6 @@ class TasksController extends Controller
                     return response()->json(['errors' => $validator->errors()], 400);
                 }
 
-                // //status changes
-                // // Fetch the task by its ID
-                // $task = Task::findOrFail($id);
-
-                // // Update the task's information
-                // $task->update($request->all());
-
                 $task = Task::findOrFail($id);
 
                 // Check if user IDs need to be updated
@@ -512,11 +505,9 @@ class TasksController extends Controller
                 $pdf = PDF::loadView('invoice', compact('task'));
 
                 // Log the successful PDF generation
-                // Log::info("PDF generated successfully for task $id");
                 Log::info("Controller::TasksController::generatePDF::END");
                 // Download the PDF with a custom filename
                 return $pdf->download('task_' . $id . '.pdf');
-
             } catch (\Exception $ex) {
                 // Log the exception if needed
                 Log::error("Error in generating PDF for task $id: " . $ex->getMessage());

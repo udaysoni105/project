@@ -33,7 +33,7 @@ export class ProjectCreateComponent implements OnInit {
 
   createProject() {
     this.loading = true;
-    console.log(this.projectForm);
+    // console.log(this.projectForm);
 
     const token = localStorage.getItem('token');
     const email = localStorage.getItem('email');
@@ -43,7 +43,7 @@ export class ProjectCreateComponent implements OnInit {
         .createProject(this.projectForm.value, token, email)
         .subscribe(
           (response) => {
-            console.log('Project created successfully', response);
+            // console.log('Project created successfully', response);
             this.projectForm.reset();
             this.loading = false; // Stop loading when the data is fetched
             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is created' });

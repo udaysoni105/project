@@ -24,7 +24,7 @@ export class ProjectService {
     headers = headers.append('email', `${email}`);
 
     const options = { headers: headers };
-    console.log(options);
+    // console.log(options);
     return this.http.post<any>(this.baseUrl, projectData, options);
 
   }

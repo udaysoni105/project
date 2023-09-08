@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Spatie\Permission\Models\Role;
-
+use Illuminate\Support\Facades\Storage;
 /** @author UDAY SONI
  *
  * Class name: UserController
@@ -88,4 +88,70 @@ class UserController extends Controller
         });
         return $result;
     }
+
+    /** 
+     * @author : UDAY SONI
+     * Method name: search
+     * search the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $result = DB::transaction(function () use ($request) {
+            try {
+                Log::info("Controller::Usercontroller::search::START");
+                $searchQuery = $request->input('searchQuery');
+
+                $users = User::where('name', 'LIKE', "%$searchQuery%")
+                    ->paginate(5);
+
+                Log::info("Controller::Usercontroller::search::END");
+                return response()->json($users);
+            } catch (\Exception $ex) {
+                // Log the exception if needed
+                Log::error("Error in searching users: " . $ex->getMessage());
+
+                // Return an error response
+                return response()->json(['error' => 'Unable to perform search'], 500);
+            }
+        });
+        return $result;
+    }
+    public function destroy($id)
+    {
+        try {
+            // Find the user by ID and get the filename of the image
+            $user = User::findOrFail($userId);
+            $imageFilename = $user->filename;
+
+            // Create an S3 client
+            $s3 = new S3Client(config('s3'));
+
+            // Specify your S3 bucket name
+            $bucketName = 'snapstics-staging-file-storage';
+
+            // Delete the user's image from the S3 bucket
+            $s3->deleteObject([
+                'Bucket' => $bucketName,
+                'Key' => 'images/' . $imageFilename,
+            ]);
+
+            // Update the user's image filename in the database (optional)
+            $user->filename = null;
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User image deleted successfully',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User image deletion failed',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    
 }
