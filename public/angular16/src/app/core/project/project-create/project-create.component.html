@@ -22,13 +22,13 @@
         </div>
       </div>
       <div>
-        <label for="description" placeholder="description">Description: </label>
-        <textarea type="text" id="description" formControlName="description" pInputTextarea required></textarea>
+        <label for="description" placeholder="description">Description </label>
+        <textarea type="text" id="description" formControlName="description" pInputTextarea ></textarea>
       </div>
       <div>
         <label for="start_date">Start Date* </label>
         <div class="input-container">
-          <input type="date" id="start_date" formControlName="start_date" pCalendar required>
+          <input type="date" id="start_date" formControlName="start_date" [min]="today" pCalendar required>
           <div *ngIf="projectForm.controls['start_date'].invalid && projectForm.controls['start_date'].touched"
             class="error-message">
             The start_date field is required.
@@ -38,14 +38,17 @@
       <div>
         <label for="end_date">End Date* </label>
         <div class="input-container">
-          <input type="date" id="end_date" formControlName="end_date" pCalendar required>
+          <input type="date" id="end_date" formControlName="end_date" [min]="today" pCalendar required>
           <div *ngIf="projectForm.controls['end_date'].invalid && projectForm.controls['end_date'].touched"
             class="error-message">
             The end_date field is required.
           </div>
         </div>
       </div>
-      <p-button type="submit" [disabled]="projectForm.invalid">Create Project</p-button>
+      <div class="pbutton">
+        <p-button class="submit-button" type="submit" [disabled]="projectForm.invalid">Create Project</p-button>
+        <p-button class="cancel-button" label="Cancel" (click)="cancel()"></p-button>   
+      </div>
     </form>
   </div>
 </div>

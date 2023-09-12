@@ -39,10 +39,28 @@
       margin-right: 130;
 
       label {
-        min-width: 160px; /* Set a minimum width for the labels */
+        min-width: 160px;
         display: block;
         margin-bottom: 5px;
         font-weight: bold;
+      }
+
+      .pbutton {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      .pbutton p-button {
+        margin: 0 10px;
+      }
+
+      .cancel-button {
+        margin-left: 50px;
+      }
+
+      .submit-button {
+        margin-left: 150px;
       }
 
       .error-message {
@@ -66,8 +84,8 @@
         border-radius: 5px;
         font-size: 1rem;
         box-sizing: border-box;
-        width: 100%; /* Set the width to 100% for the input and textarea */
-        max-width: 400px; /* Set a maximum width for the input and textarea */
+        width: 100%;
+        max-width: 400px;
       }
     }
   }

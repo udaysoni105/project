@@ -213,4 +213,11 @@ export class TaskEditComponent implements OnInit {
       console.error('Invalid form data');
     }
   }
+
+  cancel() {
+    // You can add logic here to navigate to a different page or reset the form
+    this.router.navigate(['/tasks']); // Navigate to another page
+    // Or reset the form, if needed
+    this.taskForm.reset();
+  }
 }

@@ -33,7 +33,9 @@
             <td>{{ $task->start_date }}</td>
             <td>{{ $task->end_date }}</td>
             <td>{{ $task->status }}</td>
-            <td>{{ $task->project_id }}</td>
+            <td>
+                {{ App\Models\Project::where('id', $task->project_id)->value('name') }}
+            </td>
         </tr>
     </table>
     <p>Please ensure that these tasks are addressed promptly.</p>

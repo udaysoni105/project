@@ -23,42 +23,63 @@
         </div>
 
         <div>
-          <label for="description">Description: </label>
+          <label for="description">Description </label>
           <textarea id="description" name="description" formControlName="description" pInputTextarea></textarea>
         </div>
 
-        <div>
+        <!-- <div>
           <label for="start_date">Start Date* </label>
           <div class="input-container">
-            <input type="date" id="start_date" name="start_date" formControlName="start_date" pCalendar required>
-            <div *ngIf="taskForm.controls['start_date'].invalid && taskForm.controls['start_date'].touched"
-              class="error-message">
+            <input type="date" id="start_date" name="start_date" formControlName="start_date" required>
+            <div *ngIf="taskForm.controls['start_date'].invalid && taskForm.controls['start_date'].touched" class="error-message">
               The start_date field is required.
             </div>
           </div>
         </div>
-
+        
         <div>
           <label for="end_date">End Date* </label>
           <div class="input-container">
-            <input type="date" id="end_date" name="end_date" formControlName="end_date" pCalendar required>
-            <div *ngIf="taskForm.controls['end_date'].invalid && taskForm.controls['end_date'].touched"
-              class="error-message">
+            <input type="date" id="end_date" name="end_date" formControlName="end_date" required>
+            <div *ngIf="taskForm.controls['end_date'].invalid && taskForm.controls['end_date'].touched" class="error-message">
+              The end_date field is required.
+            </div>
+          </div>
+        </div>         -->
+
+        <div>
+          <label for="start_date">Start Date* </label>
+          <div class="input-container">
+            <input type="date" id="start_date" name="start_date" formControlName="start_date"
+              [min]="selectedProjectStartDate" [max]="selectedProjectEndDate" required>
+            <div *ngIf="taskForm.controls['start_date'].invalid && taskForm.controls['start_date'].touched" class="error-message">
+              The start_date field is required.
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <label for="end_date">End Date* </label>
+          <div class="input-container">
+            <input type="date" id="end_date" name="end_date" formControlName="end_date"
+              [min]="selectedProjectStartDate" [max]="selectedProjectEndDate" required>
+            <div *ngIf="taskForm.controls['end_date'].invalid && taskForm.controls['end_date'].touched" class="error-message">
               The end_date field is required.
             </div>
           </div>
         </div>
+        
 
         <div>
           <label for="Project">Project* </label>
           <div class="input-container">
             <mat-form-field>
               <mat-label>Project</mat-label>
-              <mat-select formControlName="project_id" required>
+              <mat-select formControlName="project_id" required (selectionChange)="onProjectSelect($event)">
                 <mat-option *ngFor="let project of projectOptions" [value]="project.value">
                   {{ project.label }}
                 </mat-option>
-              </mat-select>
+              </mat-select>              
             </mat-form-field>
             <div *ngIf="taskForm.controls['project_id'].invalid && taskForm.controls['project_id'].touched"
               class="error-message">
@@ -84,8 +105,10 @@
           </div>
         </div>
       </div>
-
-      <p-button type="submit" [disabled]="taskForm.invalid">Register Task</p-button>
+      <div class="pbutton">
+        <p-button type="submit" [disabled]="taskForm.invalid">Register Task</p-button>
+        <p-button label="Cancel" class="cancel-button" (click)="cancel()"></p-button>
+      </div>
     </form>
   </div>
 </div>

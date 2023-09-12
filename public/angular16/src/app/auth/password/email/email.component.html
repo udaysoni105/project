@@ -8,6 +8,7 @@
     <div class="col-md-8">
       <div class="card">
         <div class="card-header">Forgot Password</div>
+        <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
         <div class="card-body">
           <form [formGroup]="emailForm" (ngSubmit)="sendResetLink()">
             <div class="row mb-3 spacing-10" *ngIf="!isRequestSent">

@@ -16,6 +16,9 @@ export class TaskCreateComponent implements OnInit {
   users: SelectItem[] = [];
   projectOptions: SelectItem[] = [];
   loading: boolean = false;
+  // today: string = new Date().toISOString().split('T')[0];
+  selectedProjectStartDate: Date | string | undefined;
+selectedProjectEndDate: Date | string | undefined;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -49,6 +52,28 @@ export class TaskCreateComponent implements OnInit {
     this.fetchUser();
   }
 
+  onProjectSelect(event: any): void {
+    const selectedProjectId = event.value;
+    console.log(selectedProjectId);
+  
+    // Fetch project details based on the selectedProjectId using your data source or API call
+    this.taskService.getProjectById(selectedProjectId).subscribe(
+      (selectedProject) => {
+        console.log(selectedProject);
+  
+        if (selectedProject) {
+          this.selectedProjectStartDate = selectedProject.start_date;
+          console.log(this.selectedProjectStartDate);
+          this.selectedProjectEndDate = selectedProject.end_date;
+          console.log(this.selectedProjectEndDate);
+        }
+      },
+      (error) => {
+        console.error('Failed to fetch project details', error);
+      }
+    );
+  }
+  
   fetchProject(): void {
     this.taskService.getProject().subscribe(
       (projects) => {
@@ -56,6 +81,11 @@ export class TaskCreateComponent implements OnInit {
           label: project.name,
           value: project.id,
         }));
+        // if (this.projectOptions.length > 0) {
+        //   const selectedProject = projects[0]; // Assuming you want the first project
+        //   this.selectedProjectStartDate = selectedProject.start_date;
+        //   this.selectedProjectEndDate = selectedProject.end_date;
+        // }
       }, (error) => {
         console.log('Soft delete failed:', error);
         this.loading = false;
@@ -146,5 +176,10 @@ export class TaskCreateComponent implements OnInit {
       );
     }
   }
-
+  cancel() {
+    // You can add logic here to navigate to a different page or reset the form
+    this.router.navigate(['/tasks']); // Navigate to another page
+    // Or reset the form, if needed
+    this.taskForm.reset();
+  }
 }

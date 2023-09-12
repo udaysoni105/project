@@ -17,8 +17,14 @@ export class LoginComponent implements OnInit {
   // public formVali
   public isInValid !: boolean;
   error: string | null = null;
+  loading: boolean = false;
 
-  constructor(private router: Router, private formBuilder: FormBuilder, private authService: AuthService, private http: HttpClient, private messageService: MessageService) { localStorage.clear() }
+  constructor(private router: Router, 
+    private formBuilder: FormBuilder, 
+    private authService: AuthService, 
+    private http: HttpClient, 
+    private messageService: MessageService
+    ) { localStorage.clear() }
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
@@ -28,6 +34,7 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
+    this.loading = true;
     if (this.loginForm.invalid) {
       return;
     }
@@ -45,6 +52,8 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('password', password);
         localStorage.setItem('role', role);
         this.users = { email: '', password: '' };
+        this.loading = false;
+        this.loginForm.reset();
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'login successfully' });
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
@@ -52,16 +61,42 @@ export class LoginComponent implements OnInit {
       },
       (error) => {
         console.error(error);
+        this.loading = false;
+  
+        // Check the error message and display an appropriate message
+        let errorMessage = 'An error occurred. Please try again.'; // Default error message
+  
+        if (error.status === 401) {
+          errorMessage = 'Incorrect password. Please try again.';
+        } else if (error.status === 404) {
+          errorMessage = 'User not found.';
+        }
+  
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'user is not associated'
+          detail: errorMessage
         });
+  
         setTimeout(() => {
+          // Optionally, you can clear the form or take other actions here.
         }, 1500);
       }
     );
   }
+  //     (error) => {
+  //       console.error(error);
+  //       this.loading = false;
+  //       this.messageService.add({
+  //         severity: 'error',
+  //         summary: 'Error',
+  //         detail: 'user is not associated'
+  //       });
+  //       setTimeout(() => {
+  //       }, 1500);
+  //     }
+  //   );
+  // }
 
   forgotPassword() {
     const data = {
@@ -72,9 +107,20 @@ export class LoginComponent implements OnInit {
       (response) => {
         console.log(response);
         // Handle success
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'forgot password successfully' });
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 1500);
       },
       (error) => {
         console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'error in forgot password '
+        });
+        setTimeout(() => {
+        }, 1500);
         // Handle error
       }
     );

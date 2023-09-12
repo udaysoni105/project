@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { PaginatorModule } from 'primeng/paginator';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,7 +33,8 @@ import { ProgressBarModule } from 'primeng/progressbar';
     NgFor,
     MatInputModule,
     FormsModule,
-    ProgressBarModule
+    ProgressBarModule,
+    PaginatorModule
   ],
   providers: [TaskService],
   bootstrap: [AppComponent],

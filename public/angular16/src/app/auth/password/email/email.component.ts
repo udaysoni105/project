@@ -38,20 +38,20 @@ export class EmailComponent implements OnInit {
         console.log('Password reset request sent:', response);
         this.isRequestSent = true;
         // this.users = { email: '', password: '' };
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'login successfully' });
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'email sent successfully' });
         setTimeout(() => {
           this.router.navigate(['/login']);
         }, 1500);
-        // this.router.navigate(['/login']);
       },
       (error) => {
         console.error('Error sending password reset request:', error);
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'user is not associated'
+          detail: 'email not sent'
         });
         setTimeout(() => {
+          this.router.navigate(['/login']);
         }, 1500);
       }
     );

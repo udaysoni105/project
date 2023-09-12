@@ -4,7 +4,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-
+import { CalendarModule } from 'primeng/calendar';
 @NgModule({
   declarations: [],
   imports: [
@@ -12,7 +12,8 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     DropdownModule,
     MatSelectModule,
     MatDatepickerModule,
-    AutoCompleteModule
+    AutoCompleteModule,
+    CalendarModule
   ]
 })
 export class TaskCreateModule { }

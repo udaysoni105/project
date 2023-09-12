@@ -2,18 +2,50 @@ import { Component, OnInit } from '@angular/core';
 import { ReactiveService } from '../reactive.service';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
+interface PageEvent {
+  first: number;
+  rows: number;
+  page: number;
+  pageCount: number;
+}
+
 @Component({
   selector: 'app-reactive',
   templateUrl: './reactive.component.html',
   styleUrls: ['./reactive.component.scss']
 })
+
 export class ReactiveComponent implements OnInit {
   softDeletedProjects: any[] = [];
-  isLoading: boolean = false; // New loading flag
+  isLoading: boolean = false;
+  first1: number = 0;
+
+  rows1: number = 10;
+  first2: number = 0;
+
+  rows2: number = 10;
+  totalRecords: number = 120;
+
+  options = [
+    { label: 5, value: 5 },
+    { label: 10, value: 10 },
+    { label: 20, value: 20 },
+    { label: 120, value: 120 }
+  ];
   constructor(private router: Router, private messageService: MessageService, private reactiveService: ReactiveService) { }
 
   ngOnInit(): void {
-    this.loadSoftDeletedProjects(50);
+    this.loadSoftDeletedProjects(150);
+  }
+
+  onPageChange1(event: PageEvent) {
+    this.first1 = event.first;
+    this.rows1 = event.rows;
+}
+
+  onPageChange2(event: PageEvent) {
+    this.first2 = event.first;
+    this.rows2 = event.rows;
   }
 
   loadSoftDeletedProjects(projectId: number) {
@@ -58,11 +90,11 @@ export class ReactiveComponent implements OnInit {
         if (restoredProject) {
           restoredProject.isRestored = true;
         }
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is created' });
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is restored' });
 
         // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
         setTimeout(() => {
-          this.router.navigate(['/projects']);
+          // this.router.navigate(['/projects']);
         }, 1500);
       },
       (error) => {

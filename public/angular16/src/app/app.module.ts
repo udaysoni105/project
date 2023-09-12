@@ -60,7 +60,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { JsonPipe } from './pipename.pipe';
-
+import { PaginatorModule } from 'primeng/paginator';
 const routes: Routes = [
   { path: 'register', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
@@ -122,7 +122,8 @@ const routes: Routes = [
     ProgressBarModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    AutoCompleteModule
+    AutoCompleteModule,
+    PaginatorModule
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

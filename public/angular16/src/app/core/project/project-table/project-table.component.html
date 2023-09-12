@@ -3,6 +3,7 @@
     Created on: July 18, 2023
     Note: Design for projecttable view Page. 
 -->
+
 <div *ngIf="!projects; else projectList">
   <div class="horizontal-loader"></div>
 </div>
@@ -34,14 +35,24 @@
     <div class="loading-container" *ngIf="loading">
       <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
     </div>
+    <div class="card flex flex-column gap-3">
+      <div class="flex align-items-center justify-content-end">
+        <span class="mx-1 text-color">Items per page: </span>
+        <p-dropdown [options]="options" optionLabel="label" optionValue="value" [(ngModel)]="rows2"
+          (ngModelChange)="first2 = 0"></p-dropdown>
+        <p-paginator [first]="first2" [rows]="rows2" [totalRecords]="120" (onPageChange)="onPageChange2($event)"
+          [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} of {totalRecords}"
+          [showPageLinks]="false" [showFirstLastIcon]="false"></p-paginator>
+      </div>
+    </div>
     <p-table #table [value]="projects" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5">
       <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
-          <th>NAME</th>
-          <th>DESCRIPTION</th>
-          <th>START DATE</th>
-          <th>END DATE</th>
+          <th pSortableColumn="NAME">NAME<p-sortIcon field="NAME"></p-sortIcon></th>
+          <th pSortableColumn="DESCRIPTION">DESCRIPTION<p-sortIcon field="DESCRIPTION"></p-sortIcon></th>
+          <th pSortableColumn="START DATE">START DATE<p-sortIcon field="START DATE"></p-sortIcon></th>
+          <th pSortableColumn="END DATE">END DATE<p-sortIcon field="END DATE"></p-sortIcon></th>
           <th>SOFT DELETE</th>
           <th>EDIT</th>
         </tr>

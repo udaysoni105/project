@@ -51,6 +51,11 @@ export class ProjectService {
     return this.http.put(url, projectData, { headers });
   }
 
+  getTasksByProjectId(projectId: number): Observable<any[]> {
+    const url = `${this.baseUrl}/tasks/${projectId}`; // Adjust the URL structure based on your API
+    return this.http.get<any[]>(url);
+  }
+
   softDeleteProject(projectId: number, headers: HttpHeaders): Observable<any> {
     const url = `${this.baseUrl}/${projectId}`;
     return this.http.delete(url, { headers });

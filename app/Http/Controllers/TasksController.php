@@ -13,6 +13,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\Project;
 
 /** @author UDAY SONI
  *
@@ -115,7 +116,6 @@ class TasksController extends Controller
                 // Validate the request data
                 $validator = Validator::make($request->all(), [
                     'name' => 'required|string|max:255',
-                    'description' => '',
                     'start_date' => 'required|date',
                     'end_date' => 'required|date|after:start_date',
                     'user_id' => 'required|array',
@@ -124,13 +124,6 @@ class TasksController extends Controller
                 if ($validator->fails()) {
                     return response()->json(['errors' => $validator->errors()], 400);
                 }
-
-                // // Loop through user_id values and create a task for each user
-                // foreach ($request->user_id as $userId) {
-                //     $task = new Task($request->except('user_id'));
-                //     $task->user_id = $userId;
-                //     $task->save();
-                // }
 
                 foreach ($request->user_id as $userId) {
                     $task = new Task($request->except('user_id'));
@@ -157,6 +150,28 @@ class TasksController extends Controller
         });
 
         return $result;
+    }
+
+
+    public function getTasksByProjectId(Request $request, $projectId)
+    {
+        Log::info("Controller::ProjectsController::getTasksByProjectId::START");
+
+        // Fetch the project with associated tasks
+        $project = Project::with('tasks')->find($projectId);
+
+        if (!$project) {
+            return response()->json(['message' => 'Project not found'], 404);
+        }
+
+        // Extract the start_date and end_date from the project
+        $start_date = $project->start_date;
+        $end_date = $project->end_date;
+
+        Log::info("Controller::ProjectsController::getTasksByProjectId::END");
+
+        // Return the tasks and project details as a JSON response
+        return response()->json(['project' => $project, 'start_date' => $start_date, 'end_date' => $end_date]);
     }
 
     /** 
@@ -241,7 +256,6 @@ class TasksController extends Controller
                 // Validate the request data
                 $validator = Validator::make($request->all(), [
                     'name' => '',
-                    'description' => '',
                     'start_date' => 'required|date',
                     'end_date' => 'required|date|after:start_date',
                     'user_id' => 'required|array',

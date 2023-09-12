@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      /* Add your custom styles here */
-      /* body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-      } */
-      body {
-        background-color: white;
-      }
-      .container {
-        text-align: center;
-      }
-    </style>
-    <title>PROJECT MANAGEMENT SYSTEM</title>
-  </head>
-  <body>
-    <div class="container">
-      <h1>PROJECT MANAGEMENT SYSTEM</h1>
-      <router-outlet></router-outlet>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      background-color: white;
+    }
+
+    .container {
+      text-align: center;
+    }
+    card{
+      margin-bottom: 50px;
+    }
+  </style>
+  <title>PROJECT MANAGEMENT SYSTEM</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1>PROJECT MANAGEMENT SYSTEM</h1>
+    <div class="card">
+      <p-tabMenu [model]="items"></p-tabMenu>
     </div>
-  </body>
+    <router-outlet></router-outlet>
+  </div>
+</body>
+
 </html>

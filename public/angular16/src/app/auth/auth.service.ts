@@ -30,7 +30,10 @@ export class AuthService {
     }
     return false;
   }
-
+  checkEmailExists(email: string): Observable<boolean> {
+    // Adjust the API endpoint URL and response handling based on your server's implementation
+    return this.http.get<boolean>(`${this.apiUrl}/login`);
+  }
   login(email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, { email, password });
   }

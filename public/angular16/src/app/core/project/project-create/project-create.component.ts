@@ -13,7 +13,7 @@ import { MessageService } from 'primeng/api';
 export class ProjectCreateComponent implements OnInit {
   projectForm!: FormGroup;
   loading: boolean = false;
-
+  today: string = new Date().toISOString().split('T')[0];
   constructor(
     private formBuilder: FormBuilder,
     private projectService: ProjectService,
@@ -25,7 +25,7 @@ export class ProjectCreateComponent implements OnInit {
   ngOnInit(): void {
     this.projectForm = this.formBuilder.group({
       name: ['', Validators.required],
-      description: [''],
+      description: [''], 
       start_date: ['', Validators.required],
       end_date: ['', Validators.required]
     });
@@ -64,5 +64,12 @@ export class ProjectCreateComponent implements OnInit {
           }
         );
     }
+  }
+
+  cancel() {
+    // You can add logic here to navigate to a different page or reset the form
+    this.router.navigate(['/projects']); // Navigate to another page
+    // Or reset the form, if needed
+    this.projectForm.reset();
   }
 }

@@ -7,6 +7,9 @@
   <div class="login-box">
     <div class="card-header">Login Page</div>
     <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
+    <div class="loading-container" *ngIf="loading">
+      <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+    </div>
     <div class="card-body">
       <form [formGroup]="loginForm" (ngSubmit)="login()">
         <div>

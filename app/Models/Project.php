@@ -18,7 +18,6 @@ class Project extends Model
     // Add a static validation rules array
     public static $rules = [
         'name' => 'required|string|max:255',
-        'description' => 'required|string',
         'start_date' => 'required|date',
         'end_date' => 'required|date|after:start_date',
         // 'status' => 'required|in:pending,running,completed',

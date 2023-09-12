@@ -8,6 +8,7 @@
     <div class="col-md-8">
       <div class="card">
         <div class="card-header">Reset Password</div>
+        <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
         <div class="card-body">
           <form [formGroup]="resetForm" (ngSubmit)="onSubmit()">
             <input type="hidden" name="token" [value]="token">

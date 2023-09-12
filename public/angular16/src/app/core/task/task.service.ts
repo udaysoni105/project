@@ -63,6 +63,11 @@ export class TaskService {
 
     return headers;
   }
+  getProjectById(projectId: number): Observable<any> {
+    const headers = this.getHeader(); // Get authentication headers
+    const url = `${this.apiUrl}/${projectId}`;
+    return this.http.get<any[]>(url, { headers });
+  }
 
   getProject(): Observable<any[]> {
     const headers = this.getHeader(); // Get authentication headers

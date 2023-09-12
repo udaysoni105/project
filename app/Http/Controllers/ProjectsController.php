@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\Task;
 /** @author UDAY SONI
  *
  * Class name: ProjectsController
@@ -103,7 +103,6 @@ class ProjectsController extends Controller
 
                 $validator = Validator::make($request->all(), [
                     'name' => 'required',
-                    'description' => '',
                     'start_date' => 'required|date',
                     'end_date' => 'required|date|after:start_date',
                 ]);
@@ -111,7 +110,13 @@ class ProjectsController extends Controller
                     return response()->json(['errors' => $validator->errors()], 400);
                 }
 
-                $project = Project::create($request->all());
+                $project = Project::insert([
+                    'name' => $request->name,
+                    // 'description' => $request->description,
+                    'start_date' => $request->start_date,
+                    'end_date' => $request->end_date,
+                ]);
+
                 Log::info("Controller::ProjectsController::store::END");
                 return response()->json(['message' => 'Project created successfully', 'project' => $project]);
             } catch (\Exception $ex) {
@@ -121,6 +126,16 @@ class ProjectsController extends Controller
         });
 
         return $result;
+    }
+
+    public function getTasksByProjectdate(Request $request, $projectId)
+    {
+        Log::info("Controller::ProjectsController::getTasksByProjectId::START");
+        // Use the $projectId parameter to query tasks by project ID
+        $tasks = Task::where('project_id', $projectId)->get();
+        Log::info("Controller::ProjectsController::getTasksByProjectId::END");
+        // You can return the tasks as a JSON response
+        return response()->json($tasks);
     }
 
     /** 
@@ -183,8 +198,8 @@ class ProjectsController extends Controller
                 info('user has permission: ' . $matchedPermission->name);
 
                 $validator = Validator::make($request->all(), [
-                    'name' => 'required',
-                    'description' => '',
+                    'name' => 'required|string',
+                    // 'description' => 'string',
                     'start_date' => 'required|date',
                     'end_date' => 'required|date|after:start_date',
                 ]);
@@ -193,7 +208,9 @@ class ProjectsController extends Controller
                     return response()->json(['errors' => $validator->errors()], 400);
                 }
                 $project = Project::findOrFail($id);
+
                 $project->update($request->all());
+                
                 Log::info("Controller::ProjectsController::update::END");
                 return response()->json(['message' => 'Project updated successfully', 'project' => $project]);
             } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {

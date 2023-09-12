@@ -74,7 +74,10 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
     Route::post('/projects', [ProjectsController::class, 'store'])->name('projects.store');
 });
-
+//find project start and end date
+Route::get('projects/{id}', [TasksController::class, 'getTasksByProjectId'])->name('tasks.getTasksByProjectId');
+//project assisgn task not delete project
+Route::get('projects/tasks/{id}', [ProjectsController::class, 'getTasksByProjectdate'])->name('tasks.getTasksByProjectdate');
 //tasks
 Route::put('/tasks/{id}', [TasksController::class, 'update'])->name('tasks.update');
 Route::put('/task/{id}', [TasksController::class, 'updatetask'])->name('tasks.updatetask');

@@ -32,7 +32,10 @@
         <input type="date" id="end_date" formControlName="end_date" name="end_date" pCalendar required />
       </div>
 
-      <p-button type="submit" label="Save Changes"></p-button>
+      <div class="pbutton">
+        <p-button class="submit-button" type="submit" label="Save Changes" [disabled]="projectForm.invalid"></p-button>
+        <p-button class="cancel-button" label="Cancel" (click)="cancel()"></p-button>   
+      </div>
     </form>
   </div>
 </div>

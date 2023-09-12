@@ -7,6 +7,12 @@ import { Token } from '@angular/compiler';
 import { MessageService } from 'primeng/api';
 import { ReactiveService } from '../../reactive/reactive.service';
 import { Router } from '@angular/router';
+interface PageEvent {
+  first: number;
+  rows: number;
+  page: number;
+  pageCount: number;
+}
 @Component({
   selector: 'app-project-table',
   templateUrl: './project-table.component.html',
@@ -17,6 +23,18 @@ export class ProjectTableComponent {
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
   loading: boolean = false;
+  first2: number = 0;
+  rows2: number = 10;
+  totalRecords: number = 120;
+
+  options = [
+      { label: 5, value: 5 },
+      { label: 10, value: 10 },
+      { label: 20, value: 20 },
+      { label: 120, value: 120 }
+  ];
+
+
 
   constructor(
     private projectService: ProjectService,
@@ -28,6 +46,10 @@ export class ProjectTableComponent {
   ngOnInit() {
     this.loadProjects();
   }
+  onPageChange2(event: PageEvent) {
+    this.first2 = event.first;
+    this.rows2 = event.rows;
+}
 
   // Method to fetch projects from the API
   loadProjects() {
@@ -93,38 +115,61 @@ export class ProjectTableComponent {
     this.loading = true;
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
-
+  
     if (!jwtToken) {
       console.error('JWT token not found in local storage. Please log in.');
       return;
     }
-
+  
     const headers = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
       Permission: 'delete_project', // Add the Permission header with the desired value
     });
-
-
-    this.projectService.softDeleteProject(id, headers).subscribe(
-      (response) => {
-        // console.log('Project soft deleted successfully');
-
-        this.projects = this.projects.filter((project) => project.id !== id);
-        // Show the success message using the MessageService
-        this.loading = false; // Stop loading when the data is fetched
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is soft delete' });
-
-        // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
-        setTimeout(() => {
-        }, 1500);
+  
+    // Check if the project has associated tasks
+    this.projectService.getTasksByProjectId(id).subscribe(
+      (tasks) => {
+        if (tasks.length > 0) {
+          // Project has tasks, show a message and do not perform soft delete
+          this.loading = false;
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Warning',
+            detail: 'Project has associated tasks and cannot be deleted.',
+          });
+        } else {
+          // No associated tasks, perform the soft delete
+          this.projectService.softDeleteProject(id, headers).subscribe(
+            (response) => {
+              // Remove the deleted project from the projects list
+              this.projects = this.projects.filter((project) => project.id !== id);
+              // Show the success message using the MessageService
+              this.loading = false; // Stop loading when the data is fetched
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Project is soft deleted',
+              });
+            },
+            (error) => {
+              console.log('Soft delete failed:', error);
+              this.loading = false; // Stop loading when the data is fetched
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Failed to soft delete project',
+              });
+            }
+          );
+        }
       },
       (error) => {
-        console.log('Soft delete failed:', error);
-        this.loading = false; // Stop loading when the data is fetched
+        console.error('Failed to fetch tasks:', error);
+        this.loading = false;
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Failed to softDelete project',
+          detail: 'Failed to check associated tasks',
         });
       }
     );

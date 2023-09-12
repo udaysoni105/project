@@ -44,7 +44,7 @@ export class ResetComponent implements OnInit {
           // Password reset successful, navigate to login page
           // this.router.navigate(['/login']);
           // this.users = { email: '', password: '' };
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'login successfully' });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'reset successfully' });
           setTimeout(() => {
             this.router.navigate(['/login']);
           }, 1500);
@@ -55,7 +55,7 @@ export class ResetComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'user is not associated'
+            detail: 'diffrent password so not changes'
           });
           setTimeout(() => {
           }, 1500);

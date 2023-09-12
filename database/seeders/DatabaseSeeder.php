@@ -41,6 +41,8 @@ class DatabaseSeeder extends Seeder
         ], [
             'name' => 'admin',
             'password' => bcrypt('12345678'),
+            'country' => 'N.A',
+            'state' => 'N.A'
         ]);
 
         User::firstOrCreate([
@@ -48,6 +50,8 @@ class DatabaseSeeder extends Seeder
         ], [
             'name' => 'developer',
             'password' => bcrypt('12345678'),
+            'country' => 'N.A',
+            'state' => 'N.A'
         ]);
 
         User::firstOrCreate([
@@ -55,6 +59,8 @@ class DatabaseSeeder extends Seeder
         ], [
             'name' => 'projectManager',
             'password' => bcrypt('12345678'),
+            'country' => 'N.A',
+            'state' => 'N.A'
         ]);
     }
 

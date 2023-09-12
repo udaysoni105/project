@@ -132,6 +132,24 @@
         min-width: 100px; /* Set a minimum width for the labels */
       }
 
+      .pbutton {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      .pbutton p-button {
+        margin: 0 10px;
+      }
+
+      .cancel-button {
+        margin-left: 50px;
+      }
+
+      .submit-button {
+        margin-left: 150px;
+      }
+
       input,
       textarea {
         padding: 8px;

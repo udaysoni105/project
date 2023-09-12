@@ -71,6 +71,13 @@ export class ProjectEditComponent implements OnInit {
     );
   }
 
+  cancel() {
+    // You can add logic here to navigate to a different page or reset the form
+    this.router.navigate(['/projects']); // Navigate to another page
+    // Or reset the form, if needed
+    this.projectForm.reset();
+  }
+
   saveChanges(): void {
     this.loading = true;
     if (this.projectForm.valid) {
