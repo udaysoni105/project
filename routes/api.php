@@ -41,6 +41,9 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
 });
 
+// Route::get('/tasks/{id}/users', [TasksController::class, 'getUsersForTask']);
+// Route::get('/tasks/{id}', [TasksController::class, 'assignUsers']);
+
 Route::group(['middleware' => 'api'], function ($router) {
     Route::match(['get', 'post'], '/login', [AuthController::class, 'login'])->name('login');
     Route::delete('/logout', [AuthController::class, 'logout']);
@@ -75,7 +78,7 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::post('/projects', [ProjectsController::class, 'store'])->name('projects.store');
 });
 //find project start and end date
-Route::get('projects/{id}', [TasksController::class, 'getTasksByProjectId'])->name('tasks.getTasksByProjectId');
+Route::get('projects/task/{id}', [TasksController::class, 'getTasksByProjectId'])->name('tasks.getTasksByProjectId');
 //project assisgn task not delete project
 Route::get('projects/tasks/{id}', [ProjectsController::class, 'getTasksByProjectdate'])->name('tasks.getTasksByProjectdate');
 //tasks

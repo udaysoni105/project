@@ -90,25 +90,12 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(Project::class, 'user_project');
     }
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'user_task');
-    }
+    // public function users()
+    // {
+    //     return $this->belongsToMany(User::class, 'user_task');
+    // }
     public function tasks()
     {
         return $this->belongsToMany(Task::class, 'user_task');
     }
-    // public function sendVerificationEmail()
-    // {
-    //     $verificationLink = route('verify.email', [
-    //         'id' => $this->id,
-    //         'hash' => sha1($this->email),
-    //     ]);
-
-    //     $this->isverify = true;
-    //     $this->save();
-
-    //     // Use Mandrill or your preferred email service to send the verification email
-    //     // Include the verification link in the email content
-    // }
 }

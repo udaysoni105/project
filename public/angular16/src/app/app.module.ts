@@ -33,7 +33,7 @@ import { DashboardComponent } from './auth/dashboard/dashboard.component';
 import { CarouselModule } from 'primeng/carousel';
 import { UserTableComponent } from './auth/user-table/user-table.component';
 import { MainComponent } from './auth/main/main.component';
-
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
 import { InputTextareaModule } from 'primeng/inputtextarea';
@@ -123,7 +123,8 @@ const routes: Routes = [
     MatDatepickerModule,
     MatNativeDateModule,
     AutoCompleteModule,
-    PaginatorModule
+    PaginatorModule,
+    MatPaginatorModule
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

@@ -239,6 +239,8 @@ class ProjectsController extends Controller
 
                 $projects = Project::where('name', 'LIKE', "%$searchQuery%")
                     ->orWhere('description', 'LIKE', "%$searchQuery%")
+                    ->orWhere('start_date', 'LIKE', "%$searchQuery%")
+                    ->orWhere('end_date', 'LIKE', "%$searchQuery%")
                     ->paginate(5);
                 Log::info("Controller::ProjectsController::searchProjects::END");
                 return response()->json($projects);

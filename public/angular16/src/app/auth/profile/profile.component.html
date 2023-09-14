@@ -3,30 +3,7 @@
     Created on: July 29, 2023
     Note: Design for create a profile Page. 
 -->
-<!-- <div class="card flex justify-content-center">
-  <p-fieldset legend="User Profile">
-      <p class="m-0">
-<p-card class="profile-card">
-  <div class="loading-container" *ngIf="loading">
-    <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
-  </div>
-  <ng-container>
-    <img src="assets/images/photo.jpeg" alt="User Photo" width="100">
-  </ng-container>
-  <ng-container *ngIf="user">
-    <p>Name: {{ user.name }}</p>
-    <p>Email: {{ user.email }}</p>
-    <p>Country: {{ user.country }}</p>
-    <p>State: {{ user.state }}</p>
-  </ng-container>
-  <ng-container *ngIf="!user">
-    <p>No User selected.</p>
-  </ng-container>
-</p-card>
-</p>
-</p-fieldset>
-</div> -->
-<!-- user-profile.component.html -->
+<h1> PROFILE PAGE </h1>
 <div class="card flex justify-content-center">
   <p-fieldset legend="User Profile">
     <p class="m-0">
@@ -35,20 +12,16 @@
           <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
         </div>
         <!-- <ng-container>
-          Conditionally show the image if it's uploaded
-          <img src="assets/images/photo.jpeg" alt="User Photo" width="100" *ngIf="imageUploaded">
+          <img alt="User Photo" width="100" *ngIf="imageUploaded">
         </ng-container> -->
-        <!-- Conditionally show the image if it's uploaded -->
-
-        <!-- Conditionally show the upload elements if the image is not uploaded -->
         <ng-container *ngIf="!imageUploaded">
           <input type="file" name="image" (change)="onFileSelected($event)">
           <p-button type="submit" label="Upload Image" (click)="uploadImage()"></p-button>
         </ng-container>
-        <!-- Add Update Profile button -->
-        <p-button type="button" label="Update Profile" (click)="updateProfile()" *ngIf="user && user.image && imageUploaded"></p-button>
-        <!-- Add Delete Profile button -->
-        <p-button type="button" label="Delete Profile" (click)="deleteProfile()" *ngIf="user && user.image && imageUploaded"></p-button>
+        <p-button type="button" label="Update Profile" (click)="updateProfile()"
+          *ngIf="user && user.image && imageUploaded"></p-button>
+        <p-button type="button" label="Delete Profile" (click)="deleteProfile()"
+          *ngIf="user && user.image && imageUploaded"></p-button>
         <ng-container *ngIf="user">
           <p>Name: {{ user.name }}</p>
           <p>Email: {{ user.email }}</p>

@@ -12,7 +12,7 @@
   <div class="loading-container" *ngIf="loading">
     <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
   </div>
-  <h1>PROJECT LIST</h1>
+  <h1> PROJECT TABLE </h1>
 
   <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
 
@@ -32,27 +32,35 @@
   <div *ngIf="!projects" class="horizontal-loader"></div>
   <div *ngIf="projects">
 
-    <div class="loading-container" *ngIf="loading">
-      <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
-    </div>
-    <div class="card flex flex-column gap-3">
+    <!-- <div class="card flex flex-column gap-3">
       <div class="flex align-items-center justify-content-end">
         <span class="mx-1 text-color">Items per page: </span>
-        <p-dropdown [options]="options" optionLabel="label" optionValue="value" [(ngModel)]="rows2"
-          (ngModelChange)="first2 = 0"></p-dropdown>
-        <p-paginator [first]="first2" [rows]="rows2" [totalRecords]="120" (onPageChange)="onPageChange2($event)"
-          [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} of {totalRecords}"
-          [showPageLinks]="false" [showFirstLastIcon]="false"></p-paginator>
+        <div class="inline-components">
+          <p-dropdown [options]="options" optionLabel="label" optionValue="value" [(ngModel)]="rows2"
+            (ngModelChange)="first2 = 0"></p-dropdown>
+          <p-paginator [first]="first2" [rows]="rows2" [totalRecords]="120" (onPageChange)="onPageChange2($event)"
+            [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} of {totalRecords}"
+            [showPageLinks]="false" [showFirstLastIcon]="false"></p-paginator>
+        </div>
       </div>
+    </div> -->
+    <mat-paginator [length]="100"
+    [pageSize]="10"
+    [pageSizeOptions]="[5, 10, 25, 100]"
+    aria-label="Select page">
+</mat-paginator>
+    
+    <div class="loading-container" *ngIf="loading">
+      <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
     </div>
     <p-table #table [value]="projects" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5">
       <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
-          <th pSortableColumn="NAME">NAME<p-sortIcon field="NAME"></p-sortIcon></th>
-          <th pSortableColumn="DESCRIPTION">DESCRIPTION<p-sortIcon field="DESCRIPTION"></p-sortIcon></th>
-          <th pSortableColumn="START DATE">START DATE<p-sortIcon field="START DATE"></p-sortIcon></th>
-          <th pSortableColumn="END DATE">END DATE<p-sortIcon field="END DATE"></p-sortIcon></th>
+          <th pSortableColumn="NAME">NAME<p-sortIcon field="name"></p-sortIcon></th>
+          <th pSortableColumn="DESCRIPTION">DESCRIPTION<p-sortIcon field="description"></p-sortIcon></th>
+          <th pSortableColumn="START DATE">START DATE<p-sortIcon field="start_date"></p-sortIcon></th>
+          <th pSortableColumn="END DATE">END DATE<p-sortIcon field="end_date"></p-sortIcon></th>
           <th>SOFT DELETE</th>
           <th>EDIT</th>
         </tr>

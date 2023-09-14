@@ -149,7 +149,7 @@ selectedProjectEndDate: Date | string | undefined;
       const task = this.taskForm.value;
 
       // Convert user_id to an array if it's not already
-      task.user_id = Array.isArray(task.user_id) ? task.user_id : [task.user_id];
+      // task.user_id = Array.isArray(task.user_id) ? task.user_id : [task.user_id];
 
       this.taskService.createTask(task, token, email).subscribe(
         (response) => {

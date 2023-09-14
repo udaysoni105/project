@@ -59,7 +59,7 @@ export class ProjectEditComponent implements OnInit {
     this.projectService.getProjectById(this.projectId, headers).subscribe(
       (response) => {
         // Handle the response here
-        console.log(response);
+        // console.log(response);
         this.projects = response;
         this.projectForm.patchValue(response); // Update the form with the project data
         this.loading = false; // Stop loading when the data is fetched

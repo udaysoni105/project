@@ -61,6 +61,7 @@ h2 {
 .container {
   display: flex;
   justify-content: flex-end;
+  margin-right: 24px;
 }
 .search-container {
   display: flex;
@@ -68,6 +69,7 @@ h2 {
   justify-content: flex-end;
   margin-top: 10px;
   margin-bottom: 10px;
+  padding-right: 24px;
 }
 
 .search-container .label {
@@ -80,4 +82,9 @@ h2 {
 
 .search-container input[type="text"] {
   padding-right: 24px;
+}
+.inline-components {
+  display: inline-flex; /* Display the child elements inline with flexbox */
+  align-items: center; /* Center the items vertically */
+  gap: 10px; /* Add some space between the dropdown and paginator */
 }

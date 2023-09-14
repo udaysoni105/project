@@ -12,6 +12,8 @@ import { TaskService } from './task.service';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatPaginatorModule} from '@angular/material/paginator';
+
 
 import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -64,7 +66,8 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     MatInputModule,
     MatDatepickerModule,
     ProgressBarModule,
-    AutoCompleteModule
+    AutoCompleteModule,
+    MatPaginatorModule
   ],
   providers: [TaskService],
   exports: [

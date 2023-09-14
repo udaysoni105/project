@@ -12,7 +12,7 @@ class Task extends Model
     use HasFactory, HasRoles;
     protected $table = 'tasks';
     protected $gaurd_name = 'web';
-    protected $fillable = ['name', 'description', 'start_date', 'end_date', 'status', 'project_id', 'user_id',];
+    protected $fillable = ['name', 'description', 'start_date', 'end_date', 'status', 'project_id'];
     protected $dates = ['start_date', 'end_date'];
 
     // Add a static validation rules array
@@ -23,7 +23,7 @@ class Task extends Model
         'end_date' => 'required|date|after:start_date',
         'status' => 'required|in:pending,completed',
         'project_id' => 'required|exists:projects,id',
-        'user_id' => 'required|exists:user_id'
+        // 'user_id' => 'required|exists:user_id'
     ];
 
     // protected static function boot()
@@ -48,17 +48,17 @@ class Task extends Model
     {
         return $this->belongsTo(Project::class);
     }
-    public function tasks()
-    {
-        return $this->belongsToMany(Task::class, 'user_task');
-    }
+    // public function tasks()
+    // {
+    //     return $this->belongsToMany(Task::class, 'user_task');
+    // }
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_task');
+        return $this->belongsToMany(User::class, 'user_task','user_id','task_id');
     }
     // Define the relationship between Task and User (Many-to-One)
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class, 'user_id');
+    // }
 }

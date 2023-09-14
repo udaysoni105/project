@@ -65,10 +65,11 @@ export class taskEditResolver implements Resolve<any> {
         taskId: taskId,
         Permission: 'update_tasks'
       });
-
+      // console.log(this.taskService.getUser);
       return forkJoin([
         this.taskService.gettaskById(taskId, headers),
-        this.taskService.getUsers()
+        this.taskService.getUser()
+        // getUserById(taskId, headers),
       ]).pipe(
         map(([taskDetails, users]: [any, any[]]) => {
           return { taskDetails, users };

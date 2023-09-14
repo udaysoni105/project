@@ -60,12 +60,27 @@ class TasksController extends Controller
                         ->get();
                 } else {
                     // If the user is a developer, fetch only assigned tasks with project names
-                    $tasks = Task::with(['project', 'user'])
-                        ->where('user_id', $user->id)
+                    $tasks = $user->tasks() // Assuming you have defined a 'tasks' relationship in your User model
+                        ->with(['project']) // Assuming you have a 'project' relationship defined in your Task model
                         ->select('tasks.*', 'projects.name as projectName')
                         ->join('projects', 'tasks.project_id', '=', 'projects.id')
                         ->get();
                 }
+                
+
+                // if ($user->hasRole('Admin') || $user->hasRole('projectManager')) {
+                //     // If the user is an admin or project manager, fetch all tasks with project names
+                //     $tasks = Task::join('projects', 'tasks.project_id', '=', 'projects.id')
+                //         ->select('tasks.*', 'projects.name as projectName')
+                //         ->get();
+                // } else {
+                //     // If the user is a developer, fetch only assigned tasks with project names
+                //     $tasks = Task::with(['project', 'user'])
+                //         ->where('user_id', $user->id)
+                //         ->select('tasks.*', 'projects.name as projectName')
+                //         ->join('projects', 'tasks.project_id', '=', 'projects.id')
+                //         ->get();
+                // }
 
                 Log::info("Controller::TasksController::index::END");
                 // Return the tasks as JSON response
@@ -125,17 +140,31 @@ class TasksController extends Controller
                     return response()->json(['errors' => $validator->errors()], 400);
                 }
 
-                foreach ($request->user_id as $userId) {
-                    $task = new Task($request->except('user_id'));
-                    $task->user_id = $userId;
-                    $task->save();
+                $input = $request->all();
+                info($request);
+                $task = Task::create([
+                    'name' => $input['name'],
+                    'description' => $input['description'],
+                    'start_date' => $input['start_date'],
+                    'end_date' => $input['end_date'],
+                    'project_id' => $input['project_id'],
+                    // 'user_ids' => $input['user_id'],
+                ]);
+                info($task);
+                $task->users()->sync($input['user_id']);
 
-                    // Add the task to the user_task table
-                    DB::table('user_task')->insert([
-                        'task_id' => $task->id,
-                        'user_id' => $userId,
-                    ]);
-                }
+                // DB::table('user_task')->insert(['task_id'=>$Task['id'],'user_id' => $input['user_id']['id']);
+                // foreach ($request->user_id as $userId) {
+                //     $task = new Task($request->except('user_id'));
+                //     $task->user_id = $userId;
+                //     $task->save();
+
+                //     // Add the task to the user_task table
+                //     DB::table('user_task')->insert([
+                //         'task_id' => $task->id,
+                //         'user_id' => $userId,
+                //     ]);
+                // }
 
 
                 Log::info("Controller::TasksController::store::END");
@@ -155,7 +184,7 @@ class TasksController extends Controller
 
     public function getTasksByProjectId(Request $request, $projectId)
     {
-        Log::info("Controller::ProjectsController::getTasksByProjectId::START");
+        Log::info("Controller::TasksController::getTasksByProjectId::START");
 
         // Fetch the project with associated tasks
         $project = Project::with('tasks')->find($projectId);
@@ -168,11 +197,29 @@ class TasksController extends Controller
         $start_date = $project->start_date;
         $end_date = $project->end_date;
 
-        Log::info("Controller::ProjectsController::getTasksByProjectId::END");
+        Log::info("Controller::TasksController::getTasksByProjectId::END");
 
         // Return the tasks and project details as a JSON response
         return response()->json(['project' => $project, 'start_date' => $start_date, 'end_date' => $end_date]);
     }
+
+//     public function assignUsers(Request $request, Task $task)
+//     {
+//         Log::info("Controller::TasksController::assignUsers::START");
+//         try {
+//             $userIds = $request->input('userIds'); // Assuming you send an array of user IDs in the request
+// info($userIds);
+//             // Find the task
+//             $task = Task::findOrFail($task->id);
+//             info($task);
+//             // Attach users to the task
+//             $task->users()->sync($userIds);
+
+//             return response()->json(['message' => 'Users assigned to the task successfully'], 200,$task);
+//         } catch (\Exception $e) {
+//             return response()->json(['message' => 'User assignment failed', 'error' => $e->getMessage()], 500);
+//         }
+//     }
 
     /** 
      * @author : UDAY SONI
@@ -206,7 +253,9 @@ class TasksController extends Controller
                 $matchedPermission = $rolePermissions->firstWhere('name', $permission);
                 info('user has permission: ' . $matchedPermission->name);
 
-                $task = Task::findOrFail($id);
+                $task = Task::with('users')->findOrFail($id);
+                info($task);
+                
                 Log::info("Controller::TasksController::show::END");
                 return response()->json($task);
             } catch (\Exception $ex) {
@@ -424,8 +473,12 @@ class TasksController extends Controller
                 Log::info("Controller::TasksController::search::START");
                 $searchQuery = $request->input('searchQuery');
 
-                $tasks = Task::where('name', 'LIKE', "%$searchQuery%")
+                $tasks = Task::where('id', 'LIKE', "%$searchQuery%")
+                    ->orWhere('name', 'LIKE', "%$searchQuery%")
                     ->orWhere('description', 'LIKE', "%$searchQuery%")
+                    ->orWhere('start_date', 'LIKE', "%$searchQuery%")
+                    ->orWhere('end_date', 'LIKE', "%$searchQuery%")
+                    // ->orWhere('project_id', 'LIKE', "%$searchQuery%")
                     ->paginate(5);
 
                 Log::info("Controller::TasksController::search::END");

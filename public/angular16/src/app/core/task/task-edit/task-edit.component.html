@@ -17,7 +17,7 @@
       </div>
 
       <div class="form-group">
-        <label for="description">Description: </label>
+        <label for="description">Description </label>
         <textarea id="description" name="description" pInputTextarea formControlName="description"></textarea>
       </div>
 
@@ -47,13 +47,14 @@
         <label for="user_id">Users* </label>
         <mat-form-field>
           <mat-label>Users </mat-label>
-          <mat-select formControlName="user_id" required >
+          <mat-select formControlName="user_id" [options]="users" required multiple>
             <mat-option *ngFor="let user of users" [value]="user.value">
               {{ user.label }}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
+      
       <div class="pbutton">
         <p-button class="submit-button" type="submit" label="Save Changes Task" [disabled]="taskForm.invalid"></p-button>
         <p-button class="cancel-button" label="Cancel" (click)="cancel()"></p-button>   

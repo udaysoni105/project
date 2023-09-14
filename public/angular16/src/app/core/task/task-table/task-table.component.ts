@@ -4,16 +4,18 @@ import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
-interface PageEvent {
-  first: number;
-  rows: number;
-  page: number;
-  pageCount: number;
-}
+import {MatPaginatorModule} from '@angular/material/paginator';
+// interface PageEvent {
+//   first: number;
+//   rows: number;
+//   page: number;
+//   pageCount: number;
+// }
 @Component({
   selector: 'app-task-table',
   templateUrl: './task-table.component.html',
   styleUrls: ['./task-table.component.scss'],
+  // imports: [MatPaginatorModule],
 })
 export class TaskTableComponent implements OnInit {
   tasks: any[] = [];
@@ -27,16 +29,16 @@ export class TaskTableComponent implements OnInit {
   ];
   userRoles: string[] = [];
   loading: boolean = false;
-  first2: number = 0;
-  rows2: number = 10;
-  totalRecords: number = 120;
+  // first2: number = 0;
+  // rows2: number = 10;
+  // totalRecords: number = 120;
 
-  options = [
-      { label: 5, value: 5 },
-      { label: 10, value: 10 },
-      { label: 20, value: 20 },
-      { label: 120, value: 120 }
-  ];
+  // options = [
+  //     { label: 5, value: 5 },
+  //     { label: 10, value: 10 },
+  //     { label: 20, value: 20 },
+  //     { label: 120, value: 120 }
+  // ];
   constructor(
     private taskService: TaskService,
     private router: Router,
@@ -48,10 +50,10 @@ export class TaskTableComponent implements OnInit {
     this.loadTasks();
   }
 
-  onPageChange2(event: PageEvent) {
-    this.first2 = event.first;
-    this.rows2 = event.rows;
-}
+//   onPageChange2(event: PageEvent) {
+//     this.first2 = event.first;
+//     this.rows2 = event.rows;
+// }
 
   // Method to fetch tasks from the API
   loadTasks() {

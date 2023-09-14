@@ -50,6 +50,23 @@ export class TaskService {
     return this.http.get<any[]>(url, { headers });
   }
 
+  // assignUsersToTask(taskId: string, users: any[]): Observable<any> {
+  //   // Define the URL for assigning users to a task
+  //   const url = `${this.baseUrl}/${taskId}`;
+
+  //   // Define the HTTP headers if needed
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json'
+  //     // Add any other headers you may need
+  //   });
+
+  //   // Create the request body with the list of user IDs
+  //   const body = { userIds: users.map(user => user.value) };
+
+  //   // Send a POST request to assign users to the task
+  //   return this.http.post(url, body, { headers });
+  // }
+
   private getHeaders(): HttpHeaders {
     // Construct your headers here, including authorization token
     const token = localStorage.getItem('token');
@@ -97,6 +114,10 @@ export class TaskService {
 
 
   gettaskById(taskId: string, headers: HttpHeaders): Observable<any> {
+    return this.http.get(`${this.baseUrl}/${taskId}`, { headers });
+  }
+
+  getUserById(taskId: string, headers: HttpHeaders): Observable<any> {
     return this.http.get(`${this.baseUrl}/${taskId}`, { headers });
   }
 

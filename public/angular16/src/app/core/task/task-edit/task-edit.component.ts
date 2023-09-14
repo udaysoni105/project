@@ -18,7 +18,8 @@ export class TaskEditComponent implements OnInit {
   loading: boolean = false;
   users: SelectItem[] = [];
   projectOptions: SelectItem[] = [];
-
+  taskData: any; 
+  assignedUsers: any[] = []; 
 
   constructor(
     private formBuilder: FormBuilder,
@@ -43,16 +44,34 @@ export class TaskEditComponent implements OnInit {
       this.loadTaskDetails();
     });
     this.route.data.subscribe((data: any) => {
-      if (data['taskAndUsers']) { // Access the property using ['propertyName']
+      if (data['taskAndUsers']) {
         const { taskDetails, users } = data['taskAndUsers'];
         this.taskForm.patchValue(taskDetails);
+        this.taskData = taskDetails;    
+        this.route.data.subscribe((data: any) => {
+          if (data['taskAndUsers']) { 
+            const { taskDetails, users } = data['taskAndUsers'];
+            this.taskForm.patchValue(taskDetails);
+            this.taskForm.patchValue(users);
+            this.taskData = taskDetails;
+            this.assignedUsers = users;
+            this.users = users.map((user: any) => ({
+              label: user.name,
+              value: user.id
+            }));
+            this.loading = false;
+          }
+        });
+        this.assignedUsers = users;
         this.users = users.map((user: any) => ({
           label: user.name,
           value: user.id
         }));
+
         this.loading = false;
       }
     });
+
     this.fetchProjects();
     this.fetchUsers();
   }
@@ -70,22 +89,23 @@ export class TaskEditComponent implements OnInit {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
       taskId: this.taskId,
-      Permission: 'update_tasks' // Add the Permission header with the desired value
+      Permission: 'update_tasks' 
     });
-    const task = this.taskForm.value;
 
-    // Convert user_id to an array if it's not already
-    task.user_id = Array.isArray(task.user_id) ? task.user_id : [task.user_id];
-
-    // Make the API call with the headers and task ID
-    this.taskService.gettaskById(this.taskId, headers).subscribe(
-      (response) => {
-        // Handle the response here
-        console.log(response);
-        this.tasks = response;
-        this.taskForm.patchValue(response); // Update the form with the task data
-        this.loading = false; // Stop loading when the data is fetched
-      },
+      this.taskService.gettaskById(this.taskId,headers).subscribe(
+        (response) => {
+          if (response) {
+            this.taskForm.patchValue(response);
+            
+            // Assuming the assigned users are in response.users
+            this.assignedUsers = response.users;
+            
+            // Populate the user selection in the form
+            this.taskForm.get('user_id')?.setValue(this.assignedUsers.map((user: any) => user.id));
+          }
+    
+          this.loading = false;
+        },
       (error) => {
         console.log('Soft delete failed:', error);
         this.loading = false;
@@ -107,13 +127,16 @@ export class TaskEditComponent implements OnInit {
       }
     );
   }
+  
   fetchProjects(): void {
     this.taskService.getProjects().subscribe(
       (projects) => {
+
         this.projectOptions = projects.map((project) => ({
           label: project.name,
           value: project.id,
         }));
+
       }, (error) => {
         console.log('Soft delete failed:', error);
         this.loading = false;
@@ -131,19 +154,21 @@ export class TaskEditComponent implements OnInit {
 
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
-        }, 5000); // 5 seconds delay
+        }, 5000); 
       }
     );
-  }
+  }  
 
   fetchUsers(): void {
     this.loading = true;
     this.taskService.getUsers().subscribe(
       (users) => {
+        // console.log(users);
         this.users = users.map((user: any) => ({
           label: user.name,
           value: user.id, // Adjust this based on your actual user data structure
         }));
+        // console.log(this.users);
         this.loading = false; // Stop loading when the data is fetched
       },
       (error) => {
@@ -190,8 +215,7 @@ export class TaskEditComponent implements OnInit {
 
       this.taskService.updateTask(this.taskId, taskData, headers).subscribe(
         (response) => {
-          console.log('task updated successfully', response);
-          console.log('task ID:', this.taskId);
+
           this.loading = false; // Stop loading when the data is fetched
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is updated' });
 
