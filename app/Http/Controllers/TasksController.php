@@ -66,21 +66,6 @@ class TasksController extends Controller
                         ->join('projects', 'tasks.project_id', '=', 'projects.id')
                         ->get();
                 }
-                
-
-                // if ($user->hasRole('Admin') || $user->hasRole('projectManager')) {
-                //     // If the user is an admin or project manager, fetch all tasks with project names
-                //     $tasks = Task::join('projects', 'tasks.project_id', '=', 'projects.id')
-                //         ->select('tasks.*', 'projects.name as projectName')
-                //         ->get();
-                // } else {
-                //     // If the user is a developer, fetch only assigned tasks with project names
-                //     $tasks = Task::with(['project', 'user'])
-                //         ->where('user_id', $user->id)
-                //         ->select('tasks.*', 'projects.name as projectName')
-                //         ->join('projects', 'tasks.project_id', '=', 'projects.id')
-                //         ->get();
-                // }
 
                 Log::info("Controller::TasksController::index::END");
                 // Return the tasks as JSON response
@@ -148,24 +133,10 @@ class TasksController extends Controller
                     'start_date' => $input['start_date'],
                     'end_date' => $input['end_date'],
                     'project_id' => $input['project_id'],
-                    // 'user_ids' => $input['user_id'],
+                    //'user_ids' => $input['user_id'],
                 ]);
                 info($task);
                 $task->users()->sync($input['user_id']);
-
-                // DB::table('user_task')->insert(['task_id'=>$Task['id'],'user_id' => $input['user_id']['id']);
-                // foreach ($request->user_id as $userId) {
-                //     $task = new Task($request->except('user_id'));
-                //     $task->user_id = $userId;
-                //     $task->save();
-
-                //     // Add the task to the user_task table
-                //     DB::table('user_task')->insert([
-                //         'task_id' => $task->id,
-                //         'user_id' => $userId,
-                //     ]);
-                // }
-
 
                 Log::info("Controller::TasksController::store::END");
                 return response()->json(['message' => 'Tasks created successfully', 'task' => $task]);
@@ -181,7 +152,13 @@ class TasksController extends Controller
         return $result;
     }
 
-
+    /** 
+     * @author : UDAY SONI
+     * Method name: getTasksByProjectId
+     * show the specified resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getTasksByProjectId(Request $request, $projectId)
     {
         Log::info("Controller::TasksController::getTasksByProjectId::START");
@@ -202,24 +179,6 @@ class TasksController extends Controller
         // Return the tasks and project details as a JSON response
         return response()->json(['project' => $project, 'start_date' => $start_date, 'end_date' => $end_date]);
     }
-
-//     public function assignUsers(Request $request, Task $task)
-//     {
-//         Log::info("Controller::TasksController::assignUsers::START");
-//         try {
-//             $userIds = $request->input('userIds'); // Assuming you send an array of user IDs in the request
-// info($userIds);
-//             // Find the task
-//             $task = Task::findOrFail($task->id);
-//             info($task);
-//             // Attach users to the task
-//             $task->users()->sync($userIds);
-
-//             return response()->json(['message' => 'Users assigned to the task successfully'], 200,$task);
-//         } catch (\Exception $e) {
-//             return response()->json(['message' => 'User assignment failed', 'error' => $e->getMessage()], 500);
-//         }
-//     }
 
     /** 
      * @author : UDAY SONI
@@ -254,8 +213,7 @@ class TasksController extends Controller
                 info('user has permission: ' . $matchedPermission->name);
 
                 $task = Task::with('users')->findOrFail($id);
-                info($task);
-                
+                info($task);                
                 Log::info("Controller::TasksController::show::END");
                 return response()->json($task);
             } catch (\Exception $ex) {

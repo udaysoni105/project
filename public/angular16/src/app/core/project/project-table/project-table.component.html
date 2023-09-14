@@ -32,28 +32,22 @@
   <div *ngIf="!projects" class="horizontal-loader"></div>
   <div *ngIf="projects">
 
-    <!-- <div class="card flex flex-column gap-3">
-      <div class="flex align-items-center justify-content-end">
-        <span class="mx-1 text-color">Items per page: </span>
-        <div class="inline-components">
-          <p-dropdown [options]="options" optionLabel="label" optionValue="value" [(ngModel)]="rows2"
-            (ngModelChange)="first2 = 0"></p-dropdown>
-          <p-paginator [first]="first2" [rows]="rows2" [totalRecords]="120" (onPageChange)="onPageChange2($event)"
-            [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} of {totalRecords}"
-            [showPageLinks]="false" [showFirstLastIcon]="false"></p-paginator>
-        </div>
-      </div>
-    </div> -->
     <mat-paginator [length]="100"
     [pageSize]="10"
     [pageSizeOptions]="[5, 10, 25, 100]"
     aria-label="Select page">
+
+    <!-- <mat-paginator [hidden]="noDateFound==1" [length]="length" [pageSize]="pageSize"
+    [pageIndex]="pageIndex" [pageSizeOptions]="pageSizeOptions"
+    [showFirstLastButtons]="true" (page)="onPaginateChange($event)">
+  </mat-paginator> -->
 </mat-paginator>
     
     <div class="loading-container" *ngIf="loading">
       <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
     </div>
     <p-table #table [value]="projects" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5">
+      <!-- <p-table #table [value]="projects" [tableStyle]="{ 'min-width': '50rem' }"> -->
       <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>

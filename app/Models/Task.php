@@ -52,13 +52,17 @@ class Task extends Model
     // {
     //     return $this->belongsToMany(Task::class, 'user_task');
     // }
+    // public function users()
+    // {
+    //     return $this->belongsToMany(User::class, 'user_task','user_id','task_id');
+    // }
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_task','user_id','task_id');
+        return $this->belongsToMany(User::class, 'user_task','task_id','user_id');
     }
     // Define the relationship between Task and User (Many-to-One)
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class, 'user_id');
-    // }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

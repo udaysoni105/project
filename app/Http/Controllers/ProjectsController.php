@@ -128,6 +128,13 @@ class ProjectsController extends Controller
         return $result;
     }
 
+    /** 
+     * @author : UDAY SONI
+     * Method name: getTasksByProjectdate
+     * Store a newly created resource in storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getTasksByProjectdate(Request $request, $projectId)
     {
         Log::info("Controller::ProjectsController::getTasksByProjectId::START");
@@ -307,7 +314,7 @@ class ProjectsController extends Controller
 
     /** 
      * @author : UDAY SONI
-     * Method name: getSortedProjects
+     * Method name: softDelete
      * Soft Delete a project for specified resource from storage.
      *
      * @return \Illuminate\Http\Response
@@ -358,7 +365,7 @@ class ProjectsController extends Controller
 
     /** 
      * @author : UDAY SONI
-     * Method name: getSortedProjects
+     * Method name: softDeletedProjects
      * Fetch all projects, including soft-deleted ones for specified resource from storage.
      *
      * @return \Illuminate\Http\Response
@@ -405,7 +412,7 @@ class ProjectsController extends Controller
 
     /** 
      * @author : UDAY SONI
-     * Method name: getSortedProjects
+     * Method name: restore
      * Restore a soft-deleted project for specified resource from storage.
      *
      * @return \Illuminate\Http\Response

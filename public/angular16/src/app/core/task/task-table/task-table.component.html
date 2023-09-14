@@ -49,6 +49,7 @@
       <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
     </div>
     <p-table #table [value]="tasks" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5">
+    <!-- <p-table #table [value]="tasks" [tableStyle]="{ 'min-width': '50rem' }"> -->
       <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>

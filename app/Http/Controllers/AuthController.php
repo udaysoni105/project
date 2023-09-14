@@ -281,30 +281,6 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws Exception
      */
-
-    //  public function imageUploadPost(Request $request) {
-    //     $this->validate($request, [
-    //         'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    //     ]);
-    //     $imageName = $request->image->getClientOriginalName();
-    //     $filename = md5(uniqid(rand(), true)) . $imageName;
-    //     $url = '/images/user_logo/';
-    //     $image = $request->file('image');
-    //     $path = $url . $filename;
-    //     $t = Storage::disk('s3')->put($path, file_get_contents($image), 'public');
-    //     return view('image-display', compact('filename'));
-    // }
-
-    // public function imageUpload($filename) {
-    //     if (Storage::disk('s3')->exists('/images/user_logo/' . $filename)) {
-    //         $content = Storage::disk('s3')->get('/images/user_logo/' . $filename);
-    //         $image['image'] = $content;
-    //         $image_name = $filename;
-    //         file_put_contents("images/" . $filename, $image['image']);
-    //     }
-    //     return view('image-get', compact('filename'));
-    // }
-
     public function upload(Request $request)
     {
         Log::info("Controller::AuthController::upload::START");
@@ -381,14 +357,6 @@ class AuthController extends Controller
             'message' => 'Image deleted successfully',
         ]);
     }
-    // public function destroy($images)
-    // {
-    //     Log::info("Controller::AuthController::destroy::START");
-    //     Storage::disk('s3')->delete('images/' . $images);
-
-    //     Log::info("Controller::AuthController::destroy::END");
-    //     return back()->withSuccess('Image was deleted successfully');
-    // }
 
     /** 
      * @author : UDAY SONI
