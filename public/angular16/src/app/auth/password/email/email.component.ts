@@ -25,19 +25,19 @@ export class EmailComponent implements OnInit {
     });
   }
 
+  /** 
+* @author : UDAY SONI
+* Method name: sendResetLink
+*/
   sendResetLink() {
     if (this.emailForm.invalid) {
       return;
     }
-  
     const formData = this.emailForm.value;
-    this.email = formData.email; 
-  console.log(this.email);
+    this.email = formData.email;
     this.authservice.sendPasswordResetLink(this.email).subscribe(
       (response) => {
-        console.log('Password reset request sent:', response);
         this.isRequestSent = true;
-        // this.users = { email: '', password: '' };
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'email sent successfully' });
         setTimeout(() => {
           this.router.navigate(['/login']);
@@ -56,5 +56,4 @@ export class EmailComponent implements OnInit {
       }
     );
   }
-  
 }

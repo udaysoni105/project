@@ -31,15 +31,15 @@
                 <input id="confirmPassword" type="password" pPassword class="form-control"
                   formControlName="confirmPassword" required>
                 <div
-                *ngIf="resetForm.get('password')?.invalid && (resetForm.get('password')?.touched || resetForm.get('password')?.touched)"
-                class="invalid-feedback">
-                <strong>Password is required.</strong>
-              </div>
-              <div
-                *ngIf="resetForm.hasError('passwordMismatch') && (resetForm.get('password')?.touched || resetForm.get('password')?.touched)"
-                class="invalid-feedback">
-                <strong>Passwords do not match.</strong>
-              </div>
+                  *ngIf="resetForm.get('password')?.invalid && (resetForm.get('password')?.touched || resetForm.get('password')?.touched)"
+                  class="invalid-feedback">
+                  <strong>Password is required.</strong>
+                </div>
+                <div
+                  *ngIf="resetForm.hasError('passwordMismatch') && (resetForm.get('password')?.touched || resetForm.get('password')?.touched)"
+                  class="invalid-feedback">
+                  <strong>Passwords do not match.</strong>
+                </div>
               </div>
             </div>
 
@@ -56,4 +56,3 @@
     </div>
   </div>
 </div>
-

@@ -5,9 +5,8 @@ import { AppComponent } from 'src/app/app.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { MainComponent } from './main/main.component';
 import { LoginComponent } from './login/login.component';
-import { LogoutComponent } from './logout/logout.component';
 import { UserTableComponent } from './user-table/user-table.component';
-import { ConfirmComponent } from './password/confirm/confirm.component';
+
 import { EmailComponent } from './password/email/email.component';
 import { ResetComponent } from './password/reset/reset.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -37,10 +36,11 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ProfileComponent } from './profile/profile.component';
 import { ErrorComponent } from './error/error.component';
 import { MatSelectModule } from '@angular/material/select';
+import { ErrorModule } from './error/error.module';
+import { Error401Component } from './error401/error401.component';
 @NgModule({
   declarations: [
     AppComponent,
-    ConfirmComponent,
     EmailComponent,
     ResetComponent,
     DashboardComponent,
@@ -48,15 +48,16 @@ import { MatSelectModule } from '@angular/material/select';
     RegistrationComponent,
     MainComponent,
     LoginComponent,
-    LogoutComponent,
     ProfileComponent,
-    ErrorComponent
+    ErrorComponent,
+    Error401Component
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     CarouselModule,
     ButtonModule,
+    ErrorModule,
     TabMenuModule,
     FieldsetModule,
     CommonModule,
@@ -81,7 +82,7 @@ import { MatSelectModule } from '@angular/material/select';
   ],
   providers: [AuthService],
   exports: [
-    ConfirmComponent,
+
     EmailComponent,
     ResetComponent,
     DashboardComponent,
@@ -89,7 +90,6 @@ import { MatSelectModule } from '@angular/material/select';
     RegistrationComponent,
     MainComponent,
     LoginComponent,
-    LogoutComponent,
     AppComponent
   ],
   bootstrap: [AppComponent]

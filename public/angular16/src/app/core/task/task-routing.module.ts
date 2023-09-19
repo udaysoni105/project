@@ -10,7 +10,6 @@ import { TaskDeleteComponent } from './task-delete/task-delete.component';
 import { taskEditResolver } from './task-edit/task-edit.resolver';
 
 const routes: Routes = [
-  // { path: 'tasks/:id', component: TaskDetailsComponent, canActivate: [authGuard] },
   { path: 'tasks', component: TaskTableComponent },
   // { path: 'tasks', component: TaskTableComponent, canActivate: [authGuard] },
   { path: 'task-Create', component: TaskCreateComponent },

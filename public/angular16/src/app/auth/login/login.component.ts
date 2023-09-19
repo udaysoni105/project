@@ -14,17 +14,16 @@ export class LoginComponent implements OnInit {
   password!: string;
   loginForm!: FormGroup;
   users: any = {};
-  // public formVali
   public isInValid !: boolean;
   error: string | null = null;
   loading: boolean = false;
 
-  constructor(private router: Router, 
-    private formBuilder: FormBuilder, 
-    private authService: AuthService, 
-    private http: HttpClient, 
+  constructor(private router: Router,
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private http: HttpClient,
     private messageService: MessageService
-    ) { localStorage.clear() }
+  ) { localStorage.clear() }
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
@@ -33,6 +32,10 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  /** 
+   * @author : UDAY SONI
+   * Method name: login
+   */
   login(): void {
     this.loading = true;
     if (this.loginForm.invalid) {
@@ -44,7 +47,6 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(email, password).subscribe(
       (response: any) => {
-        // console.log(response);
         const token = response.access_token;
         const role = response.user.role;
         localStorage.setItem('token', token);
@@ -62,51 +64,38 @@ export class LoginComponent implements OnInit {
       (error) => {
         console.error(error);
         this.loading = false;
-  
-        // Check the error message and display an appropriate message
-        let errorMessage = 'An error occurred. Please try again.'; // Default error message
-  
+
+        let errorMessage = 'An error occurred. Please try again.';
+
         if (error.status === 401) {
-          errorMessage = 'Incorrect password. Please try again.';
+          errorMessage = 'unauthorized . Please try again.';
         } else if (error.status === 404) {
           errorMessage = 'User not found.';
         }
-  
+
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: errorMessage
         });
-  
+
         setTimeout(() => {
-          // Optionally, you can clear the form or take other actions here.
         }, 1500);
       }
     );
   }
-  //     (error) => {
-  //       console.error(error);
-  //       this.loading = false;
-  //       this.messageService.add({
-  //         severity: 'error',
-  //         summary: 'Error',
-  //         detail: 'user is not associated'
-  //       });
-  //       setTimeout(() => {
-  //       }, 1500);
-  //     }
-  //   );
-  // }
 
+  /** 
+   * @author : UDAY SONI
+   * Method name: forgotPassword
+   */
   forgotPassword() {
     const data = {
-      // email: this.email,
+      email: this.email,
     };
 
     this.http.post('/forgot-password', data).subscribe(
       (response) => {
-        console.log(response);
-        // Handle success
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'forgot password successfully' });
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
@@ -114,17 +103,14 @@ export class LoginComponent implements OnInit {
       },
       (error) => {
         console.error(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'error in forgot password '
-        });
-        setTimeout(() => {
-        }, 1500);
-        // Handle error
       }
     );
   }
+
+  /** 
+   * @author : UDAY SONI
+   * Method name: navigateToRegistration
+   */
   navigateToRegistration(): void {
     this.router.navigate(['/registration']);
   }

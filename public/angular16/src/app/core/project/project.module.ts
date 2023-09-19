@@ -27,6 +27,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { ErrorModule } from 'src/app/auth/error/error.module';
 @NgModule({
   declarations: [
     ProjectCreateComponent,
@@ -48,6 +49,7 @@ import { MessageService } from 'primeng/api';
     SplitButtonModule,
     ToastModule,
     DropdownModule,
+    ErrorModule,
     MenuModule,
     FormsModule,
     ViewChild,

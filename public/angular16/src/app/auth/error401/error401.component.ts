@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+
 @Component({
-  selector: 'app-error',
-  templateUrl: './error.component.html',
-  styleUrls: ['./error.component.scss']
+  selector: 'app-error401',
+  templateUrl: './error401.component.html',
+  styleUrls: ['./error401.component.scss']
 })
-export class ErrorComponent {
+export class Error401Component {
 
   constructor(private router: Router) { }
 

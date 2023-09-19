@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Task;
+
 /** @author UDAY SONI
  *
  * Class name: ProjectsController
@@ -103,6 +104,7 @@ class ProjectsController extends Controller
 
                 $validator = Validator::make($request->all(), [
                     'name' => 'required',
+                    'description' => '',
                     'start_date' => 'required|date',
                     'end_date' => 'required|date|after:start_date',
                 ]);
@@ -217,7 +219,7 @@ class ProjectsController extends Controller
                 $project = Project::findOrFail($id);
 
                 $project->update($request->all());
-                
+
                 Log::info("Controller::ProjectsController::update::END");
                 return response()->json(['message' => 'Project updated successfully', 'project' => $project]);
             } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
@@ -266,14 +268,17 @@ class ProjectsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getProjects(Request $request)
+    public function paginationProjects(Request $request)
     {
         $result = DB::transaction(function () use ($request) {
             try {
-                Log::info("Controller::ProjectsController::getProjects::START");
+                Log::info("Controller::ProjectsController::paginationProjects::START");
                 $perPage = $request->input('perPage', 5);
-                $projects = Project::paginate($perPage);
-                Log::info("Controller::ProjectsController::getProjects::END");
+                $page = $request->input('page', 1);
+
+                // Query your database for projects with pagination
+                $projects = Project::paginate($perPage, ['*'], 'page', $page);
+                Log::info("Controller::ProjectsController::paginationProjects::END");
                 return response()->json($projects);
             } catch (\Exception $ex) {
 
@@ -287,22 +292,25 @@ class ProjectsController extends Controller
 
     /** 
      * @author : UDAY SONI
-     * Method name: getSortedProjects
-     * getSortedProjects the specified resource from storage.
+     * Method name: SortedProjects
+     * SortedProjects the specified resource from storage.
      *
      * @return \Illuminate\Http\Response
      */
-    public function getSortedProjects(Request $request)
+    public function SortedProjects(Request $request)
     {
         $result = DB::transaction(function () use ($request) {
             try {
-                Log::info("Controller::ProjectsController::getSortedProjects::START");
+                Log::info("Controller::ProjectsController::SortedProjects::START");
+                $perPage = $request->input('perPage', 5);
+                $page = $request->input('page', 1);
                 $column = $request->input('column', 'id');
                 $direction = $request->input('direction', 'asc');
 
                 $projects = Project::orderBy($column, $direction)
-                    ->paginate(5);
-                Log::info("Controller::ProjectsController::getSortedProjects::END");
+                    ->paginate($perPage, ['*'], 'page', $page);
+
+                Log::info("Controller::ProjectsController::SortedProjects::END");
                 return response()->json($projects);
             } catch (\Exception $ex) {
                 Log::error("Error in ProjectsController::getSortedProjects: " . $ex->getMessage());

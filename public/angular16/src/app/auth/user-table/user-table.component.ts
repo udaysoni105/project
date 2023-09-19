@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Table } from 'primeng/table';
-import { SortEvent } from 'primeng/api';
 import { User } from './user';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
@@ -21,9 +20,9 @@ export class UserTableComponent implements OnInit {
   @ViewChild('table') table!: Table;
 
   loading: boolean = false;
-  constructor(private authService: AuthService,    
+  constructor(private authService: AuthService,
     private messageService: MessageService,
-    private router:Router) { }
+    private router: Router) { }
 
   ngOnInit() {
     this.loadUsers();
@@ -33,11 +32,19 @@ export class UserTableComponent implements OnInit {
     return value !== null && value !== undefined ? value : 'N.A';
   }
 
+  /** 
+* @author : UDAY SONI
+* Method name: loadUsers
+* Add the Permission header with the desired value
+* Make the API call with the headers
+* Assuming the API returns an array of projects
+* Stop loading when the data is fetched
+* 
+*/
   loadUsers() {
     this.loading = true;
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
-    // console.log(jwtToken);
     if (!jwtToken) {
       console.error('JWT token not found in local storage. Please log in.');
       return;
@@ -45,48 +52,43 @@ export class UserTableComponent implements OnInit {
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
-      email: 'email',
-      Permission: 'view_project' // Add the Permission header with the desired value
+      'email': `${email}`,
+      Permission: 'view_project'
     });
-    // console.log(headers);
 
-    // Make the API call with the headers
     this.authService.getAllUsers(headers).subscribe(
       (response) => {
-        // Handle the response here
-        // console.log(response);
-        this.users = response; // Assuming the API returns an array of projects
-        this.loading = false; // Stop loading when the data is fetched
+        this.users = response;
+        this.loading = false;
       },
       (error) => {
-        console.log('Soft delete failed:', error);
         this.loading = false;
-      
         if (error.status === 404) {
-          this.router.navigate(['Not Found']);
+          this.router.navigate(['/404']);
+        } else if (error.status === 401) {
+          // Handle 401 error - navigate to a 401 page
+          this.router.navigate(['/401']);
         } else {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'Failed to softDelete project',
+            detail: 'user not found',
           });
-          this.router.navigate(['Not Found']);
+          this.router.navigate(['401']);
         }
-      
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 5000); // 5 seconds delay
       }
     );
   }
 
-  // onSearch(): void {
-  //   this.table.filter(this.searchQuery, 'name', 'contains');
-  // }
+  /** 
+* @author : UDAY SONI
+* Method name: onSearch
+* Extract the 'data' array from the response
+*/
   onSearch(): void {
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
-    // console.log(jwtToken);
+
     if (!jwtToken) {
       console.error('JWT token not found in local storage. Please log in.');
       return;
@@ -94,38 +96,15 @@ export class UserTableComponent implements OnInit {
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
-      email: 'email'
+      'email': `${email}`,
     });
-// console.log(headers);
-
     this.authService.searchTasks(this.searchQuery, headers).subscribe(
       (response) => {
-        // console.log('Search Response:', response);
-        this.users = response.data; // Extract the 'data' array from the response
+        this.users = response.data;
       },
       (error) => {
-        console.log(error);
       }
     );
-  }
-
-  // onSearch(): void {
-  //   if (this.searchValue.trim() !== '') {
-  //     this.filteredUsers = this.users.filter(user => {
-  //       return (
-  //         user.name.toLowerCase().includes(this.searchValue.toLowerCase()) ||
-  //         user.email.toLowerCase().includes(this.searchValue.toLowerCase()) ||
-  //         user.country.toLowerCase().includes(this.searchValue.toLowerCase()) ||
-  //         user.state.toLowerCase().includes(this.searchValue.toLowerCase())
-  //       );
-  //     });
-  //   } else {
-  //     this.filteredUsers = [...this.users];
-  //   }
-  // }
-
-  onSort(event: SortEvent): void {
-    // Implement the sorting logic here
   }
 }
 

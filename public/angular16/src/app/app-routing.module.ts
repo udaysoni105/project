@@ -5,7 +5,6 @@ import { authGuard } from './auth/auth.guard';
 
 import { RegistrationComponent } from './auth/registration/registration.component';
 import { LoginComponent } from './auth/login/login.component';
-import { LogoutComponent } from './auth/logout/logout.component';
 import { EmailComponent } from './auth/password/email/email.component';
 import { ResetComponent } from './auth/password/reset/reset.component';
 import { DashboardComponent } from './auth/dashboard/dashboard.component';
@@ -26,13 +25,13 @@ import { taskEditResolver } from './core/task/task-edit/task-edit.resolver';
 import { UserTableComponent } from './auth/user-table/user-table.component';
 import { MainComponent } from './auth/main/main.component';
 import { ProfileComponent } from './auth/profile/profile.component';
-import { ReactiveComponent } from './core/reactive/reactive/reactive.component';
+import { ReactiveComponent } from './core/project/reactive/reactive.component';
+import { Error401Component } from './auth/error401/error401.component';
 const routes: Routes = [
 
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'registration', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'logout', component: LogoutComponent },
   { path: 'email', component: EmailComponent },
   { path: 'reset', component: ResetComponent },
   { path: 'reset/:email', component: ResetComponent },
@@ -41,19 +40,21 @@ const routes: Routes = [
   // { path: '',loadChildren:()=>import('./auth/dashboard/dashboard.module').then(a=>a.DashboardModule),canActivate:[authGuard]},
   { path: 'api/login/verify_email', component: LoginComponent },
 
-  { path: 'projects', component: ProjectTableComponent },
-  { path: 'register-project', component: ProjectCreateComponent },
-  { path: 'project-edit/:id', component: ProjectEditComponent, resolve: { project: projectEditResolver } },
-  { path: 'project-details', component: ProjectDetailsComponent },
-  { path: 'soft-deleted', component: ReactiveComponent },
+  { path: 'projects', component: ProjectTableComponent,canActivate: [authGuard]  },
+  { path: 'register-project', component: ProjectCreateComponent ,canActivate: [authGuard] },
+  { path: 'project-edit/:id', component: ProjectEditComponent, canActivate: [authGuard] ,resolve: { project: projectEditResolver } },
+  { path: 'project-details', component: ProjectDetailsComponent ,canActivate: [authGuard] },
+  { path: 'soft-deleted', component: ReactiveComponent ,canActivate: [authGuard] },
 
   { path: 'tasks', component: TaskTableComponent, canActivate: [authGuard] },
-  { path: 'task-Create', component: TaskCreateComponent },
-  { path: 'task-edit/:id', component: TaskEditComponent, resolve: { task: taskEditResolver } },
+  { path: 'task-Create', component: TaskCreateComponent ,canActivate: [authGuard] },
+  { path: 'task-edit/:id', component: TaskEditComponent, canActivate: [authGuard] ,resolve: { task: taskEditResolver } },
 
-  { path: 'users', component: UserTableComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: '**', component: ErrorComponent },
+  { path: 'users', component: UserTableComponent,canActivate: [authGuard]  },
+  { path: 'profile', component: ProfileComponent ,canActivate: [authGuard] },
+  { path: '401', component: Error401Component},
+  { path: '404', component: ErrorComponent },
+  { path: '**', redirectTo: '/404' }
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

@@ -1,0 +1,26 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 85vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #f0f0f0;
+}
+
+h1 {
+  font-size: 36px;
+  color: #333;
+  margin-top: 20px;
+}
+
+p {
+  font-size: 18px;
+  color: #666;
+  margin: 10px 0;
+}
+.container {
+  text-align: center;
+}

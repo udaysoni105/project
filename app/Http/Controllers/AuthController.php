@@ -257,20 +257,30 @@ class AuthController extends Controller
     //  */
     public function imageUpload()
     {
-        Log::info("Controller::AuthController::imageUpload::START");
-        $url = 'https://s3-us-west-1.amazonaws.com/snapstics-staging-file-storage/images/user_logo/';
-        $images = [];
-        $files = Storage::disk('s3')->files('images');
-        foreach ($files as $file) {
-            $images[] = [
-                'name' => str_replace(' $url', '', $file),
-                'src' => $url . $file
-            ];
-        }
-        Log::info("Controller::AuthController::imageUpload::END");
-        return response()->json(compact('images'));
+        $result = DB::transaction(function () {
+            try {
+                Log::info("Controller::AuthController::imageUpload::START");
+                $url = 'https://s3-us-west-1.amazonaws.com/snapstics-staging-file-storage/images/user_logo/';
+                $images = [];
+                $files = Storage::disk('s3')->files('images');
+                foreach ($files as $file) {
+                    $images[] = [
+                        'name' => str_replace(' $url', '', $file),
+                        'src' => $url . $file
+                    ];
+                }
+                Log::info("Controller::AuthController::imageUpload::END");
+                return response()->json(compact('images'));
+            } catch (\Exception $ex) {
+                // Log any exceptions that might occur during the process
+                Log::error("Error in respondWithToken: " . $ex->getMessage());
+                // Return an error response in case of any issues
+                return response()->json(['error' => 'An error occurred while responding with token'], 500);
+            }
+        });
+        return $result;
     }
-
+    
     /** 
      * @author : UDAY SONI
      * Method name: store
@@ -286,26 +296,26 @@ class AuthController extends Controller
         Log::info("Controller::AuthController::upload::START");
 
         $file = $request['filename'];
-        info($file);
+        //info($file);
 
         $filename = md5(uniqid(rand(), true)) . $file;
-        info($filename);
+        //info($filename);
 
         $filePath = '/images/user_logo/' . $filename;
-        info($filePath);
+        //info($filePath);
 
         $dataFileName = 'https://s3-us-west-1.amazonaws.com/snapstics-staging-file-storage/images/user_logo/' . $filename;
-        info($dataFileName);
+        //info($dataFileName);
 
         Storage::disk('s3')->put($filePath, base64_decode(($request['base64Image'])), 'public');
 
         // Retrieve the 'email' header from the request
         $emailHeader = $request->header('email');
-        info($emailHeader);
+        //info($emailHeader);
 
         // Get the user based on the email from the reset link
         $user = User::where('email', $emailHeader)->first();
-        info($user);
+        //info($user);
 
         if ($user) {
             // Update the user's image_filename and image_path in the database
@@ -313,7 +323,7 @@ class AuthController extends Controller
                 'image_filename' => $filename,
                 'image_path' => $dataFileName
             ]);
-            info('user update' . $user);
+            //info('user update' . $user);
             Log::info("Controller::AuthController::upload::END");
 
             // Return the URL of the uploaded image
@@ -343,6 +353,8 @@ class AuthController extends Controller
      */
     public function destroy(Request $request, int $id)
     {
+        $result = DB::transaction(function ($request,$id) {
+            try {
         Log::info("Controller::AuthController::destroy::START");
         $images = User::find($id);
         $images->delete();
@@ -356,7 +368,14 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Image deleted successfully',
         ]);
+    } catch (\Exception $ex) {
+        Log::error("Error in AuthController::profile: " . $ex->getMessage());
+
+        return response()->json(['error' => 'An error occurred while retrieving the profile'], 500);
     }
+});
+return $result;
+}
 
     /** 
      * @author : UDAY SONI
@@ -537,7 +556,7 @@ class AuthController extends Controller
         $result = DB::transaction(function () use ($request) {
             try {
                 Log::info("Controller::AuthController::resetPassword::START");
-                Log::info('Reset Password Request:', $request->all());
+                //Log::info('Reset Password Request:', $request->all());
                 $request->validate([
                     'email' => 'required|email',
                     'password' => 'required|min:6|confirmed',

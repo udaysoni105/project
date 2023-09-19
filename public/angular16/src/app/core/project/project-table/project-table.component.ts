@@ -1,18 +1,11 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ProjectService } from '../project.service';
 import { Table } from 'primeng/table';
 import { SortEvent } from 'primeng/api';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Token } from '@angular/compiler';
 import { MessageService } from 'primeng/api';
-import { ReactiveService } from '../../reactive/reactive.service';
 import { Router } from '@angular/router';
-interface PageEvent {
-  first: number;
-  rows: number;
-  page: number;
-  pageCount: number;
-}
+import { PageEvent } from '@angular/material/paginator';
 @Component({
   selector: 'app-project-table',
   templateUrl: './project-table.component.html',
@@ -23,142 +16,210 @@ export class ProjectTableComponent {
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
   loading: boolean = false;
-  first2: number = 0;
-  rows2: number = 10;
-  totalRecords: number = 120;
-
   options = [
-      { label: 5, value: 5 },
-      { label: 10, value: 10 },
-      { label: 20, value: 20 },
-      { label: 120, value: 120 }
+    { label: 5, value: 5 },
+    { label: 10, value: 10 },
+    { label: 20, value: 20 },
+    { label: 120, value: 120 }
   ];
-
-
+  pageSize: any;
+  sortDirection: string = 'asc';
+  sortColumn: string = 'id';
+  paginator: any;
 
   constructor(
     private projectService: ProjectService,
     private messageService: MessageService,
-    private reactiveService: ReactiveService,
-    private router: Router
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     this.loadProjects();
   }
-  onPageChange2(event: PageEvent) {
-    this.first2 = event.first;
-    this.rows2 = event.rows;
-}
 
-  // Method to fetch projects from the API
+  /** 
+  * @author : UDAY SONI
+  * using angular pipe
+  */
+  displayNA(value: any): string {
+    return value !== null && value !== undefined ? value : 'N.A';
+  }
+
+  /** 
+  * @author : UDAY SONI
+  * Method name: loadProjects
+  * Method to fetch projects from the API
+  * Add the Permission header with the desired value
+  * Make the API call with the headers
+  * Handle 404 error - navigate to a 404 page
+  * Handle 401 error - navigate to a 401 page
+  * Trigger change detection manually
+  * Assuming the API returns an array of projects
+  * Stop loading when the data is fetched
+  */
   loadProjects() {
     this.loading = true;
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
-    // console.log(jwtToken);
-    // console.log(email);
     if (!jwtToken) {
       console.error('JWT token not found in local storage. Please log in.');
       return;
     }
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
-      email: 'email',
-      Permission: 'view_project', // Add the Permission header with the desired value
+      'email': `${email}`,
+      Permission: 'view_project',
     });
-    // console.log(headers);
-    // Make the API call with the headers
     this.projectService.getAllProjects(headers).subscribe(
       (response) => {
-        // Handle the response here
-        // console.log(response);
-        this.projects = response; // Assuming the API returns an array of projects
-        this.loading = false; // Stop loading when the data is fetched
-
-      },
-      // (error) => {
-      //   // Handle the error here
-      //   console.log(error);
-      //   this.loading = false; // Stop loading when the data is fetched
-      //   if (error.status === 403) {
-      //     // Unauthorized or Forbidden
-      //     this.router.navigate(['/**']); // Navigate to the custom 404 page
-      //   }
-      // }
-      (error) => {
-        console.log('Soft delete failed:', error);
+        this.projects = response;
         this.loading = false;
-
+        this.changeDetectorRef.detectChanges();
+      },
+      (error) => {
+        this.loading = false;
         if (error.status === 404) {
-          this.router.navigate(['Not Found']);
+          this.router.navigate(['/404']);
+        } else if (error.status === 401) {
+          this.router.navigate(['/401']);
         } else {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'Failed to softDelete project',
+            detail: 'Failed to load projects',
           });
-          this.router.navigate(['Not Found']);
+          this.router.navigate(['/401']);
         }
-
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 5000); // 5 seconds delay
       }
-
-
     );
   }
 
-  softDeleteProject(id: number) {
-    this.loading = true;
+  /** 
+  * @author : UDAY SONI
+  * Method name: onSortChange
+  * Call the service method to fetch sorted projects
+  * Update your component's data with the sorted projects
+  */
+  onSortChange(column: string, direction: string,) {
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
-  
     if (!jwtToken) {
       console.error('JWT token not found in local storage. Please log in.');
       return;
     }
-  
     const headers = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
-      Permission: 'delete_project', // Add the Permission header with the desired value
+      email: `${email}`,
+      Permission: 'view_project',
     });
-  
-    // Check if the project has associated tasks
+    this.projectService.getSortedProjects(column, direction, headers).subscribe(
+      (response) => {
+      },
+      (error) => {
+      }
+    );
+  }
+
+  /** 
+  * @author : UDAY SONI
+  * Method name: loadPaginatedProjects
+  * Send a GET request to your Laravel API with pagination parameters
+  * Update the paginator's length based on the total count from the API
+  * Trigger change detection manually
+  */
+  loadPaginatedProjects(page: number = 1, perPage: number = 10) {
+    this.loading = true;
+    const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      email: `${email}`,
+      Permission: 'view_project',
+    });
+    this.projectService.getPaginatedProjects(page, perPage, headers).subscribe(
+      (response) => {
+        this.projects = response.data;
+        this.table.totalRecords = response.total;
+        this.loading = false;
+        this.changeDetectorRef.detectChanges();
+      },
+      (error) => {
+        this.loading = false;
+      }
+    );
+  }
+
+  /** 
+  * @author : UDAY SONI
+  * Method name: onPageChange
+  * Page index is 0-based, so add 1
+  */
+  onPageChange(event: PageEvent): void {
+    const page = event.pageIndex + 1;
+    const perPage = event.pageSize;
+    this.loadPaginatedProjects(page, perPage);
+  }
+
+  /** 
+  * @author : UDAY SONI
+  * Method name: softDeleteProject
+  * Add the Permission header with the desired value
+  * Check if the project has associated tasks
+  * Project has tasks, show a message and do not perform soft delete
+  * No associated tasks, perform the soft delete
+  * Remove the deleted project from the projects list
+  * Show the success message using the MessageService
+  * Stop loading when the data is fetched
+  */
+  softDeleteProject(id: number) {
+    this.loading = true;
+    const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      'email': `${email}`,
+      Permission: 'delete_project',
+    });
     this.projectService.getTasksByProjectId(id).subscribe(
       (tasks) => {
         if (tasks.length > 0) {
-          // Project has tasks, show a message and do not perform soft delete
           this.loading = false;
           this.messageService.add({
             severity: 'warn',
             summary: 'Warning',
             detail: 'Project has associated tasks and cannot be deleted.',
           });
+          setTimeout(() => { }, 1500);
         } else {
-          // No associated tasks, perform the soft delete
           this.projectService.softDeleteProject(id, headers).subscribe(
             (response) => {
-              // Remove the deleted project from the projects list
               this.projects = this.projects.filter((project) => project.id !== id);
-              // Show the success message using the MessageService
-              this.loading = false; // Stop loading when the data is fetched
+              this.loading = false;
+              this.changeDetectorRef.detectChanges();
               this.messageService.add({
                 severity: 'success',
                 summary: 'Success',
                 detail: 'Project is soft deleted',
               });
+              setTimeout(() => { }, 1500);
             },
             (error) => {
-              console.log('Soft delete failed:', error);
-              this.loading = false; // Stop loading when the data is fetched
+              this.loading = false;
               this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
                 detail: 'Failed to soft delete project',
               });
+              setTimeout(() => { }, 1500);
             }
           );
         }
@@ -169,25 +230,37 @@ export class ProjectTableComponent {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Failed to check associated tasks',
+          detail: 'Failed to soft delete project',
         });
+        setTimeout(() => { }, 1500);
       }
     );
   }
 
+  /** 
+  * @author : UDAY SONI
+  * Method name: getProjects
+  * Stop loading when the data is fetched
+  */
   getProjects(): void {
     this.projectService.getProjects().subscribe(
       (response) => {
         this.projects = response;
-        this.loading = false; // Stop loading when the data is fetched
+        this.loading = false;
       },
       (error) => {
-        console.log(error);
         this.loading = false;
       }
     );
   }
 
+  /** 
+  * @author : UDAY SONI
+  * Method name: onSearch
+  * Add the Permission header with the desired value
+  * Extract the 'data' array from the response
+  * 
+  */
   onSearch(): void {
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
@@ -195,40 +268,18 @@ export class ProjectTableComponent {
       console.error('JWT token not found in local storage. Please log in.');
       return;
     }
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
-      email: 'email',
-      Permission: 'view_project', // Add the Permission header with the desired value
+      'email': `${email}`,
+      Permission: 'view_project',
     });
-
-
     this.projectService.searchProjects(this.searchQuery, headers).subscribe(
       (response) => {
-        // console.log('Search Response:', response);
-        this.projects = response.data; // Extract the 'data' array from the response
+        this.projects = response.data;
       },
       (error) => {
-        console.log(error);
+        this.loading = false;
       }
     );
   }
-
-  onSort(event: SortEvent): void {
-    this.loading = true;
-    const column: string | undefined = event.field;
-    const direction: string = event.order === 1 ? 'asc' : 'desc';
-
-    if (column) {
-      this.projectService.getSortedProjects(column, direction).subscribe(
-        (response) => {
-          this.projects = response;
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    }
-  }
-
 }

@@ -16,9 +16,8 @@ export class TaskCreateComponent implements OnInit {
   users: SelectItem[] = [];
   projectOptions: SelectItem[] = [];
   loading: boolean = false;
-  // today: string = new Date().toISOString().split('T')[0];
   selectedProjectStartDate: Date | string | undefined;
-selectedProjectEndDate: Date | string | undefined;
+  selectedProjectEndDate: Date | string | undefined;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -38,7 +37,7 @@ selectedProjectEndDate: Date | string | undefined;
       user_id: [[], Validators.required]
     });
     this.route.data.subscribe((data: any) => {
-      if (data['taskAndUsers']) { // Access the property using ['propertyName']
+      if (data['taskAndUsers']) {
         const { taskDetails, users } = data['taskAndUsers'];
         this.taskForm.patchValue(taskDetails);
         this.users = users.map((user: any) => ({
@@ -52,28 +51,31 @@ selectedProjectEndDate: Date | string | undefined;
     this.fetchUser();
   }
 
+  /** 
+* @author : UDAY SONI
+* Method name: onProjectSelect
+* Fetch project details based on the selectedProjectId using your data source or API call
+*/
   onProjectSelect(event: any): void {
     const selectedProjectId = event.value;
-    console.log(selectedProjectId);
-  
-    // Fetch project details based on the selectedProjectId using your data source or API call
     this.taskService.getProjectById(selectedProjectId).subscribe(
       (selectedProject) => {
-        console.log(selectedProject);
-  
+
         if (selectedProject) {
           this.selectedProjectStartDate = selectedProject.start_date;
-          console.log(this.selectedProjectStartDate);
           this.selectedProjectEndDate = selectedProject.end_date;
-          console.log(this.selectedProjectEndDate);
         }
       },
       (error) => {
-        console.error('Failed to fetch project details', error);
+        // console.error('Failed to fetch project details', error);
       }
     );
   }
-  
+
+  /** 
+* @author : UDAY SONI
+* Method name: fetchProject
+*/
   fetchProject(): void {
     this.taskService.getProject().subscribe(
       (projects) => {
@@ -81,43 +83,44 @@ selectedProjectEndDate: Date | string | undefined;
           label: project.name,
           value: project.id,
         }));
-        // if (this.projectOptions.length > 0) {
-        //   const selectedProject = projects[0]; // Assuming you want the first project
-        //   this.selectedProjectStartDate = selectedProject.start_date;
-        //   this.selectedProjectEndDate = selectedProject.end_date;
-        // }
       }, (error) => {
-        console.log('Soft delete failed:', error);
         this.loading = false;
 
         if (error.status === 404) {
-          this.router.navigate(['Not Found']);
+          // Handle 404 error - navigate to a 404 page
+          console.log('a');
+          this.router.navigate(['/404']);
+          console.log('a');
+        } else if (error.status === 401) {
+          // Handle 401 error - navigate to a 401 page
+          this.router.navigate(['/401']);
         } else {
+          // Handle other errors - display an error message
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'Failed to softDelete project',
+            detail: 'Failed to fetch projects',
           });
-          this.router.navigate(['Not Found']);
+          this.router.navigate(['/401']);
         }
-
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 5000); // 5 seconds delay
       }
     );
   }
 
+  /** 
+* @author : UDAY SONI
+* Method name: fetchUser
+* Adjust this based on your actual user data structure
+*/
   fetchUser(): void {
     this.taskService.getUser().subscribe(
       (users) => {
         this.users = users.map((user: any) => ({
           label: user.name,
-          value: user.id, // Adjust this based on your actual user data structure
+          value: user.id,
         }));
       },
       (error) => {
-        console.log('Soft delete failed:', error);
         this.loading = false;
 
         if (error.status === 404) {
@@ -133,14 +136,18 @@ selectedProjectEndDate: Date | string | undefined;
 
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
-        }, 5000); // 5 seconds delay
+        }, 5000);
       }
     );
   }
 
+  /** 
+* @author : UDAY SONI
+* Method name: createtask
+* Stop loading when the data is fetched
+*/
   createtask(): void {
     this.loading = true;
-    console.log(this.taskForm);
 
     const token = localStorage.getItem('token');
     const email = localStorage.getItem('email');
@@ -148,25 +155,18 @@ selectedProjectEndDate: Date | string | undefined;
     if (token !== null && email !== null) {
       const task = this.taskForm.value;
 
-      // Convert user_id to an array if it's not already
-      // task.user_id = Array.isArray(task.user_id) ? task.user_id : [task.user_id];
-
       this.taskService.createTask(task, token, email).subscribe(
         (response) => {
-          console.log('Task created successfully', response);
-          // Reset the form
           this.taskForm.reset();
-          this.loading = false; // Stop loading when the data is fetched
+          this.loading = false;
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is created' });
-
-          // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
           setTimeout(() => {
             this.router.navigate(['/tasks']);
           }, 1500);
         },
         (error) => {
           console.error('Failed to create task', error);
-          this.loading = false; // Stop loading when the data is fetched
+          this.loading = false;
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -176,10 +176,16 @@ selectedProjectEndDate: Date | string | undefined;
       );
     }
   }
+
+  /** 
+* @author : UDAY SONI
+* Method name: cancel
+* You can add logic here to navigate to a different page or reset the form
+* Navigate to another page
+* Or reset the form, if needed
+*/
   cancel() {
-    // You can add logic here to navigate to a different page or reset the form
-    this.router.navigate(['/tasks']); // Navigate to another page
-    // Or reset the form, if needed
+    this.router.navigate(['/tasks']);
     this.taskForm.reset();
   }
 }

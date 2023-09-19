@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router ,ActivatedRoute} from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../auth.service';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-reset',
@@ -21,7 +19,7 @@ export class ResetComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.resetForm = this.formBuilder.group({
@@ -36,13 +34,17 @@ export class ResetComponent implements OnInit {
     });
   }
 
+  /** 
+* @author : UDAY SONI
+* Method name: onSubmit
+* Password reset successful, navigate to login page
+* Handle error, show appropriate message to the user
+*/
   onSubmit(): void {
     if (this.resetForm.valid) {
       const { password, confirmPassword } = this.resetForm.value;
       this.authService.resetPassword(this.email, this.token, password, confirmPassword).subscribe(
         (response) => {
-          // Password reset successful, navigate to login page
-          // this.router.navigate(['/login']);
           // this.users = { email: '', password: '' };
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'reset successfully' });
           setTimeout(() => {
@@ -51,7 +53,6 @@ export class ResetComponent implements OnInit {
         },
         error => {
           console.error('Password reset error:', error);
-          // Handle error, show appropriate message to the user
           this.messageService.add({
             severity: 'error',
             summary: 'Error',

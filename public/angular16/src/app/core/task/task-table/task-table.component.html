@@ -40,24 +40,25 @@
         </div>
       </div>
     </div> -->
-    <mat-paginator [length]="100"
-              [pageSize]="10"
-              [pageSizeOptions]="[5, 10, 25, 100]"
-              aria-label="Select page">
-</mat-paginator>
+    <mat-paginator
+    [length]="table.totalRecords"
+    [pageSize]="5"
+    [pageSizeOptions]="[5, 10, 25, 100]"
+    aria-label="Select page"
+    (page)="onPageChange($event)"
+  ></mat-paginator>
     <div class="loading-container" *ngIf="loading">
       <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
     </div>
-    <p-table #table [value]="tasks" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5">
-    <!-- <p-table #table [value]="tasks" [tableStyle]="{ 'min-width': '50rem' }"> -->
+    <p-table #table [value]="tasks" [tableStyle]="{ 'min-width': '50rem' }" >
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
-          <th pSortableColumn="NAME">NAME<p-sortIcon field="name"></p-sortIcon></th>
-          <th pSortableColumn="DESCRIPTION">DESCRIPTION<p-sortIcon field="description"></p-sortIcon></th>
-          <th pSortableColumn="START DATE">START DATE<p-sortIcon field="start_date"></p-sortIcon></th>
-          <th pSortableColumn="END DATE">END DATE<p-sortIcon field="end_date"></p-sortIcon></th>
-          <th pSortableColumn="PROJECT NAME">PROJECT NAME<p-sortIcon field="project_id"></p-sortIcon></th>
+          <th pSortableColumn="id" (click)="onSortChange('id', 'asc')">ID<p-sortIcon field="id"></p-sortIcon></th>
+          <th pSortableColumn="name" (click)="onSortChange('id', 'asc')">NAME<p-sortIcon field="name"></p-sortIcon></th>
+          <th pSortableColumn="description" (click)="onSortChange('id', 'asc')">DESCRIPTION<p-sortIcon field="description"></p-sortIcon></th>
+          <th pSortableColumn="start_date" (click)="onSortChange('id', 'asc')">START DATE<p-sortIcon field="start_date"></p-sortIcon></th>
+          <th pSortableColumn="end_date" (click)="onSortChange('id', 'asc')">END DATE<p-sortIcon field="end_date"></p-sortIcon></th>
+          <th pSortableColumn="project_id" (click)="onSortChange('id', 'asc')">PROJECT NAME<p-sortIcon field="project_id"></p-sortIcon></th>
           <th>HARD DELETE</th>
           <th>EDIT</th>
           <th>PDF</th>
@@ -68,7 +69,7 @@
         <tr>
           <td>{{ task.id }}</td>
           <td>{{ task.name }}</td>
-          <td>{{ task.description }}</td>
+          <td>{{ displayNA(task.description) }}</td>
           <td>{{ task.start_date }}</td>
           <td>{{ task.end_date }}</td>
           <td>

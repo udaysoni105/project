@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -16,6 +14,13 @@ export class ProjectService {
     return this.http.get<any[]>(url, { headers });
   }
 
+  getPaginatedProjects(page: number, perPage: number, headers: HttpHeaders): Observable<any> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('perPage', perPage.toString());
+    return this.http.get<any>(`${this.baseUrl}/pagination`, { headers, params });
+  }
+
   createProject(projectData: any, token: string, email: string): Observable<any> {
     let headers = new HttpHeaders()
     headers = headers.append('Content-Type', 'application/json');
@@ -24,9 +29,7 @@ export class ProjectService {
     headers = headers.append('email', `${email}`);
 
     const options = { headers: headers };
-    // console.log(options);
     return this.http.post<any>(this.baseUrl, projectData, options);
-
   }
 
   searchProjects(searchQuery: string, headers: HttpHeaders): Observable<any> {
@@ -34,10 +37,10 @@ export class ProjectService {
     return this.http.get(url, { headers });
   }
 
-  getSortedProjects(column: string, direction: string): Observable<any> {
-    // const headers = this.createHeaders();
-    return this.http.get(`${this.baseUrl}/sorted?column=${column}&direction=${direction}`, {});
+  getSortedProjects(column: string, direction: string, headers: HttpHeaders): Observable<any> {
+    return this.http.get(`${this.baseUrl}/sorted?column=${column}&direction=${direction}`, { headers });
   }
+
   getProjects(): Observable<any> {
     return this.http.get(`${this.baseUrl}`);
   }
@@ -52,7 +55,7 @@ export class ProjectService {
   }
 
   getTasksByProjectId(projectId: number): Observable<any[]> {
-    const url = `${this.baseUrl}/tasks/${projectId}`; // Adjust the URL structure based on your API
+    const url = `${this.baseUrl}/tasks/${projectId}`;
     return this.http.get<any[]>(url);
   }
 
@@ -66,22 +69,23 @@ export class ProjectService {
     return throwError(error);
   }
 
-  // deleteProject(id: string): Observable<any> {
-  //   // const headers = this.createHeaders();
-  //   return this.http.delete(`${this.baseUrl}/${id}`, {  });
-  // }
+  restoreProject(id: number): Observable<any> {
+    const url = `${this.baseUrl}/${id}/restore`;
+    return this.http.put(url, null);
+  }
 
-  // registerProject(project: any): Observable<any> {
-  //   // const headers = this.createHeaders();
-  //   return this.http.post<any>(this.baseUrl, project, {  });
-  // }
+  softDeleteProjects(id: number): Observable<any> {
+    const url = `${this.baseUrl}/${id}`;
+    return this.http.delete(url);
+  }
 
-  // saveChanges(projectData: any, projectId: string): Observable<any> {
-  //   // const headers = this.createHeaders();
-  //   return this.http.put(`${this.baseUrl}/${projectId}`, projectData, {  });
-  // }
-  // restoreProject(id: number, headers: HttpHeaders): Observable<any> {
-  //   const url = `${this.baseUrl}/${id}/restore`;
-  //   return this.http.put(url, null, { headers });
-  // }
+  getSoftDeletedProjects(projectId: number): Observable<any[]> {
+    const url = `${this.baseUrl}/${projectId}/soft-deleted`;
+    return this.http.get<any[]>(url);
+  }
 }
+
+
+
+
+

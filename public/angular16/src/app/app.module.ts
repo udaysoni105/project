@@ -6,7 +6,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
-import { LogoutComponent } from './auth/logout/logout.component';
 import { AuthService } from './auth/auth.service';
 import { AppRoutingModule } from './app-routing.module';
 // import { RegistrationModule } from './auth/registration/registration.module';
@@ -50,7 +49,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ProfileComponent } from './auth/profile/profile.component';
 import { DatePipe, NgFor } from '@angular/common';
 import { UserchecktableComponent } from './core/userchecktablee/userchecktable/userchecktable.component';
-import { ReactiveComponent } from './core/reactive/reactive/reactive.component';
+import { ReactiveComponent } from './core/project/reactive/reactive.component';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -61,10 +60,11 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { JsonPipe } from './pipename.pipe';
 import { PaginatorModule } from 'primeng/paginator';
+import { ErrorModule } from './auth/error/error.module';
+import { Error401Module } from './auth/error401/error401.module';
 const routes: Routes = [
   { path: 'register', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'logout', component: LogoutComponent },
 ];
 
 @NgModule({
@@ -72,7 +72,6 @@ const routes: Routes = [
     AppComponent,
     RegistrationComponent,
     LoginComponent,
-    LogoutComponent,
     ProjectCreateComponent,
     ProjectDeleteComponent,
     ProjectDetailsComponent,
@@ -105,7 +104,9 @@ const routes: Routes = [
     DialogModule,
     RouterModule.forRoot(routes),
     ButtonModule,
+    Error401Module,
     InputTextModule,
+    ErrorModule,
     CardModule,
     InputTextareaModule,
     CalendarModule,

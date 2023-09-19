@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TaskService } from '../task.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { SelectItem } from 'primeng/api';
 
@@ -18,10 +18,16 @@ export class TaskEditComponent implements OnInit {
   loading: boolean = false;
   users: SelectItem[] = [];
   projectOptions: SelectItem[] = [];
-  taskData: any; 
-  assignedUsers: any[] = []; 
+  taskData: any;
+  assignedUsers: any[] = [];
+  today: string = new Date().toISOString().split('T')[0];
+  start_date: any;
+  end_date: any;
+  projectStartDate: any;
+  projectEndDate: any;
 
   constructor(
+    private fb: FormBuilder,
     private formBuilder: FormBuilder,
     private taskService: TaskService,
     private route: ActivatedRoute,
@@ -47,9 +53,9 @@ export class TaskEditComponent implements OnInit {
       if (data['taskAndUsers']) {
         const { taskDetails, users } = data['taskAndUsers'];
         this.taskForm.patchValue(taskDetails);
-        this.taskData = taskDetails;    
+        this.taskData = taskDetails;
         this.route.data.subscribe((data: any) => {
-          if (data['taskAndUsers']) { 
+          if (data['taskAndUsers']) {
             const { taskDetails, users } = data['taskAndUsers'];
             this.taskForm.patchValue(taskDetails);
             this.taskForm.patchValue(users);
@@ -76,6 +82,13 @@ export class TaskEditComponent implements OnInit {
     this.fetchUsers();
   }
 
+  /** 
+* @author : UDAY SONI
+* Method name: loadTaskDetails
+* Assuming the assigned users are in response.users
+* Populate the user selection in the form
+* 
+*/
   loadTaskDetails(): void {
     this.loading = true;
     const jwtToken = localStorage.getItem('token');
@@ -88,28 +101,26 @@ export class TaskEditComponent implements OnInit {
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
+      'email': `${email}`,
       taskId: this.taskId,
-      Permission: 'update_tasks' 
+      Permission: 'update_tasks'
     });
 
-      this.taskService.gettaskById(this.taskId,headers).subscribe(
-        (response) => {
+    this.taskService.gettaskById(this.taskId, headers).subscribe(
+      (response) => {
+        if (response) {
           if (response) {
-            this.taskForm.patchValue(response);
-            
-            // Assuming the assigned users are in response.users
-            this.assignedUsers = response.users;
-            
-            // Populate the user selection in the form
-            this.taskForm.get('user_id')?.setValue(this.assignedUsers.map((user: any) => user.id));
+            this.projectStartDate = response.start_date;
+            this.projectEndDate = response.end_date;
           }
-    
-          this.loading = false;
-        },
-      (error) => {
-        console.log('Soft delete failed:', error);
+          this.taskForm.patchValue(response);
+          this.assignedUsers = response.users;
+          this.taskForm.get('user_id')?.setValue(this.assignedUsers.map((user: any) => user.id));
+        }
         this.loading = false;
-
+      },
+      (error) => {
+        this.loading = false;
         if (error.status === 404) {
           this.router.navigate(['temporary-error']);
         } else {
@@ -120,14 +131,17 @@ export class TaskEditComponent implements OnInit {
           });
           this.router.navigate(['temporary-error']);
         }
-
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
-        }, 5000); // 5 seconds delay
+        }, 5000);
       }
     );
   }
-  
+
+  /** 
+* @author : UDAY SONI
+* Method name: fetchProjects
+*/
   fetchProjects(): void {
     this.taskService.getProjects().subscribe(
       (projects) => {
@@ -136,11 +150,8 @@ export class TaskEditComponent implements OnInit {
           label: project.name,
           value: project.id,
         }));
-
       }, (error) => {
-        console.log('Soft delete failed:', error);
         this.loading = false;
-
         if (error.status === 404) {
           this.router.navigate(['temporary-error']);
         } else {
@@ -151,48 +162,53 @@ export class TaskEditComponent implements OnInit {
           });
           this.router.navigate(['temporary-error']);
         }
-
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
-        }, 5000); 
-      }
-    );
-  }  
-
-  fetchUsers(): void {
-    this.loading = true;
-    this.taskService.getUsers().subscribe(
-      (users) => {
-        // console.log(users);
-        this.users = users.map((user: any) => ({
-          label: user.name,
-          value: user.id, // Adjust this based on your actual user data structure
-        }));
-        // console.log(this.users);
-        this.loading = false; // Stop loading when the data is fetched
-      },
-      (error) => {
-        console.log('Soft delete failed:', error);
-        this.loading = false;
-
-        if (error.status === 404) {
-          this.router.navigate(['Not Found']);
-        } else {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to softDelete project',
-          });
-          this.router.navigate(['Not Found']);
-        }
-
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 5000); // 5 seconds delay
+        }, 5000);
       }
     );
   }
 
+  /** 
+* @author : UDAY SONI
+* Method name: fetchUsers
+*/
+  fetchUsers(): void {
+    this.loading = true;
+    this.taskService.getUsers().subscribe(
+      (users) => {
+        this.users = users.map((user: any) => ({
+          label: user.name,
+          value: user.id,
+        }));
+        this.loading = false;
+      },
+      (error) => {
+        this.loading = false;
+
+        if (error.status === 404) {
+          this.router.navigate(['Not Found']);
+        } else {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to softDelete project',
+          });
+          this.router.navigate(['Not Found']);
+        }
+
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 5000);
+      }
+    );
+  }
+
+  /** 
+* @author : UDAY SONI
+* Method name: onUpdate
+* Stop loading when the data is fetched
+*/
   onUpdate(): void {
     this.loading = true;
     if (this.taskForm.valid) {
@@ -207,19 +223,15 @@ export class TaskEditComponent implements OnInit {
 
       const headers = new HttpHeaders({
         Authorization: `Bearer ${jwtToken}`,
-        Permission: 'update_tasks' // Add the Permission header with the desired value
+        'email': `${email}`,
+        Permission: 'update_tasks'
       });
       const task = this.taskForm.value;
-
       task.user_id = Array.isArray(task.user_id) ? task.user_id : [task.user_id];
-
       this.taskService.updateTask(this.taskId, taskData, headers).subscribe(
         (response) => {
-
-          this.loading = false; // Stop loading when the data is fetched
+          this.loading = false;
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is updated' });
-
-          // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
           setTimeout(() => {
             this.router.navigate(['/tasks']);
           }, 1500);
@@ -238,10 +250,12 @@ export class TaskEditComponent implements OnInit {
     }
   }
 
+  /** 
+* @author : UDAY SONI
+* Method name: cancel
+*/
   cancel() {
-    // You can add logic here to navigate to a different page or reset the form
-    this.router.navigate(['/tasks']); // Navigate to another page
-    // Or reset the form, if needed
+    this.router.navigate(['/tasks']);
     this.taskForm.reset();
   }
 }

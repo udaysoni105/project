@@ -68,9 +68,9 @@ Route::get('projects/{id}/soft-deleted', [ProjectsController::class, 'softDelete
 
 Route::group(['middleware' => 'auth'], function ($router) {
     // Additional routes for searching, sorting, and pagination
-    Route::get('/projects', [ProjectsController::class, 'getProjects'])->name('projects.getProjects');
+    Route::get('/projects/pagination', [ProjectsController::class, 'paginationProjects'])->name('projects.paginationProjects');
     Route::get('/projects/search', [ProjectsController::class, 'searchProjects'])->name('projects.searchProjects');
-    Route::get('/projects/sorted', [ProjectsController::class, 'getSortedProjects'])->name('projects.getSortedProjects');
+    Route::get('/projects/sorted', [ProjectsController::class, 'SortedProjects'])->name('projects.SortedProjects');
 
     Route::get('/projects', [ProjectsController::class, 'index'])->name('projects.index');
     Route::get('/projects/{id}', [ProjectsController::class, 'show'])->name('projects.show');
@@ -84,10 +84,12 @@ Route::get('projects/tasks/{id}', [ProjectsController::class, 'getTasksByProject
 //tasks
 Route::put('/tasks/{id}', [TasksController::class, 'update'])->name('tasks.update');
 Route::put('/task/{id}', [TasksController::class, 'updatetask'])->name('tasks.updatetask');
-Route::get('tasks/{id}/generate-pdf', [TasksController::class, 'generatePDF'])->name('generatePDF');
+// Route::get('tasks/{id}/generate-pdf', [TasksController::class, 'generatePDF'])->name('generatePDF');
+Route::post('tasks/{id}/generate-pdf', [TasksController::class, 'generatePDF'])->name('generatePDF');
+
 Route::group(['middleware' => 'auth'], function ($router) {
     // Additional routes for searching, sorting, and pagination
-    Route::get('/tasks', [TasksController::class, 'getTasks'])->name('tasks.getTasks'); //pagination
+    Route::get('/tasks/pagination', [TasksController::class, 'pagination'])->name('tasks.pagination'); //pagination
     Route::get('/tasks/search', [TasksController::class, 'search'])->name('tasks.search');
     Route::get('/tasks/sorted', [TasksController::class, 'sorted'])->name('tasks.sorted');
 

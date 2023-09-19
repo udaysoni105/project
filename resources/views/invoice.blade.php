@@ -20,14 +20,17 @@
     <p>The following tasks list:</p>
     <table border="1">
         <tr>
+            <th> ID</th>
             <th>Name</th>
             <th>Description</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Status</th>
             <th>Project ID</th>
+            <th>User ID</th>
         </tr>
         <tr>
+            <td>{{ $task->id }}</td>
             <td>{{ $task->name }}</td>
             <td>{{ $task->description }}</td>
             <td>{{ $task->start_date }}</td>
@@ -35,6 +38,15 @@
             <td>{{ $task->status }}</td>
             <td>
                 {{ App\Models\Project::where('id', $task->project_id)->value('name') }}
+            </td>
+            <td>
+                @if ($task->users->isNotEmpty())
+                    @foreach ($task->users as $user)
+                        {{ $user->name }}
+                    @endforeach
+                @else
+                    User not assigned
+                @endif
             </td>
         </tr>
     </table>

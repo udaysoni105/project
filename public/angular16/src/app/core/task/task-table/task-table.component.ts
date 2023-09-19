@@ -1,21 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { TaskService } from '../task.service';
 import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
-import {MatPaginatorModule} from '@angular/material/paginator';
-// interface PageEvent {
-//   first: number;
-//   rows: number;
-//   page: number;
-//   pageCount: number;
-// }
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+
 @Component({
   selector: 'app-task-table',
   templateUrl: './task-table.component.html',
   styleUrls: ['./task-table.component.scss'],
-  // imports: [MatPaginatorModule],
 })
 export class TaskTableComponent implements OnInit {
   tasks: any[] = [];
@@ -29,33 +23,32 @@ export class TaskTableComponent implements OnInit {
   ];
   userRoles: string[] = [];
   loading: boolean = false;
-  // first2: number = 0;
-  // rows2: number = 10;
-  // totalRecords: number = 120;
 
-  // options = [
-  //     { label: 5, value: 5 },
-  //     { label: 10, value: 10 },
-  //     { label: 20, value: 20 },
-  //     { label: 120, value: 120 }
-  // ];
   constructor(
     private taskService: TaskService,
     private router: Router,
     private http: HttpClient,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     this.loadTasks();
   }
 
-//   onPageChange2(event: PageEvent) {
-//     this.first2 = event.first;
-//     this.rows2 = event.rows;
-// }
+  displayNA(value: any): string {
+    return value !== null && value !== undefined ? value : 'N.A';
+  }
 
-  // Method to fetch tasks from the API
+  /** 
+* @author : UDAY SONI
+* Method name: loadTasks
+* Method to fetch tasks from the API
+* Add the Permission header with the desired value
+* Assuming the API returns an array of tasks
+* Make the API call with the headers
+* Stop loading when the data is fetched
+*/
   loadTasks() {
     this.loading = true;
     const jwtToken = localStorage.getItem('token');
@@ -67,46 +60,122 @@ export class TaskTableComponent implements OnInit {
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
-      email: 'email',
-      Permission: 'view_tasks', // Add the Permission header with the desired value
+      'email': `${email}`,
+      Permission: 'view_tasks',
     });
 
-    // Make the API call with the headers
     this.taskService.getAllTasks(headers).subscribe(
       (response) => {
-        // Handle the response here
-        // console.log(response);
-        this.tasks = response; // Assuming the API returns an array of tasks
-        this.loading = false; // Stop loading when the data is fetched
+        this.tasks = response;
+        this.loading = false;
+        // Trigger change detection manually
+        this.changeDetectorRef.detectChanges();
       },
       (error) => {
-        console.log('Soft delete failed:', error);
         this.loading = false;
 
         if (error.status === 404) {
-          this.router.navigate(['Not Found']);
+          this.router.navigate(['/404']);
         } else {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
             detail: 'Failed to softDelete project',
           });
-          this.router.navigate(['Not Found']);
         }
-
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 5000); // 5 seconds delay
       }
-
     );
   }
 
+  /** 
+* @author : UDAY SONI
+* Method name: onSortChange
+* Make the API call with the headers
+* Call the service method to fetch sorted projects
+* Handle the response data here
+* Update your component's data with the sorted projects
+*/
+  onSortChange(column: string, direction: string,) {
+    const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      email: `${email}`,
+      Permission: 'view_project',
+    });
+    this.taskService.getSortedtasks(column, direction, headers).subscribe(
+      (response) => {
+      },
+      (error) => {
+      }
+    );
+  }
+
+  /** 
+* @author : UDAY SONI
+* Method name: loadPaginatedTasks
+* Make the API call with the headers
+* Send a GET request to your Laravel API with pagination parameters
+* Update the paginator's length based on the total count from the API
+* Trigger change detection manually
+* Page index is 0-based, so add 1
+*/
+  loadPaginatedTasks(page: number = 1, perPage: number = 10) {
+    this.loading = true;
+    const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      email: `${email}`,
+      Permission: 'view_tasks',
+    });
+    this.taskService.getPaginatedTasks(page, perPage, headers).subscribe(
+      (response) => {
+        this.tasks = response.data;
+        this.table.totalRecords = response.total;
+        this.loading = false;
+        this.changeDetectorRef.detectChanges();
+      },
+      (error) => {
+        this.loading = false;
+      }
+    );
+  }
+
+  /** 
+* @author : UDAY SONI
+* Method name: onPageChange
+* loadPaginatedTasks page and perpage event 
+*/
+  onPageChange(event: PageEvent): void {
+    const page = event.pageIndex + 1;
+    const perPage = event.pageSize;
+    this.loadPaginatedTasks(page, perPage);
+  }
+
+  /** 
+* @author : UDAY SONI
+* Method name: isAdminOrProjectManager
+*/
   isAdminOrProjectManager(): boolean {
     return this.userRoles.includes('Admin') || this.userRoles.includes('projectManager');
   }
 
-
+  /** 
+* @author : UDAY SONI
+* Method name: deleteTask
+* Add the Permission header with the desired value
+* Stop loading when the data is fetched
+* Stop loading when the data is fetched
+*/
   deleteTask(id: string) {
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
@@ -118,13 +187,13 @@ export class TaskTableComponent implements OnInit {
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
-      Permission: 'delete_tasks', // Add the Permission header with the desired value
+      'email': `${email}`,
+      Permission: 'delete_tasks',
     });
 
     this.taskService.deletetask(id, headers).subscribe(
       (response) => {
-        console.log('task hard deleted successfully', response);
-        this.loading = false; // Stop loading when the data is fetched
+        this.loading = false;
         this.loadTasks();
         this.tasks = this.tasks.filter((task) => task.id !== id);
         this.messageService.add({
@@ -132,22 +201,27 @@ export class TaskTableComponent implements OnInit {
           summary: 'Success',
           detail: 'Task is Hard deleted',
         });
-
-        // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
         setTimeout(() => { }, 1500);
       },
       (error) => {
-        console.log('Soft delete failed:', error);
-        this.loading = false; // Stop loading when the data is fetched
+        this.loading = false;
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: 'Failed to delete task unauthorized',
         });
+        setTimeout(() => { }, 1500);
       }
     );
   }
 
+  /** 
+* @author : UDAY SONI
+* Method name: onSearch
+* Add the Permission header with the desired value
+* Extract the 'data' array from the response
+* Stop loading when the data is fetched
+*/
   onSearch(): void {
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
@@ -158,33 +232,73 @@ export class TaskTableComponent implements OnInit {
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
-      email: 'email',
-      Permission: 'view_tasks', // Add the Permission header with the desired value
+      'email': `${email}`,
+      Permission: 'view_tasks',
     });
 
 
     this.taskService.searchTasks(this.searchQuery, headers).subscribe(
       (response) => {
-        console.log('Search Response:', response);
-        this.tasks = response.data; // Extract the 'data' array from the response
+        this.tasks = response.data;
       },
       (error) => {
-        console.log(error);
+        this.loading = false;
       }
     );
   }
 
+  /** 
+* @author : UDAY SONI
+* Method name: generatePDF
+*/
   generatePDF(taskId: string): void {
-    this.taskService.generatePDF(taskId);
+    const token = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+
+    if (token !== null && email !== null) {
+      // const task = this.taskForm.value;
+      this.taskService.generatePDF(taskId, token, email).subscribe(
+        (response) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'successfully download pdf',
+          });
+          setTimeout(() => { }, 1500);
+        },
+        (error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed pdf download',
+          });
+          setTimeout(() => { }, 1500);
+        }
+      );
+    }
   }
 
+  /** 
+* @author : UDAY SONI
+* Method name: getStatusOptions
+*/
   getStatusOptions(): string[] {
     return this.tasks.map((task) => task.status);
   }
 
+  /** 
+* @author : UDAY SONI
+* Method name: updateTaskStatus
+* Add the required permission
+* Update the status in the tasks array on success
+* Stop loading when the data is fetched
+* Stop loading when the data is fetched
+*/
   updateTaskStatus(task: any, newStatus: string): void {
+
     this.loading = true;
     const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
     if (!jwtToken) {
       console.error('JWT token not found in local storage. Please log in.');
       return;
@@ -192,30 +306,31 @@ export class TaskTableComponent implements OnInit {
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
-      Permission: 'update_status', // Add the required permission
+      'email': `${email}`,
+      Permission: 'update_status',
     });
 
     const updatedTask = { ...task, status: newStatus };
     this.taskService.updateTasks(task.id, updatedTask, headers).subscribe(
       (response) => {
-        console.log('Task status updated successfully', response);
-        task.status = newStatus; // Update the status in the tasks array on success
-        this.loading = false; // Stop loading when the data is fetched
+        task.status = newStatus;
+        this.loading = false;
         this.loadTasks();
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
           detail: 'Task status updated successfully',
         });
+        setTimeout(() => { }, 1500);
       },
       (error) => {
-        console.log('Failed to update task status:', error);
-        this.loading = false; // Stop loading when the data is fetched
+        this.loading = false;
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Failed to update task status',
+          detail: 'Failed to update task unothorized',
         });
+        setTimeout(() => { }, 1500);
       }
     );
   }

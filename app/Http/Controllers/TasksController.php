@@ -116,6 +116,7 @@ class TasksController extends Controller
                 // Validate the request data
                 $validator = Validator::make($request->all(), [
                     'name' => 'required|string|max:255',
+                    'description'=>'',
                     'start_date' => 'required|date',
                     'end_date' => 'required|date|after:start_date',
                     'user_id' => 'required|array',
@@ -126,7 +127,7 @@ class TasksController extends Controller
                 }
 
                 $input = $request->all();
-                info($request);
+                //info($request);
                 $task = Task::create([
                     'name' => $input['name'],
                     'description' => $input['description'],
@@ -135,7 +136,7 @@ class TasksController extends Controller
                     'project_id' => $input['project_id'],
                     //'user_ids' => $input['user_id'],
                 ]);
-                info($task);
+                //info($task);
                 $task->users()->sync($input['user_id']);
 
                 Log::info("Controller::TasksController::store::END");
@@ -213,7 +214,7 @@ class TasksController extends Controller
                 info('user has permission: ' . $matchedPermission->name);
 
                 $task = Task::with('users')->findOrFail($id);
-                info($task);                
+                //info($task);                
                 Log::info("Controller::TasksController::show::END");
                 return response()->json($task);
             } catch (\Exception $ex) {
@@ -464,10 +465,14 @@ class TasksController extends Controller
         $result = DB::transaction(function () use ($request) {
             try {
                 Log::info("Controller::TasksController::sorted::START");
-                $column = $request->input('column');
-                $direction = $request->input('direction', 'asc'); // Default to ascending order if not specified
 
-                $tasks = Task::orderBy($column, $direction)->get();
+                $perPage = $request->input('perPage', 5);
+                $page = $request->input('page', 1);
+                $column = $request->input('column', 'id');
+                $direction = $request->input('direction', 'asc');
+
+                $tasks = Task::orderBy($column, $direction)
+                ->paginate($perPage, ['*'], 'page', $page);
                 Log::info("Controller::TasksController::sorted::END");
                 return response()->json($tasks);
             } catch (\Exception $ex) {
@@ -483,18 +488,22 @@ class TasksController extends Controller
 
     /** 
      * @author : UDAY SONI
-     * Method name: getTasks
+     * Method name: pagination
      * paginate the specified resource from storage.
      *
      * @return \Illuminate\Http\Response
      */
-    public function getTasks(Request $request)
+    public function pagination(Request $request)
     {
         $result = DB::transaction(function () use ($request) {
             try {
-                Log::info("Controller::TasksController::getTasks::START");
-                $tasks = Task::paginate(5); // Adjust the pagination limit as needed
-                Log::info("Controller::TasksController::getTasks::END");
+                Log::info("Controller::TasksController::pagination::START");
+                $perPage = $request->input('perPage', 5);
+                $page = $request->input('page', 1);
+                
+                // Query your database for projects with pagination
+                $tasks = Task::paginate($perPage, ['*'], 'page', $page);
+                Log::info("Controller::TasksController::pagination::END");
                 return response()->json($tasks);
             } catch (\Exception $ex) {
                 // Log the exception if needed
@@ -514,13 +523,35 @@ class TasksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function generatePDF($id)
+    public function generatePDF(Request $request,$id)
     {
-        $result = DB::transaction(function () use ($id) {
+        $result = DB::transaction(function () use ($id,$request) {
             try {
-                Log::info("Controller::TasksController::generatePDF::START");
 
-                // Find the task based on the provided $id
+                Log::info("Controller::TasksController::generatePDF::START");
+                $input = $request->all();
+                // info($request);
+                $permission = $request->header('permission');
+
+                $user = auth()->user();
+
+                $userRole = UserRole::where('user_id', $user->id)->first();
+
+                $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+                    $query->select('permission_id')
+                        ->from('role_has_permissions')
+                        ->where('role_id', $userRole->role_id);
+                })->get();
+
+                $hasPermission = $rolePermissions->contains('name', $permission);
+
+                if (!$hasPermission) {
+                    info('Unauthorized');
+                }
+
+                $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+                info('user has permission: ' . $matchedPermission->name);
+
                 $task = Task::find($id);
                 if (!$task) {
                     return response()->json(['error' => 'Task not found'], 404);

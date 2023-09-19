@@ -154,7 +154,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'update_status',
             'guard_name' => 'web',
         ]);
-        
+        Permission::firstOrCreate([
+            'name' => 'view_pdf',
+            'guard_name' => 'web',
+        ]);
     }
 
     private function assignPermissionsToRoles()
@@ -174,6 +177,7 @@ class DatabaseSeeder extends Seeder
         $reactivePermission = Permission::where('name', 'reactive')->first();
         $developerRole = Role::where('name', 'developer')->first();
         $updateStatusPermission = Permission::where('name', 'update_status')->first();
+        $view_pdfPermission = Permission::where('name', 'view_pdf')->first();
 
         if ($adminRole && $createProjectPermission && !$adminRole->hasPermissionTo($createProjectPermission)) {
             $adminRole->givePermissionTo($createProjectPermission);
@@ -223,6 +227,9 @@ class DatabaseSeeder extends Seeder
         }
         if ($developerRole && $updateStatusPermission && !$developerRole->hasPermissionTo($updateStatusPermission)) {
             $developerRole->givePermissionTo($updateStatusPermission);
+        }
+        if ($adminRole && $view_pdfPermission && !$adminRole->hasPermissionTo($view_pdfPermission)) {
+            $adminRole->givePermissionTo($view_pdfPermission);
         }
     }
 }

@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -21,8 +23,20 @@ export class TaskService {
     return this.http.get(url, { headers });
   }
 
+  getSortedtasks(column: string, direction: string, headers: HttpHeaders): Observable<any> {
+    return this.http.get(`${this.baseUrl}/sorted?column=${column}&direction=${direction}`,{ headers });
+  }
+
   projectcreate(): Observable<any> {
     return this.http.get<any>(this.apiUrl);
+  }
+
+  getPaginatedTasks(page: number, perPage: number, headers: HttpHeaders): Observable<any> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('perPage', perPage.toString());
+  
+    return this.http.get<any>(`${this.baseUrl}/pagination`, { headers, params });
   }
 
   createTask(taskData: any, token: string, email: string): Observable<any> {
@@ -33,7 +47,6 @@ export class TaskService {
     headers = headers.append('email', `${email}`);
 
     const options = { headers: headers };
-    console.log(options);
     return this.http.post<any>(this.baseUrl, taskData, options);
 
   }
@@ -136,21 +149,30 @@ export class TaskService {
   registertask(task: any): Observable<any> {
     return this.http.post<any>(this.baseUrl, task);
   }
+  generatePDF(taskId: string, token: string, email: string): Observable<any> {
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type', 'application/json');
+    headers = headers.append('Permission', 'view_pdf');
+    headers = headers.append('Authorization', `Bearer ${token}`);
+    headers = headers.append('email', `${email}`);
 
-  generatePDF(taskId: string): void {
+    const options = { headers: headers };
     const url = `${this.baseUrl}/${taskId}/generate-pdf`;
-    this.http.get(url, { responseType: 'blob' }).subscribe(
-      (response: Blob) => {
+
+    return this.http.post(url, {}, { responseType: 'blob', headers }).pipe(
+      switchMap((response: Blob) => {
         const file = new Blob([response], { type: 'application/pdf' });
         const fileURL = URL.createObjectURL(file);
         const a = document.createElement('a');
         a.href = fileURL;
         a.download = 'filename.pdf';
         a.click();
-      },
-      (error) => {
+        return of(response); // Return the response for further processing if needed
+      }),
+      catchError((error) => {
         console.error('Error generating PDF:', error);
-      }
+        return throwError(error);
+      })
     );
   }
 

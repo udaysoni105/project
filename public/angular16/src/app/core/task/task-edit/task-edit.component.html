@@ -23,13 +23,14 @@
 
       <div class="form-group">
         <label for="start_date">Start Date* </label>
-        <input type="date" id="start_date" name="start_date" pCalendar formControlName="start_date" required>
+        <input type="date" id="start_date" [min]="projectStartDate" [max]="projectEndDate" name="start_date" pCalendar formControlName="start_date" required>
       </div>
-
+      
       <div class="form-group">
         <label for="end_date">End Date* </label>
-        <input type="date" id="end_date" name="end_date" pCalendar formControlName="end_date" required>
+        <input type="date" id="end_date" [min]="projectStartDate" [max]="projectEndDate" name="end_date" pCalendar formControlName="end_date" required>
       </div>
+      
 
       <div>
         <label for="Project">Project* </label>

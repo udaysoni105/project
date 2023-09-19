@@ -19,21 +19,26 @@ export class ProjectCreateComponent implements OnInit {
     private projectService: ProjectService,
     private http: HttpClient,
     private router: Router,
-    private messageService: MessageService 
-  ) {}
+    private messageService: MessageService
+  ) { }
 
   ngOnInit(): void {
     this.projectForm = this.formBuilder.group({
       name: ['', Validators.required],
-      description: [''], 
+      description: [''],
       start_date: ['', Validators.required],
       end_date: ['', Validators.required]
     });
   }
 
+  /** 
+* @author : UDAY SONI
+* Method name: createProject
+* Stop loading when the data is fetched
+* Stop loading when the data is fetched
+*/
   createProject() {
     this.loading = true;
-    // console.log(this.projectForm);
 
     const token = localStorage.getItem('token');
     const email = localStorage.getItem('email');
@@ -43,33 +48,67 @@ export class ProjectCreateComponent implements OnInit {
         .createProject(this.projectForm.value, token, email)
         .subscribe(
           (response) => {
-            // console.log('Project created successfully', response);
             this.projectForm.reset();
-            this.loading = false; // Stop loading when the data is fetched
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is created' });
-
-            // Use setTimeout to navigate after a delay (e.g., 1500 milliseconds)
+            this.loading = false;
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Project is created'
+            });
             setTimeout(() => {
               this.router.navigate(['/projects']);
-            },1500 );
+            }, 1500);
           },
           (error) => {
-            console.error('Failed to create project', error);
-            this.loading = false; // Stop loading when the data is fetched
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Failed to create project',
-            });
+            this.loading = false;
+            if (error.status === 404) {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Resource not found (404)',
+              });
+              // Optionally, you can navigate to a 404 page
+              this.router.navigate(['/404']);
+            } else if (error.status === 401) {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Unauthorized (401)',
+              });
+              // Optionally, you can navigate to a 401 page
+              this.router.navigate(['/401']);
+            } else {
+              this.loading = false;
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Failed to create project',
+              });
+              setTimeout(() => {
+              }, 1500);
+            }
           }
         );
+      (error: any) => {
+        this.loading = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to create project',
+        });
+        setTimeout(() => {
+        }, 1500);
+      };
     }
   }
-
+  /** 
+* @author : UDAY SONI
+* Method name: cancel
+* Navigate to another page
+* Or reset the form, if needed
+*/
   cancel() {
-    // You can add logic here to navigate to a different page or reset the form
-    this.router.navigate(['/projects']); // Navigate to another page
-    // Or reset the form, if needed
+    this.router.navigate(['/projects']);
     this.projectForm.reset();
   }
 }

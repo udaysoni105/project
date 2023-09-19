@@ -3,7 +3,6 @@
     Created on: July 18, 2023
     Note: Design for projecttable view Page. 
 -->
-
 <div *ngIf="!projects; else projectList">
   <div class="horizontal-loader"></div>
 </div>
@@ -32,29 +31,24 @@
   <div *ngIf="!projects" class="horizontal-loader"></div>
   <div *ngIf="projects">
 
-    <mat-paginator [length]="100"
-    [pageSize]="10"
-    [pageSizeOptions]="[5, 10, 25, 100]"
-    aria-label="Select page">
+    <mat-paginator #paginator [length]="table.totalRecords" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 25, 100]"
+      aria-label="Select page" (page)="onPageChange($event)"></mat-paginator>
 
-    <!-- <mat-paginator [hidden]="noDateFound==1" [length]="length" [pageSize]="pageSize"
-    [pageIndex]="pageIndex" [pageSizeOptions]="pageSizeOptions"
-    [showFirstLastButtons]="true" (page)="onPaginateChange($event)">
-  </mat-paginator> -->
-</mat-paginator>
-    
     <div class="loading-container" *ngIf="loading">
       <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
     </div>
-    <p-table #table [value]="projects" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5">
-      <!-- <p-table #table [value]="projects" [tableStyle]="{ 'min-width': '50rem' }"> -->
+    <p-table #table [value]="projects" [tableStyle]="{ 'min-width': '50rem' }">
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
-          <th pSortableColumn="NAME">NAME<p-sortIcon field="name"></p-sortIcon></th>
-          <th pSortableColumn="DESCRIPTION">DESCRIPTION<p-sortIcon field="description"></p-sortIcon></th>
-          <th pSortableColumn="START DATE">START DATE<p-sortIcon field="start_date"></p-sortIcon></th>
-          <th pSortableColumn="END DATE">END DATE<p-sortIcon field="end_date"></p-sortIcon></th>
+          <th pSortableColumn="id" (click)="onSortChange('id', 'asc')">ID<p-sortIcon field="id"></p-sortIcon></th>
+          <th pSortableColumn="name" (click)="onSortChange('name', 'asc')">NAME<p-sortIcon field="name"></p-sortIcon>
+          </th>
+          <th pSortableColumn="description" (click)="onSortChange('description', 'asc')">DESCRIPTION<p-sortIcon
+              field="description"></p-sortIcon></th>
+          <th pSortableColumn="start_date" (click)="onSortChange('start_date', 'asc')">START DATE<p-sortIcon
+              field="start_date"></p-sortIcon></th>
+          <th pSortableColumn="end_date" (click)="onSortChange('end_date', 'asc')">END DATE<p-sortIcon
+              field="end_date"></p-sortIcon></th>
           <th>SOFT DELETE</th>
           <th>EDIT</th>
         </tr>
@@ -63,7 +57,7 @@
         <tr>
           <td>{{ project.id }}</td>
           <td>{{ project.name }}</td>
-          <td>{{ project.description }}</td>
+          <td>{{ displayNA(project.description) }}</td>
           <td>{{ project.start_date }}</td>
           <td>{{ project.end_date }}</td>
           <td>
