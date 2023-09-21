@@ -43,9 +43,16 @@ export class ReactiveComponent implements OnInit {
     this.softDeletedProjects = [];
     this.projectService.getSoftDeletedProjects(projectId).subscribe(
       (response) => {
+        if (projectId !== null && projectId !== null) {
         this.softDeletedProjects = response;
         this.loading = false;
-      },
+      }
+      else {
+        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'loadsoftdeletedproject unsuccessfully' });
+        setTimeout(() => {
+        }, 1500);
+      }
+    },
       (error) => {
         this.loading = false;
       }
@@ -61,6 +68,7 @@ export class ReactiveComponent implements OnInit {
     this.loading = true;
     this.projectService.restoreProject(id).subscribe(
       (response) => {
+        if (id !== null && id !== null) {
         const restoredProject = this.softDeletedProjects.find(project => project.id === id);
 
         if (restoredProject) {
@@ -71,7 +79,13 @@ export class ReactiveComponent implements OnInit {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is restored' });
         setTimeout(() => {
         }, 1500);
-      },
+      }
+      else {
+        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'restoreProject unsuccessfully' });
+        setTimeout(() => {
+        }, 1500);
+      }
+    },
       (error) => {
         this.loading = false;
         this.messageService.add({

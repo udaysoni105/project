@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Storage;
+
 /** @author UDAY SONI
  *
  * Class name: UserController
@@ -39,8 +40,17 @@ class UserController extends Controller
                 // Get the permission from the request header
                 $permission = $request->header('permission');
 
+                if ($permission == null || $permission == '') {
+                    Log::info("Controller::UserController::index::");
+                    return response()->json(['error' => 'permission Unauthorized'], 500);
+                }
+
                 // Get the authenticated user
                 $user = auth()->user();
+                if ($user == null || $user == '') {
+                    Log::info("Controller::UserController::index::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
 
                 // Get the user's role information
                 $userRole = UserRole::where('user_id', $user->id)->first();
@@ -118,40 +128,40 @@ class UserController extends Controller
         });
         return $result;
     }
-    public function destroy($id)
-    {
-        try {
-            // Find the user by ID and get the filename of the image
-            $user = User::findOrFail($userId);
-            $imageFilename = $user->filename;
+    // public function destroy($id)
+    // {
+    //     try {
+    //         // Find the user by ID and get the filename of the image
+    //         $user = User::findOrFail($userId);
+    //         $imageFilename = $user->filename;
 
-            // Create an S3 client
-            $s3 = new S3Client(config('s3'));
+    //         // Create an S3 client
+    //         $s3 = new S3Client(config('s3'));
 
-            // Specify your S3 bucket name
-            $bucketName = 'snapstics-staging-file-storage';
+    //         // Specify your S3 bucket name
+    //         $bucketName = 'snapstics-staging-file-storage';
 
-            // Delete the user's image from the S3 bucket
-            $s3->deleteObject([
-                'Bucket' => $bucketName,
-                'Key' => 'images/' . $imageFilename,
-            ]);
+    //         // Delete the user's image from the S3 bucket
+    //         $s3->deleteObject([
+    //             'Bucket' => $bucketName,
+    //             'Key' => 'images/' . $imageFilename,
+    //         ]);
 
-            // Update the user's image filename in the database (optional)
-            $user->filename = null;
-            $user->save();
+    //         // Update the user's image filename in the database (optional)
+    //         $user->filename = null;
+    //         $user->save();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'User image deleted successfully',
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User image deletion failed',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
-    
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'User image deleted successfully',
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'User image deletion failed',
+    //             'error' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+
 }

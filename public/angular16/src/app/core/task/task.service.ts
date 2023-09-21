@@ -24,7 +24,7 @@ export class TaskService {
   }
 
   getSortedtasks(column: string, direction: string, headers: HttpHeaders): Observable<any> {
-    return this.http.get(`${this.baseUrl}/sorted?column=${column}&direction=${direction}`,{ headers });
+    return this.http.get(`${this.baseUrl}/sorted?column=${column}&direction=${direction}`, { headers });
   }
 
   projectcreate(): Observable<any> {
@@ -35,7 +35,7 @@ export class TaskService {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('perPage', perPage.toString());
-  
+
     return this.http.get<any>(`${this.baseUrl}/pagination`, { headers, params });
   }
 
@@ -52,33 +52,16 @@ export class TaskService {
   }
 
   getProjects(): Observable<any[]> {
-    const headers = this.getHeaders(); // Get authentication headers
+    const headers = this.getHeaders();
     const url = `${this.apiUrl}`;
     return this.http.get<any[]>(url, { headers });
   }
 
   getUsers(): Observable<any[]> {
-    const headers = this.getHeaders(); // Get authentication headers
+    const headers = this.getHeaders();
     const url = `${this.userUrl}`;
     return this.http.get<any[]>(url, { headers });
   }
-
-  // assignUsersToTask(taskId: string, users: any[]): Observable<any> {
-  //   // Define the URL for assigning users to a task
-  //   const url = `${this.baseUrl}/${taskId}`;
-
-  //   // Define the HTTP headers if needed
-  //   const headers = new HttpHeaders({
-  //     'Content-Type': 'application/json'
-  //     // Add any other headers you may need
-  //   });
-
-  //   // Create the request body with the list of user IDs
-  //   const body = { userIds: users.map(user => user.value) };
-
-  //   // Send a POST request to assign users to the task
-  //   return this.http.post(url, body, { headers });
-  // }
 
   private getHeaders(): HttpHeaders {
     // Construct your headers here, including authorization token
@@ -93,26 +76,26 @@ export class TaskService {
 
     return headers;
   }
+
   getProjectById(projectId: number): Observable<any> {
-    const headers = this.getHeader(); // Get authentication headers
+    const headers = this.getHeader();
     const url = `${this.apiUrl}/${projectId}`;
     return this.http.get<any[]>(url, { headers });
   }
 
   getProject(): Observable<any[]> {
-    const headers = this.getHeader(); // Get authentication headers
+    const headers = this.getHeader();
     const url = `${this.apiUrl}`;
     return this.http.get<any[]>(url, { headers });
   }
 
   getUser(): Observable<any[]> {
-    const headers = this.getHeader(); // Get authentication headers
+    const headers = this.getHeader();
     const url = `${this.userUrl}`;
     return this.http.get<any[]>(url, { headers });
   }
 
   private getHeader(): HttpHeaders {
-    // Construct your headers here, including authorization token
     const token = localStorage.getItem('token');
     const email = localStorage.getItem('email');
 
@@ -121,10 +104,8 @@ export class TaskService {
     headers = headers.append('Permission', 'create_tasks');
     headers = headers.append('Authorization', `Bearer ${token}`);
     headers = headers.append('email', `${email}`);
-
     return headers;
   }
-
 
   gettaskById(taskId: string, headers: HttpHeaders): Observable<any> {
     return this.http.get(`${this.baseUrl}/${taskId}`, { headers });
@@ -149,6 +130,7 @@ export class TaskService {
   registertask(task: any): Observable<any> {
     return this.http.post<any>(this.baseUrl, task);
   }
+
   generatePDF(taskId: string, token: string, email: string): Observable<any> {
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');
@@ -167,7 +149,7 @@ export class TaskService {
         a.href = fileURL;
         a.download = 'filename.pdf';
         a.click();
-        return of(response); // Return the response for further processing if needed
+        return of(response);
       }),
       catchError((error) => {
         console.error('Error generating PDF:', error);

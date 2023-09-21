@@ -61,13 +61,23 @@ export class ProjectEditComponent implements OnInit {
       projectId: this.projectId,
       Permission: 'update_project'
     });
+
+
     this.projectService.getProjectById(this.projectId, headers).subscribe(
       (response) => {
-        this.projects = response;
-        this.projectForm.patchValue(response);
-        this.loading = false;
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project edit data show' });
-        setTimeout(() => { }, 1500);
+        if (this.projectId!== null && this.projectId !== null) {
+          this.projects = response;
+          this.projectForm.patchValue(response);
+          this.loading = false;
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project edit data show' });
+          setTimeout(() => { }, 1500);
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'edit unsuccessfully' });
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1500);
+        }
       },
       (error) => {
         this.messageService.add({
@@ -115,12 +125,20 @@ export class ProjectEditComponent implements OnInit {
       });
       this.projectService.updateProject(this.projectId, projectData, headers).subscribe(
         (response) => {
+          if (this.projectId!== null && this.projectId !== null) {
           this.loading = false;
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is updated' });
           setTimeout(() => {
             this.router.navigate(['/projects']);
           }, 1500);
-        },
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'savechanges unsuccessfully' });
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1500);
+        }
+      },
         (error) => {
           console.error('Failed to update project', error);
           this.messageService.add({
@@ -132,7 +150,10 @@ export class ProjectEditComponent implements OnInit {
         }
       );
     } else {
-      console.error('Invalid form data');
+      this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'edit unsuccessfully' });
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 1500);
     }
   }
 }

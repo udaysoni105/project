@@ -36,7 +36,17 @@ class TasksController extends Controller
             try {
                 Log::info("Controller::TasksController::index::START");
                 $permission = $request->header('permission');
+                if ($permission == null || $permission == '') {
+                    Log::info("Controller::TasksController::index::");
+                    return response()->json(['error' => 'permission Unauthorized'], 500);
+                }
+
                 $user = auth()->user();
+                if ($user == null || $user == '') {
+                    Log::info("Controller::TasksController::index::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
+
                 $userRole = UserRole::where('user_id', $user->id)->first();
                 $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
                     $query->select('permission_id')
@@ -60,8 +70,8 @@ class TasksController extends Controller
                         ->get();
                 } else {
                     // If the user is a developer, fetch only assigned tasks with project names
-                    $tasks = $user->tasks() // Assuming you have defined a 'tasks' relationship in your User model
-                        ->with(['project']) // Assuming you have a 'project' relationship defined in your Task model
+                    $tasks = $user->tasks() //  'tasks' relationship in your User model
+                        ->with(['project']) // 'project' relationship defined in your Task model
                         ->select('tasks.*', 'projects.name as projectName')
                         ->join('projects', 'tasks.project_id', '=', 'projects.id')
                         ->get();
@@ -94,7 +104,17 @@ class TasksController extends Controller
             try {
                 Log::info("Controller::TasksController::store::START");
                 $permission = $request->header('permission');
+
+                if ($permission == null || $permission == '') {
+                    Log::info("Controller::TasksController::store::");
+                    return response()->json(['error' => 'permission Unauthorized'], 500);
+                }
+
                 $user = auth()->user();
+                if ($user == null || $user == '') {
+                    Log::info("Controller::TasksController::store::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
 
                 $userRole = UserRole::where('user_id', $user->id)->first();
 
@@ -116,7 +136,7 @@ class TasksController extends Controller
                 // Validate the request data
                 $validator = Validator::make($request->all(), [
                     'name' => 'required|string|max:255',
-                    'description'=>'',
+                    'description' => '',
                     'start_date' => 'required|date',
                     'end_date' => 'required|date|after:start_date',
                     'user_id' => 'required|array',
@@ -127,16 +147,15 @@ class TasksController extends Controller
                 }
 
                 $input = $request->all();
-                //info($request);
+
                 $task = Task::create([
                     'name' => $input['name'],
                     'description' => $input['description'],
                     'start_date' => $input['start_date'],
                     'end_date' => $input['end_date'],
                     'project_id' => $input['project_id'],
-                    //'user_ids' => $input['user_id'],
                 ]);
-                //info($task);
+
                 $task->users()->sync($input['user_id']);
 
                 Log::info("Controller::TasksController::store::END");
@@ -194,7 +213,16 @@ class TasksController extends Controller
             try {
                 Log::info("Controller::TasksController::show::START");
                 $permission = $request->header('permission');
+                if ($permission == null || $permission == '') {
+                    Log::info("Controller::TasksController::show::");
+                    return response()->json(['error' => 'permission Unauthorized'], 500);
+                }
+
                 $user = auth()->user();
+                if ($user == null || $user == '') {
+                    Log::info("Controller::TasksController::show::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
 
                 $userRole = UserRole::where('user_id', $user->id)->first();
 
@@ -242,7 +270,16 @@ class TasksController extends Controller
                 Log::info("Controller::TasksController::update::START");
 
                 $permission = $request->header('permission');
+
+                if ($permission == null || $permission == '') {
+                    Log::info("Controller::TasksController::update::");
+                    return response()->json(['error' => 'permission Unauthorized'], 500);
+                }
                 $user = auth()->user();
+                if ($user == null || $user == '') {
+                    Log::info("Controller::TasksController::update::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
 
                 $userRole = UserRole::where('user_id', $user->id)->first();
 
@@ -314,7 +351,16 @@ class TasksController extends Controller
                 Log::info("Controller::TasksController::updatetask::START");
                 // Fetch the task by its ID
                 $permission = $request->header('permission');
+                if ($permission == null || $permission == '') {
+                    Log::info("Controller::TasksController::updatetask::");
+                    return response()->json(['error' => 'permission Unauthorized'], 500);
+                }
+
                 $user = auth()->user();
+                if ($user == null || $user == '') {
+                    Log::info("Controller::TasksController::updatetask::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
 
                 $userRole = UserRole::where('user_id', $user->id)->first();
 
@@ -366,7 +412,16 @@ class TasksController extends Controller
             try {
                 Log::info("Controller::TasksController::destroy::START");
                 $permission = $request->header('permission');
+                if ($permission == null || $permission == '') {
+                    Log::info("Controller::TasksController::destroy::");
+                    return response()->json(['error' => 'permission Unauthorized'], 500);
+                }
+
                 $user = auth()->user();
+                if ($user == null || $user == '') {
+                    Log::info("Controller::TasksController::destroy::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
 
                 //$userRole = UserRole::where('user_id', $user['id'])->first();
                 $userRole = UserRole::where('user_id', $user->id)->first();
@@ -472,7 +527,7 @@ class TasksController extends Controller
                 $direction = $request->input('direction', 'asc');
 
                 $tasks = Task::orderBy($column, $direction)
-                ->paginate($perPage, ['*'], 'page', $page);
+                    ->paginate($perPage, ['*'], 'page', $page);
                 Log::info("Controller::TasksController::sorted::END");
                 return response()->json($tasks);
             } catch (\Exception $ex) {
@@ -500,7 +555,7 @@ class TasksController extends Controller
                 Log::info("Controller::TasksController::pagination::START");
                 $perPage = $request->input('perPage', 5);
                 $page = $request->input('page', 1);
-                
+
                 // Query your database for projects with pagination
                 $tasks = Task::paginate($perPage, ['*'], 'page', $page);
                 Log::info("Controller::TasksController::pagination::END");
@@ -523,17 +578,25 @@ class TasksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function generatePDF(Request $request,$id)
+    public function generatePDF(Request $request, $id)
     {
-        $result = DB::transaction(function () use ($id,$request) {
+        $result = DB::transaction(function () use ($id, $request) {
             try {
 
                 Log::info("Controller::TasksController::generatePDF::START");
                 $input = $request->all();
-                // info($request);
+
                 $permission = $request->header('permission');
+                if ($permission == null || $permission == '') {
+                    Log::info("Controller::TasksController::generatePDF::");
+                    return response()->json(['error' => 'permission Unauthorized'], 500);
+                }
 
                 $user = auth()->user();
+                if ($user == null || $user == '') {
+                    Log::info("Controller::TasksController::generatePDF::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
 
                 $userRole = UserRole::where('user_id', $user->id)->first();
 

@@ -58,8 +58,16 @@ export class UserTableComponent implements OnInit {
 
     this.authService.getAllUsers(headers).subscribe(
       (response) => {
+        if (email !== null && email !== "") {
         this.users = response;
         this.loading = false;
+      }
+      else{
+        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'users data not show' });
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1500);
+        }
       },
       (error) => {
         this.loading = false;

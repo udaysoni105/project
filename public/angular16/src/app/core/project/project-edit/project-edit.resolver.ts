@@ -5,13 +5,12 @@ import { catchError } from 'rxjs/operators';
 import { ProjectService } from '../project.service';
 import { HttpHeaders } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
-
 @Injectable({
   providedIn: 'root'
 })
 export class projectEditResolver implements Resolve<any> {
 
-  constructor(private projectService: ProjectService,    private messageService: MessageService) { }
+  constructor(private projectService: ProjectService, private messageService: MessageService) { }
 
   /** 
 * @author : UDAY SONI

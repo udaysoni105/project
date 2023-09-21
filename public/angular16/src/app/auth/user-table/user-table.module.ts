@@ -4,10 +4,8 @@ import { UserTableComponent } from './user-table.component';
 import { AuthService } from '../auth.service';
 import { FormsModule } from '@angular/forms';
 import { ProgressBarModule } from 'primeng/progressbar';
-
-
 @NgModule({
-  declarations: [UserTableComponent, ], // Include JsonPipe here
+  declarations: [UserTableComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -16,7 +14,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
   providers: [
     AuthService
   ],
-  exports:[
+  exports: [
     UserTableComponent
   ]
 })

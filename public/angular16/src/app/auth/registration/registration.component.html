@@ -8,80 +8,82 @@
     <div class="card-header">Registration Form</div>
     <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
     <div class="card-body">
-    <form [formGroup]="registrationForm" (ngSubmit)="register()">
-      <div class="form-group">
-        <div>
-          <label for="name">Name: </label>
-          <div class="input-container">
-            <input type="text" id="name" formControlName="name" pInputText required [(ngModel)]="user.name" />
-            <div *ngIf="registrationForm.controls['name'].invalid && registrationForm.controls['name'].touched"
-              class="error-message">
-              The name field is required.
+      <form [formGroup]="registrationForm" (ngSubmit)="register()">
+        <div class="form-group">
+          <div>
+            <label for="name">Name: </label>
+            <div class="input-container">
+              <input type="text" id="name" formControlName="name" pInputText required [(ngModel)]="user.name" />
+              <div *ngIf="registrationForm.controls['name'].invalid && registrationForm.controls['name'].touched"
+                class="error-message">
+                The name field is required.
+              </div>
             </div>
           </div>
-        </div>
 
-        <div>
-          <label for="email">Email: </label>
-          <div class="input-container">
-            <input type="email" id="email" formControlName="email" pInputText required [(ngModel)]="user.email" />
-            <div *ngIf="registrationForm.controls['email'].invalid && registrationForm.controls['email'].touched"
-              class="error-message">
-              The email field is required.
+          <div>
+            <label for="email">Email: </label>
+            <div class="input-container">
+              <input type="email" id="email" formControlName="email" pInputText required [(ngModel)]="user.email" />
+              <div *ngIf="registrationForm.controls['email'].invalid && registrationForm.controls['email'].touched"
+                class="error-message">
+                The email field is required.
+              </div>
             </div>
           </div>
-        </div>
 
-        <div>
-          <label for="password">Password: </label>
-          <div class="input-container">
-            <input type="password" id="password" formControlName="password" pPassword required
-              [(ngModel)]="user.password" />
-            <div *ngIf="registrationForm.controls['password'].invalid && registrationForm.controls['password'].touched"
-              class="error-message">
-              The password field is required.
+          <div>
+            <label for="password">Password: </label>
+            <div class="input-container">
+              <input type="password" id="password" formControlName="password" pPassword required
+                [(ngModel)]="user.password" />
+              <div
+                *ngIf="registrationForm.controls['password'].invalid && registrationForm.controls['password'].touched"
+                class="error-message">
+                The password field is required.
+              </div>
             </div>
           </div>
-        </div>
 
-        <div>
-          <label for="password_confirmation">Confirm Password: </label>
-          <div class="input-container">
-            <input type="password" id="password_confirmation" formControlName="password_confirmation" pPassword
-              required [(ngModel)]="user.password_confirmation" />
-            <div
-              *ngIf="registrationForm.controls['password_confirmation'].invalid && registrationForm.controls['password_confirmation'].touched"
-              class="error-message">
-              The password_confirmation field is required.
+          <div>
+            <label for="password_confirmation">Confirm Password: </label>
+            <div class="input-container">
+              <input type="password" id="password_confirmation" formControlName="password_confirmation" pPassword
+                required [(ngModel)]="user.password_confirmation" />
+              <div
+                *ngIf="registrationForm.controls['password_confirmation'].invalid && registrationForm.controls['password_confirmation'].touched"
+                class="error-message">
+                The password_confirmation field is required.
+              </div>
             </div>
           </div>
-        </div>
 
-        <div>
-          <label for="country">Country</label>
-          <div class="input-container">
-            <select id="country" class="form-control" formControlName="country" [(ngModel)]="selectedCountryCode"  (change)="onCountryChange()">
-              <option value="" disabled selected>Select Country</option>
-              <option *ngFor="let country of countries" [value]="country.alpha2Code">
-                {{ country.name }}
-              </option>
-            </select>
+          <div>
+            <label for="country">Country</label>
+            <div class="input-container">
+              <select id="country" class="form-control" formControlName="country" [(ngModel)]="selectedCountryCode"
+                (change)="onCountryChange()">
+                <option value="" disabled selected>Select Country</option>
+                <option *ngFor="let country of countries" [value]="country.alpha2Code">
+                  {{ country.name }}
+                </option>
+              </select>
+            </div>
           </div>
-        </div>
 
-        <div>
-          <label for="state">State:</label>
-          <div class="input-container">
-            <select id="state" class="form-control" formControlName="state" [(ngModel)]="selectedStateCode">
-              <option value="" disabled>Select State</option>
-              <option *ngFor="let state of states" [value]="state.alpha2Code">{{ state.name }}</option>
-            </select>
+          <div>
+            <label for="state">State:</label>
+            <div class="input-container">
+              <select id="state" class="form-control" formControlName="state" [(ngModel)]="selectedStateCode">
+                <option value="" disabled>Select State</option>
+                <option *ngFor="let state of states" [value]="state.alpha2Code">{{ state.name }}</option>
+              </select>
+            </div>
           </div>
+
         </div>
-        
-      </div>
-      <p-button type="submit" [disabled]="registrationForm.invalid">Register</p-button>
-    </form>
+        <p-button type="submit" [disabled]="registrationForm.invalid">Register</p-button>
+      </form>
     </div>
   </div>
 </div>

@@ -1,72 +1,72 @@
 /* Define styles for the project table */
 h1 {
-    text-align: center;
-  }
-  
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Add some additional styling */
+h2 {
+  margin-bottom: 10px;
+}
+
+div {
+  margin-top: 20px;
+}
+
+/* Add responsiveness for smaller screens */
+@media (max-width: 767px) {
   table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
+    font-size: 14px;
   }
-  
-  th, td {
-    padding: 10px;
-    text-align: left;
-  }
-  
-  th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-  }
-  
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  /* Add some additional styling */
-  h2 {
-    margin-bottom: 10px;
-  }
-  
-  div {
-    margin-top: 20px;
-  }
-  
-  /* Add responsiveness for smaller screens */
-  @media (max-width: 767px) {
-    table {
-      font-size: 14px;
-    }
-  }
-  .search-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-    justify-content: flex-end;
-    margin-right: 20px;
-  }
-  
-  .container {
-    display: flex;
-    justify-content: flex-end;
-    offset: 1;
-  }
-  .search-container {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin-bottom: 10px;
-  }
-  
-  .search-container .label {
-    margin-right: 5px;
-  }
-  
-  .search-container .p-inputgroup-addon {
-    position: relative;
-  }
-  
-  .search-container input[type="text"] {
-    padding-right: 24px;
-  }
-  
+}
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  justify-content: flex-end;
+  margin-right: 20px;
+}
+
+.container {
+  display: flex;
+  justify-content: flex-end;
+  offset: 1;
+}
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.search-container .label {
+  margin-right: 5px;
+}
+
+.search-container .p-inputgroup-addon {
+  position: relative;
+}
+
+.search-container input[type="text"] {
+  padding-right: 24px;
+}

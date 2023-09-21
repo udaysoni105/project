@@ -6,4 +6,4 @@ import { CalendarModule } from 'primeng/calendar';
   declarations: [],
   imports: [CommonModule, CalendarModule],
 })
-export class ProjectCreateModule {}
+export class ProjectCreateModule { }

@@ -28,7 +28,7 @@ Route::get('/verify_email', [VerificationController::class, 'verifyEmail'])->nam
 
 Route::get('/images', [AuthController::class,'imageUpload'])->name('images.upload'); 
 Route::post('/store', [AuthController::class,'store'])->name('images.store'); 
-Route::delete('/destroy/{image}', [AuthController::class,'destroy'])->name('images.destroy'); 
+Route::delete('/destroy/{id}/{oldProfilePictureUrl}', [AuthController::class, 'destroy'])->name('images.destroy');
 Route::post('/upload/image', [AuthController::class,'upload'])->name('upload.image');
 Route::get('/receive/{image}',[AuthController::class,'imageUploads']);
 
@@ -37,7 +37,7 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::get('/users', [UserController::class, 'index']);
     Route::post('/users', [UserController::class, 'store']);
     Route::put('/users/{id}', [UserController::class, 'update']);
-    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+    // Route::delete('/users/{id}', [UserController::class, 'destroy']);
     Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
 });
 

@@ -37,11 +37,19 @@ export class EmailComponent implements OnInit {
     this.email = formData.email;
     this.authservice.sendPasswordResetLink(this.email).subscribe(
       (response) => {
+        if (formData !== null && formData !== "") {
         this.isRequestSent = true;
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'email sent successfully' });
         setTimeout(() => {
           this.router.navigate(['/login']);
         }, 1500);
+      }
+      else{
+        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'unsuccessfully' });
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1500);
+        }
       },
       (error) => {
         console.error('Error sending password reset request:', error);

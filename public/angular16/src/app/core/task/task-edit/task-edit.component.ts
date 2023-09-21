@@ -108,6 +108,7 @@ export class TaskEditComponent implements OnInit {
 
     this.taskService.gettaskById(this.taskId, headers).subscribe(
       (response) => {
+        if (jwtToken !== null && email !== null) {
         if (response) {
           if (response) {
             this.projectStartDate = response.start_date;
@@ -118,7 +119,14 @@ export class TaskEditComponent implements OnInit {
           this.taskForm.get('user_id')?.setValue(this.assignedUsers.map((user: any) => user.id));
         }
         this.loading = false;
-      },
+      }
+      else {
+        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'project data not show' });
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1500);
+      }
+    },
       (error) => {
         this.loading = false;
         if (error.status === 404) {
@@ -230,12 +238,18 @@ export class TaskEditComponent implements OnInit {
       task.user_id = Array.isArray(task.user_id) ? task.user_id : [task.user_id];
       this.taskService.updateTask(this.taskId, taskData, headers).subscribe(
         (response) => {
+          if (taskData !== null && taskData !== null) {
           this.loading = false;
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is updated' });
           setTimeout(() => {
             this.router.navigate(['/tasks']);
           }, 1500);
-        },
+        }      else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'task not edit' });
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1500);
+        }},
         (error) => {
           console.error('Failed to update task', error);
           this.messageService.add({

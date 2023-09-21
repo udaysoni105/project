@@ -64,12 +64,12 @@ div {
   margin-right: 25px;
   padding-left: 25px;
 }
-.btn{
+.btn {
   padding-left: 10px;
 }
 
 .inline-components {
-  display: inline-flex; /* Display the child elements inline with flexbox */
-  align-items: center; /* Center the items vertically */
-  gap: 10px; /* Add some space between the dropdown and paginator */
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }

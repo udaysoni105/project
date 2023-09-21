@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Output, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ProjectService } from '../project.service';
 import { Table } from 'primeng/table';
-import { SortEvent } from 'primeng/api';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
@@ -74,9 +73,18 @@ export class ProjectTableComponent {
     this.projectService.getAllProjects(headers).subscribe(
       (response) => {
         this.projects = response;
+        //console.log(this.projects);
+        if (this.projects !== null && this.projects !== null) {
         this.loading = false;
         this.changeDetectorRef.detectChanges();
-      },
+      }
+      else {
+        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'project data not show' });
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1500);
+      }
+    },
       (error) => {
         this.loading = false;
         if (error.status === 404) {
@@ -115,6 +123,7 @@ export class ProjectTableComponent {
     });
     this.projectService.getSortedProjects(column, direction, headers).subscribe(
       (response) => {
+        this.changeDetectorRef.detectChanges();
       },
       (error) => {
       }
@@ -247,6 +256,7 @@ export class ProjectTableComponent {
       (response) => {
         this.projects = response;
         this.loading = false;
+        this.changeDetectorRef.detectChanges();
       },
       (error) => {
         this.loading = false;
@@ -276,6 +286,7 @@ export class ProjectTableComponent {
     this.projectService.searchProjects(this.searchQuery, headers).subscribe(
       (response) => {
         this.projects = response.data;
+        this.changeDetectorRef.detectChanges();
       },
       (error) => {
         this.loading = false;

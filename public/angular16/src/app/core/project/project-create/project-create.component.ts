@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ProjectService } from '../project.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 @Component({
@@ -48,6 +48,7 @@ export class ProjectCreateComponent implements OnInit {
         .createProject(this.projectForm.value, token, email)
         .subscribe(
           (response) => {
+            if (this.projectForm!== null && this.projectForm !== null) {
             this.projectForm.reset();
             this.loading = false;
             this.messageService.add({
@@ -58,7 +59,13 @@ export class ProjectCreateComponent implements OnInit {
             setTimeout(() => {
               this.router.navigate(['/projects']);
             }, 1500);
-          },
+          }
+          else {
+            this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'create unsuccessfully' });
+            setTimeout(() => {
+            }, 1500);
+          }
+        },
           (error) => {
             this.loading = false;
             if (error.status === 404) {
@@ -67,7 +74,6 @@ export class ProjectCreateComponent implements OnInit {
                 summary: 'Error',
                 detail: 'Resource not found (404)',
               });
-              // Optionally, you can navigate to a 404 page
               this.router.navigate(['/404']);
             } else if (error.status === 401) {
               this.messageService.add({
@@ -75,7 +81,6 @@ export class ProjectCreateComponent implements OnInit {
                 summary: 'Error',
                 detail: 'Unauthorized (401)',
               });
-              // Optionally, you can navigate to a 401 page
               this.router.navigate(['/401']);
             } else {
               this.loading = false;
@@ -89,17 +94,21 @@ export class ProjectCreateComponent implements OnInit {
             }
           }
         );
-      (error: any) => {
-        this.loading = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to create project',
-        });
-        setTimeout(() => {
-        }, 1500);
-      };
     }
+    else {
+      this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'user not found' });
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 1500);
+    }
+    (error: any) => {
+      this.loading = false;
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to create project',
+      });
+    };
   }
   /** 
 * @author : UDAY SONI

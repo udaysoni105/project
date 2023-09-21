@@ -13,7 +13,8 @@
     .container {
       text-align: center;
     }
-    card{
+
+    card {
       margin-bottom: 50px;
     }
   </style>
@@ -24,10 +25,10 @@
   <div class="container">
     <h1>PROJECT MANAGEMENT SYSTEM</h1>
 
-  <div class="card">
-    <p-tabMenu [model]="items" [activeItem]="activeItem" (activeItemChange)="onActiveItemChange($event)"></p-tabMenu>
-</div>
-    
+    <div class="card">
+      <p-tabMenu [model]="items" [activeItem]="items[0]"></p-tabMenu>
+    </div>
+
     <router-outlet></router-outlet>
   </div>
 </body>

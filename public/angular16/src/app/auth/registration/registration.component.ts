@@ -49,7 +49,6 @@ export class RegistrationComponent implements OnInit {
 * Transform the associative array into an array of objects
 */
   onCountryChange(): void {
-
     if (this.selectedCountryCode) {
       this.authService.getStates(this.selectedCountryCode).subscribe((data: any) => {
 
@@ -67,10 +66,18 @@ export class RegistrationComponent implements OnInit {
   register() {
     this.authService.register(this.registrationForm.value).subscribe(
       response => {
+        if (this.registrationForm !== null && this.registrationForm.value !== "") {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'register successfully' });
         setTimeout(() => {
           this.router.navigate(['/login']);
         }, 1500);
+      }
+      else{
+        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'unsuccessfully' });
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1500);
+        }
       },
       error => {
         if (error && error.error && error.error.message) {

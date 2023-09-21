@@ -30,10 +30,9 @@
   form {
     display: flex;
     flex-direction: column;
-    width: 55%; /* Set the form width to 100% */
-    max-width: 800px; /* Set a maximum width if needed */
-    margin: 0 auto; /* Center the form horizontally */
-    
+    width: 55%;
+    max-width: 800px;
+    margin: 0 auto;
 
     .form-group {
       margin-bottom: 20px;
@@ -63,7 +62,7 @@
           width: 100%;
         }
 
-        #country{
+        #country {
           display: flex;
           flex-direction: column;
           margin-bottom: 5px;
@@ -71,7 +70,7 @@
           background-color: white;
         }
 
-        #state{
+        #state {
           display: flex;
           flex-direction: column;
           margin-bottom: 5px;

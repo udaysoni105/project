@@ -11,11 +11,14 @@
         <p>No soft-deleted projects found.</p>
       </div>
       <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
-      <mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"
-        aria-label="Select page"></mat-paginator>
+      <!-- <mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"
+        aria-label="Select page"></mat-paginator> -->
       <div class="card flex flex-column gap-3">
         <div class="loading-container" *ngIf="loading">
           <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+        </div>
+        <div class="button-container">
+          <p-button label="Cancel" (click)="cancel()"></p-button>
         </div>
         <div class="flex align-items-center justify-content-center">
           <p-table [value]="softDeletedProjects" [paginator]="true" [rows]="5">
@@ -44,7 +47,6 @@
           </p-table>
         </div>
       </div>
-      <p-button class="cancel-button" label="Cancel" (click)="cancel()"></p-button>
     </div>
   </div>
 </div>

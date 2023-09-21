@@ -4,22 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use CountryState;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
-use CountryState;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerificationEmail;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use ResponseManager;
 
 const LOG_FILE_NAME = 'laravel.log';
 /** @author UDAY SONI
@@ -70,6 +70,11 @@ class AuthController extends Controller
                     'country' => $request->country,
                     'state' => $request->state,
                 ]);
+
+                if ($user == null || $user == '') {
+                    Log::info("Controller::AuthController::login::");
+                    return response()->json(['error' => 'user not found'], 500);
+                }
 
                 // Assign the "developer" role to the registered user
                 $developerRole = Role::where('name', 'developer')->first();
@@ -162,6 +167,11 @@ class AuthController extends Controller
 
                 // Retrieve the authenticated user
                 $user = auth()->user();
+
+                if ($user == null || $user == '') {
+                    Log::info("Controller::AuthController::login::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
 
                 // Get the user's role
                 $role = $user->roles->pluck('name')->first();
@@ -280,7 +290,7 @@ class AuthController extends Controller
         });
         return $result;
     }
-    
+
     /** 
      * @author : UDAY SONI
      * Method name: store
@@ -296,26 +306,38 @@ class AuthController extends Controller
         Log::info("Controller::AuthController::upload::START");
 
         $file = $request['filename'];
-        //info($file);
+
+        if ($file == null || $file == '') {
+            Log::info("Controller::AuthController::login::");
+            return response()->json(['error' => 'file not found'], 403);
+        }
 
         $filename = md5(uniqid(rand(), true)) . $file;
-        //info($filename);
 
         $filePath = '/images/user_logo/' . $filename;
-        //info($filePath);
 
         $dataFileName = 'https://s3-us-west-1.amazonaws.com/snapstics-staging-file-storage/images/user_logo/' . $filename;
-        //info($dataFileName);
-
+        info($dataFileName);
         Storage::disk('s3')->put($filePath, base64_decode(($request['base64Image'])), 'public');
 
-        // Retrieve the 'email' header from the request
         $emailHeader = $request->header('email');
-        //info($emailHeader);
+
+        if ($emailHeader == null || $emailHeader == '') {
+            Log::info("Controller::AuthController::upload::");
+            return response()->json(['error' => 'email is not Retrieve'], 500);
+        }
 
         // Get the user based on the email from the reset link
         $user = User::where('email', $emailHeader)->first();
-        //info($user);
+
+        info($user);
+        // Delete the user's profile image from storage (S3 or local storage, depending on your setup)
+        $imagePath = $user->image_path;
+        info('imagepath===' . $imagePath);
+
+        if (Storage::disk('s3')->exists($filePath)) {
+            Storage::disk('s3')->delete($filename);
+        }
 
         if ($user) {
             // Update the user's image_filename and image_path in the database
@@ -323,6 +345,7 @@ class AuthController extends Controller
                 'image_filename' => $filename,
                 'image_path' => $dataFileName
             ]);
+
             //info('user update' . $user);
             Log::info("Controller::AuthController::upload::END");
 
@@ -353,29 +376,39 @@ class AuthController extends Controller
      */
     public function destroy(Request $request, int $id)
     {
-        $result = DB::transaction(function ($request,$id) {
+        $result = DB::transaction(function () use ($request, $id) {
             try {
-        Log::info("Controller::AuthController::destroy::START");
-        $images = User::find($id);
-        $images->delete();
+                Log::info("Controller::AuthController::destroy::START");
+                $input = $request->all();
+                info($input);
+                // $user = User::find($id);
 
-        $path = 'images/' . $images->olduserimagelogo;
-        if (Storage::disk('s3')->exists($path)) {
-            Storage::disk('s3')->delete($path);
-        }
-        Log::info("Controller::AuthController::destroy::END");
-        return response()->json([
-            'success' => true,
-            'message' => 'Image deleted successfully',
-        ]);
-    } catch (\Exception $ex) {
-        Log::error("Error in AuthController::profile: " . $ex->getMessage());
+                // if (!$user) {
+                //     return response()->json(['error' => 'User not found'], 404);
+                // }
 
-        return response()->json(['error' => 'An error occurred while retrieving the profile'], 500);
+                if (" " != $request['oldProfilePictureUrl'] && null != $request['oldProfilePictureUrl']) {
+                    $path = 'https://s3-us-west-1.amazonaws.com/snapstics-staging-file-storage/images/user_logo/' . $request['oldProfilePictureUrl'];
+                    if (Storage::disk('s3')->exists($path)) {
+                        Storage::disk('s3')->delete($path);
+                    }
+                }
+
+                info($path);
+                Log::info("Controller::AuthController::destroy::END");
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Image deleted successfully',
+                ]);
+            } catch (\Exception $ex) {
+                Log::error("Error in AuthController::profile: " . $ex->getMessage());
+
+                return response()->json(['error' => 'An error occurred while retrieving the profile'], 500);
+            }
+        });
+
+        return $result;
     }
-});
-return $result;
-}
 
     /** 
      * @author : UDAY SONI
@@ -494,10 +527,15 @@ return $result;
 
             // Get the user based on the email from the reset link
             $user = User::where('email', $request->email)->first();
-
-            if (!$user) {
-                return response()->json(['error' => 'User not found'], 404);
+            info($user);
+            if ($user == null || $user == '') {
+                Log::info("Controller::AuthController::forgotPassword::");
+                return response()->json(['error' => 'forgotPassword not finding user'], 500);
             }
+
+            // if (!$user) {
+            //     return response()->json(['error' => 'User not found'], 404);
+            // }
 
             // Generate a password reset token
             // $token = Password::createToken($user);
@@ -564,6 +602,10 @@ return $result;
 
                 // Get the user based on the email
                 $user = User::where('email', $request->email)->first();
+                if ($user == null || $user == '') {
+                    Log::info("Controller::AuthController::resetPassword::");
+                    return response()->json(['error' => 'resetPassword not finding user'], 404);
+                }
 
                 if (!$user) {
                     return response()->json(['error' => 'User not found'], 404);
@@ -571,6 +613,10 @@ return $result;
 
                 // Reset the user's password
                 $user->password = bcrypt($request->password);
+                if ($user == null || $user == '') {
+                    Log::info("Controller::AuthController::resetPassword::");
+                    return response()->json(['error' => 'password not changes'], 404);
+                }
                 $user->save();
 
                 Log::info("Controller::AuthController::resetPassword::END");
@@ -600,6 +646,10 @@ return $result;
             try {
                 Log::info("Controller::AuthController::getCountries::START");
                 $countries = CountryState::getCountries();
+                if ($countries == null || $countries == '') {
+                    Log::error('Controller::AuthController::getCountries::');
+                    return Response()->json(['error' => 'An error occurred while fetching countries']);
+                }
                 Log::info("Controller::AuthController::getCountries::END");
                 return response()->json($countries);
             } catch (\Exception $ex) {
@@ -624,8 +674,13 @@ return $result;
     {
         $result = DB::transaction(function () use ($countryCode) {
             try {
+
                 Log::info("Controller::AuthController::getStates::START");
                 $states = CountryState::getStates($countryCode);
+                if ($states == null || $states == '') {
+                    Log::error('Controller::AuthController::getStates::');
+                    return response()->json(['error' => 'An error occurred while fetching state']);
+                }
                 Log::info("Controller::AuthController::getStates::END");
                 return response()->json($states);
             } catch (\Exception $ex) {

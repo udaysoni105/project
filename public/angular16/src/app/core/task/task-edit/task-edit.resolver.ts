@@ -10,7 +10,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class taskEditResolver implements Resolve<any> {
-  constructor(private taskService: TaskService) {}
+  constructor(private taskService: TaskService) { }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
     const taskId = route.paramMap.get('id');
     if (taskId) {
@@ -30,7 +30,6 @@ export class taskEditResolver implements Resolve<any> {
       return forkJoin([
         this.taskService.gettaskById(taskId, headers),
         this.taskService.getUser()
-        // getUserById(taskId, headers),
       ]).pipe(
         map(([taskDetails, users]: [any, any[]]) => {
           return { taskDetails, users };
@@ -44,6 +43,6 @@ export class taskEditResolver implements Resolve<any> {
       return of(null);
     }
   }
-  
+
 }
 

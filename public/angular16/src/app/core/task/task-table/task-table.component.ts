@@ -4,7 +4,7 @@ import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-task-table',
@@ -66,11 +66,19 @@ export class TaskTableComponent implements OnInit {
 
     this.taskService.getAllTasks(headers).subscribe(
       (response) => {
+        if (jwtToken !== null && email !== null) {
         this.tasks = response;
         this.loading = false;
         // Trigger change detection manually
         this.changeDetectorRef.detectChanges();
-      },
+      }
+      else {
+        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'task data not show' });
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1500);
+      }
+    },
       (error) => {
         this.loading = false;
 

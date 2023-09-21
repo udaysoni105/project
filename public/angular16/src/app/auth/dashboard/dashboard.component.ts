@@ -37,7 +37,7 @@ export class DashboardComponent implements OnInit {
   */
   handleGetStartedClick() {
     this.getStartedClickCount++;
-    if (this.getStartedClickCount === 0) {
+    if (this.getStartedClickCount === 1) {
       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'task table open successfully' });
       setTimeout(() => {
         this.router.navigate(['/tasks']);

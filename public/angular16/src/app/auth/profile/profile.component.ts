@@ -20,6 +20,8 @@ export class ProfileComponent implements OnInit {
   selectedFileName: string | null = null;
   payload: any;
   files: any;
+  oldprofileimage: string = '';
+
   constructor(private http: HttpClient,
     private authService: AuthService,
     private messageService: MessageService,
@@ -113,11 +115,18 @@ export class ProfileComponent implements OnInit {
 
         this.authService.createimage(this.payload, headers).subscribe(
           (response: any) => {
-            // this.user.image = response.imageURL; 
-            this.user.image = 'https://s3-us-west-1.amazonaws.com/snapstics-staging-file-storage/images/user_logo/';
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'profile image sent successfully' });
-            setTimeout(() => {
-            }, 1500);
+            if (this.payload !== null && this.payload !== "") {
+              // this.user.image = response.imageURL; 
+              this.user.image = 'https://s3-us-west-1.amazonaws.com/snapstics-staging-file-storage/images/user_logo/';
+              this.messageService.add({ severity: 'success', summary: 'Success', detail: 'profile image sent successfully' });
+              setTimeout(() => {
+              }, 1500);
+            }
+            else {
+              this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'image not upload' });
+              setTimeout(() => {
+              }, 1500);
+            }
           },
           (error) => {
             this.messageService.add({
@@ -146,27 +155,47 @@ export class ProfileComponent implements OnInit {
 * @author : UDAY SONI
 * Method name: deleteProfile
 */
-  deleteProfile(): void {
-    const userId: number = this.userId as number;
-
-    if (confirm('Are you sure you want to delete your profile?')) {
-      this.authService.deleteUserProfile(userId)
-        .subscribe(
-          (response) => {
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'deleteProfile successfully' });
-            setTimeout(() => {
-            }, 1500);
-          },
-          (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'not delete Profile '
-            });
-            setTimeout(() => {
-            }, 1500);
-          }
-        );
+  deleteProfile() {
+    if (!this.user) {
+      console.error('No user selected.');
+      return;
     }
+
+    const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      email: `${email}`,
+    });
+
+    const deleteProfilePic = {
+      // profilepic: this.user.image,
+      user_id: this.user.id,
+      oldprofilepic: this.user.image_filename,
+    };
+
+    // console.log(deleteProfilePic);
+
+    this.authService.deleteUserProfile(this.user.id, deleteProfilePic, headers).subscribe(
+      (response) => {
+        this.user.image = '';
+        this.imageUploaded = false;
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Profile image deleted successfully' });
+      },
+      (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to delete profile image'
+        });
+      }
+    );
   }
+
 }

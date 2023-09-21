@@ -62,10 +62,6 @@ import { JsonPipe } from './pipename.pipe';
 import { PaginatorModule } from 'primeng/paginator';
 import { ErrorModule } from './auth/error/error.module';
 import { Error401Module } from './auth/error401/error401.module';
-const routes: Routes = [
-  { path: 'register', component: RegistrationComponent },
-  { path: 'login', component: LoginComponent },
-];
 
 @NgModule({
   declarations: [
@@ -102,7 +98,6 @@ const routes: Routes = [
     AppRoutingModule,
     FormsModule,
     DialogModule,
-    RouterModule.forRoot(routes),
     ButtonModule,
     Error401Module,
     InputTextModule,

@@ -14,17 +14,18 @@
     <form [formGroup]="projectForm" (ngSubmit)="saveChanges()">
       <div class="form-group">
         <label for="name">Name* </label>
-        <input type="text" id="name" formControlName="name" pInputText required/>
+        <input type="text" id="name" formControlName="name" pInputText required />
       </div>
 
       <div class="form-group">
         <label for="description">Description </label>
-        <textarea type="description" id="description" formControlName="description" pInputTextarea ></textarea>
+        <textarea type="description" id="description" formControlName="description" pInputTextarea></textarea>
       </div>
 
       <div class="form-group">
         <label for="start_date">Start Date* </label>
-        <input type="date" id="start_date" formControlName="start_date" [min]="today" name="start_date" pCalendar required />
+        <input type="date" id="start_date" formControlName="start_date" [min]="today" name="start_date" pCalendar
+          required />
       </div>
 
       <div class="form-group">
@@ -34,7 +35,7 @@
 
       <div class="pbutton">
         <p-button class="submit-button" type="submit" label="Save Changes" [disabled]="projectForm.invalid"></p-button>
-        <p-button class="cancel-button" label="Cancel" (click)="cancel()"></p-button>   
+        <p-button class="cancel-button" label="Cancel" (click)="cancel()"></p-button>
       </div>
     </form>
   </div>

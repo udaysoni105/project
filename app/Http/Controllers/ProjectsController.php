@@ -38,7 +38,18 @@ class ProjectsController extends Controller
             try {
                 Log::info("Controller::ProjectsController::index::START");
                 $permission = $request->header('permission');
+
+                if ($permission == null || $permission == '') {
+                    Log::info("Controller::ProjectsController::index::");
+                    return response()->json(['error' => 'permission Unauthorized'], 401);
+                }
+
                 $user = auth()->user();
+
+                if ($user == null || $user == '') {
+                    Log::info("Controller::ProjectsController::index::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
 
                 $userRole = UserRole::where('user_id', $user->id)->first();
 
@@ -83,7 +94,18 @@ class ProjectsController extends Controller
             try {
                 Log::info("Controller::ProjectsController::store::START");
                 $permission = $request->header('permission');
+
+                if ($permission == null || $permission == '') {
+                    Log::info("Controller::ProjectsController::store::");
+                    return response()->json(['error' => 'permission Unauthorized'], 401);
+                }
+
                 $user = auth()->user();
+
+                if ($user == null || $user == '') {
+                    Log::info("Controller::ProjectsController::store::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
 
                 $userRole = UserRole::where('user_id', $user->id)->first();
 
@@ -186,7 +208,18 @@ class ProjectsController extends Controller
             try {
                 Log::info("Controller::ProjectsController::update::START");
                 $permission = $request->header('permission');
+
+                if ($permission == null || $permission == '') {
+                    Log::info("Controller::ProjectsController::update::");
+                    return response()->json(['error' => 'permission Unauthorized'], 500);
+                }
+
                 $user = auth()->user();
+
+                if ($user == null || $user == '') {
+                    Log::info("Controller::ProjectsController::update::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
 
                 $userRole = UserRole::where('user_id', $user->id)->first();
 
@@ -219,6 +252,11 @@ class ProjectsController extends Controller
                 $project = Project::findOrFail($id);
 
                 $project->update($request->all());
+
+                if ($project == null || $project == '') {
+                    Log::info("Controller::ProjectsController::update::");
+                    return response()->json(['error' => 'project not found'], 500);
+                }
 
                 Log::info("Controller::ProjectsController::update::END");
                 return response()->json(['message' => 'Project updated successfully', 'project' => $project]);
@@ -334,8 +372,16 @@ class ProjectsController extends Controller
                 Log::info("Controller::ProjectsController::softDelete::START");
                 $permission = $request->header('permission');
 
-                $user = auth()->user();
+                if ($permission == null || $permission == '') {
+                    Log::info("Controller::ProjectsController::softDelete::");
+                    return response()->json(['error' => 'permission Unauthorized'], 500);
+                }
 
+                $user = auth()->user();
+                if ($user == null || $user == '') {
+                    Log::info("Controller::ProjectsController::softDelete::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
 
                 //$userRole = UserRole::where('user_id', $user['id'])->first();
                 $userRole = UserRole::where('user_id', $user->id)->first();

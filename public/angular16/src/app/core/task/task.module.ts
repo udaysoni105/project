@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 
-
 import { TaskEditComponent } from './task-edit/task-edit.component';
 import { TaskTableComponent } from './task-table/task-table.component';
 import { TaskCreateComponent } from './task-create/task-create.component';
@@ -12,7 +11,7 @@ import { TaskService } from './task.service';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatPaginatorModule} from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';

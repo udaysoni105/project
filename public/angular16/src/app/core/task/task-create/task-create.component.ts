@@ -67,7 +67,6 @@ export class TaskCreateComponent implements OnInit {
         }
       },
       (error) => {
-        // console.error('Failed to fetch project details', error);
       }
     );
   }
@@ -79,23 +78,27 @@ export class TaskCreateComponent implements OnInit {
   fetchProject(): void {
     this.taskService.getProject().subscribe(
       (projects) => {
+        if (projects !== null && projects !== null) {
         this.projectOptions = projects.map((project) => ({
           label: project.name,
           value: project.id,
         }));
-      }, (error) => {
+      }
+      else {
+        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'project not found' });
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1500);
+      }
+    },
+     (error) => {
         this.loading = false;
 
         if (error.status === 404) {
-          // Handle 404 error - navigate to a 404 page
-          console.log('a');
           this.router.navigate(['/404']);
-          console.log('a');
         } else if (error.status === 401) {
-          // Handle 401 error - navigate to a 401 page
           this.router.navigate(['/401']);
         } else {
-          // Handle other errors - display an error message
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -115,11 +118,19 @@ export class TaskCreateComponent implements OnInit {
   fetchUser(): void {
     this.taskService.getUser().subscribe(
       (users) => {
+        if (users !== null && users !== null) {
         this.users = users.map((user: any) => ({
           label: user.name,
           value: user.id,
         }));
-      },
+      }
+      else {
+        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'user not found' });
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1500);
+      }
+    },
       (error) => {
         this.loading = false;
 
@@ -174,6 +185,11 @@ export class TaskCreateComponent implements OnInit {
           });
         }
       );
+    }      else {
+      this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'task not create' });
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 1500);
     }
   }
 
