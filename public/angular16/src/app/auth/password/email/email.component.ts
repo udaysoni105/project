@@ -37,7 +37,7 @@ export class EmailComponent implements OnInit {
     this.email = formData.email;
     this.authservice.sendPasswordResetLink(this.email).subscribe(
       (response) => {
-        if (formData !== null && formData !== "") {
+        if (response !== null && response !== "") {
         this.isRequestSent = true;
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'email sent successfully' });
         setTimeout(() => {
@@ -47,7 +47,6 @@ export class EmailComponent implements OnInit {
       else{
         this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'unsuccessfully' });
         setTimeout(() => {
-          this.router.navigate(['/login']);
         }, 1500);
         }
       },
@@ -59,9 +58,12 @@ export class EmailComponent implements OnInit {
           detail: 'email not sent'
         });
         setTimeout(() => {
-          this.router.navigate(['/login']);
         }, 1500);
       }
     );
+  }
+
+  backtologin() {
+    this.router.navigate(['/login']);
   }
 }

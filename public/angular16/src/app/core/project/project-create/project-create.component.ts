@@ -29,6 +29,16 @@ export class ProjectCreateComponent implements OnInit {
       start_date: ['', Validators.required],
       end_date: ['', Validators.required]
     });
+    // Add a listener for changes in the end_date field
+    this.projectForm.get('end_date')?.valueChanges.subscribe((endDate) => {
+      const startDate = this.projectForm.get('start_date')?.value;
+
+      // Check if end_date is smaller than start_date
+      if (endDate < startDate) {
+        // Clear the start_date field
+        this.projectForm.get('start_date')?.setValue('');
+      }
+    });
   }
 
   /** 
@@ -48,24 +58,24 @@ export class ProjectCreateComponent implements OnInit {
         .createProject(this.projectForm.value, token, email)
         .subscribe(
           (response) => {
-            if (this.projectForm!== null && this.projectForm !== null) {
-            this.projectForm.reset();
-            this.loading = false;
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: 'Project is created'
-            });
-            setTimeout(() => {
-              this.router.navigate(['/projects']);
-            }, 1500);
-          }
-          else {
-            this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'create unsuccessfully' });
-            setTimeout(() => {
-            }, 1500);
-          }
-        },
+            if (response !== null && response !== "") {
+              this.projectForm.reset();
+              this.loading = false;
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Project is created'
+              });
+              setTimeout(() => {
+                this.router.navigate(['/projects']);
+              }, 1500);
+            }
+            else {
+              this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'create unsuccessfully' });
+              setTimeout(() => {
+              }, 1500);
+            }
+          },
           (error) => {
             this.loading = false;
             if (error.status === 404) {
@@ -75,14 +85,8 @@ export class ProjectCreateComponent implements OnInit {
                 detail: 'Resource not found (404)',
               });
               this.router.navigate(['/404']);
-            } else if (error.status === 401) {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Unauthorized (401)',
-              });
-              this.router.navigate(['/401']);
-            } else {
+            }
+            else if (error.status === 404) {
               this.loading = false;
               this.messageService.add({
                 severity: 'error',
@@ -91,7 +95,15 @@ export class ProjectCreateComponent implements OnInit {
               });
               setTimeout(() => {
               }, 1500);
+            } else {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Unauthorized (401)',
+              });
+              this.router.navigate(['/401']);
             }
+
           }
         );
     }

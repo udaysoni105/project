@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { TaskService } from '../task.service';
 import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
@@ -21,9 +21,16 @@ export class TaskTableComponent implements OnInit {
     { name: 'Pending' },
     { name: 'completed' }
   ];
+  date: Date | undefined;
   userRoles: string[] = [];
   loading: boolean = false;
-
+  start_date: Date | null | undefined;
+  end_date: Date | null | undefined;
+  isStartDateSelected: boolean = false;
+  isEndDateSelected: boolean = false;
+  originalTasks: any[] = [];
+  noDateFound = 0;
+  baseUrl = 'http://localhost:8000/api/tasks';
   constructor(
     private taskService: TaskService,
     private router: Router,
@@ -66,19 +73,21 @@ export class TaskTableComponent implements OnInit {
 
     this.taskService.getAllTasks(headers).subscribe(
       (response) => {
-        if (jwtToken !== null && email !== null) {
-        this.tasks = response;
-        this.loading = false;
-        // Trigger change detection manually
-        this.changeDetectorRef.detectChanges();
-      }
-      else {
-        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'task data not show' });
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 1500);
-      }
-    },
+        this.noDateFound=0;
+        if (response !== null && response !== undefined) {
+          this.originalTasks = response;
+          this.tasks = response;
+          this.loading = false;
+          // Trigger change detection manually
+          this.changeDetectorRef.detectChanges();
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'task data not show' });
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1500);
+        }
+      },
       (error) => {
         this.loading = false;
 
@@ -91,6 +100,79 @@ export class TaskTableComponent implements OnInit {
             detail: 'Failed to softDelete project',
           });
         }
+      }
+    );
+  }
+
+  cancel() {
+    this.start_date = null;
+    this.end_date = null;
+    this.isStartDateSelected = false;
+    this.isEndDateSelected = false;
+    this.tasks = this.originalTasks; // Reset the displayed tasks to the original data
+  }
+
+
+  /** 
+* @author : UDAY SONI
+* Method name: applyDateFilter
+* Implement the applyDateFilter method
+*/
+  applyDateFilter() {
+    if (this.isStartDateSelected && this.isEndDateSelected) {
+      const start_date = this.start_date?.toISOString();
+      const end_date = this.end_date?.toISOString();
+      this.loadFilteredTasks(start_date, end_date);
+    } else {
+    }
+  }
+
+  /** 
+* @author : UDAY SONI
+* Method name: loadFilteredTasks
+* Update the loadFilteredTasks method to include both start_date and end_date
+*/
+  loadFilteredTasks(start_date: string | undefined, end_date: string | undefined) {
+    this.loading = true;
+    const jwtToken = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+    if (!jwtToken) {
+      console.error('JWT token not found in local storage. Please log in.');
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      email: `${email}`,
+      Permission: 'view_tasks',
+    });
+
+    // Add the start_date and end_date as query parameters
+    const params = {
+      start_date: start_date || '',
+      end_date: end_date || '',
+    };
+
+    // Modify the URL to include query parameters
+    const url = `${this.baseUrl}/filter`;
+
+    this.taskService.getFilteredTasks(url, { headers, params }).subscribe(
+      (response) => {
+        if (response !== null && response !== undefined) {
+          this.tasks = response;
+          // this.originalTasks = response;
+          this.loading = false;
+          this.changeDetectorRef.detectChanges();
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'loadFilteredTasks not show' });
+          setTimeout(() => {
+          }, 1500);
+        }
+      },
+      (error) => {
+        this.loading = false;
+        // Handle error
       }
     );
   }
@@ -117,6 +199,13 @@ export class TaskTableComponent implements OnInit {
     });
     this.taskService.getSortedtasks(column, direction, headers).subscribe(
       (response) => {
+        if (response !== null && response !== "") {
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'onSortChange not works' });
+          setTimeout(() => {
+          }, 1500);
+        }
       },
       (error) => {
       }
@@ -147,10 +236,17 @@ export class TaskTableComponent implements OnInit {
     });
     this.taskService.getPaginatedTasks(page, perPage, headers).subscribe(
       (response) => {
-        this.tasks = response.data;
-        this.table.totalRecords = response.total;
-        this.loading = false;
-        this.changeDetectorRef.detectChanges();
+        if (response !== null && response !== "") {
+          this.tasks = response.data;
+          this.table.totalRecords = response.total;
+          this.loading = false;
+          this.changeDetectorRef.detectChanges();
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'loadPaginatedTasks not works' });
+          setTimeout(() => {
+          }, 1500);
+        }
       },
       (error) => {
         this.loading = false;
@@ -201,15 +297,22 @@ export class TaskTableComponent implements OnInit {
 
     this.taskService.deletetask(id, headers).subscribe(
       (response) => {
-        this.loading = false;
-        this.loadTasks();
-        this.tasks = this.tasks.filter((task) => task.id !== id);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Task is Hard deleted',
-        });
-        setTimeout(() => { }, 1500);
+        if (response !== null && response !== "") {
+          this.loading = false;
+          this.loadTasks();
+          this.tasks = this.tasks.filter((task) => task.id !== id);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Task is Hard deleted',
+          });
+          setTimeout(() => { }, 1500);
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'loadPaginatedTasks not works' });
+          setTimeout(() => {
+          }, 1500);
+        }
       },
       (error) => {
         this.loading = false;
@@ -247,7 +350,14 @@ export class TaskTableComponent implements OnInit {
 
     this.taskService.searchTasks(this.searchQuery, headers).subscribe(
       (response) => {
-        this.tasks = response.data;
+        if (response !== null && response !== "") {
+          this.tasks = response.data;
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'loadPaginatedTasks not works' });
+          setTimeout(() => {
+          }, 1500);
+        }
       },
       (error) => {
         this.loading = false;
@@ -267,12 +377,19 @@ export class TaskTableComponent implements OnInit {
       // const task = this.taskForm.value;
       this.taskService.generatePDF(taskId, token, email).subscribe(
         (response) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'successfully download pdf',
-          });
-          setTimeout(() => { }, 1500);
+          if (response !== null && response !== "") {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'successfully download pdf',
+            });
+            setTimeout(() => { }, 1500);
+          }
+          else {
+            this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'loadPaginatedTasks not works' });
+            setTimeout(() => {
+            }, 1500);
+          }
         },
         (error) => {
           this.messageService.add({
@@ -321,15 +438,22 @@ export class TaskTableComponent implements OnInit {
     const updatedTask = { ...task, status: newStatus };
     this.taskService.updateTasks(task.id, updatedTask, headers).subscribe(
       (response) => {
-        task.status = newStatus;
-        this.loading = false;
-        this.loadTasks();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Task status updated successfully',
-        });
-        setTimeout(() => { }, 1500);
+        if (response !== null && response !== "") {
+          task.status = newStatus;
+          this.loading = false;
+          this.loadTasks();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Task status updated successfully',
+          });
+          setTimeout(() => { }, 1500);
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'loadPaginatedTasks not works' });
+          setTimeout(() => {
+          }, 1500);
+        }
       },
       (error) => {
         this.loading = false;

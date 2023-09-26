@@ -15,17 +15,14 @@ export class ProjectTableComponent {
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
   loading: boolean = false;
-  options = [
-    { label: 5, value: 5 },
-    { label: 10, value: 10 },
-    { label: 20, value: 20 },
-    { label: 120, value: 120 }
-  ];
+  pageSizeOptions = [5, 10, 25, 100];
   pageSize: any;
   sortDirection: string = 'asc';
   sortColumn: string = 'id';
   paginator: any;
-
+  noDateFound=0;
+  length = 0;
+  pageIndex = 0;
   constructor(
     private projectService: ProjectService,
     private messageService: MessageService,
@@ -59,6 +56,7 @@ export class ProjectTableComponent {
   */
   loadProjects() {
     this.loading = true;
+    
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
     if (!jwtToken) {
@@ -72,19 +70,21 @@ export class ProjectTableComponent {
     });
     this.projectService.getAllProjects(headers).subscribe(
       (response) => {
+        this.noDateFound=0;
         this.projects = response;
-        //console.log(this.projects);
-        if (this.projects !== null && this.projects !== null) {
-        this.loading = false;
-        this.changeDetectorRef.detectChanges();
-      }
-      else {
-        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'project data not show' });
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 1500);
-      }
-    },
+        if (response !== null && response !== undefined) {
+          this.loading = false;
+          this.noDateFound=0;
+          this.changeDetectorRef.detectChanges();
+        }
+        else {
+          this.noDateFound=1;
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'project data not show' });
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1500);
+        }
+      },
       (error) => {
         this.loading = false;
         if (error.status === 404) {
@@ -92,6 +92,7 @@ export class ProjectTableComponent {
         } else if (error.status === 401) {
           this.router.navigate(['/401']);
         } else {
+          this.noDateFound=1;
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -123,7 +124,14 @@ export class ProjectTableComponent {
     });
     this.projectService.getSortedProjects(column, direction, headers).subscribe(
       (response) => {
-        this.changeDetectorRef.detectChanges();
+        if (response !== null && response !== "") {
+          this.changeDetectorRef.detectChanges();
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'onSortChange unsuccessfully' });
+          setTimeout(() => {
+          }, 1500);
+        }
       },
       (error) => {
       }
@@ -152,10 +160,17 @@ export class ProjectTableComponent {
     });
     this.projectService.getPaginatedProjects(page, perPage, headers).subscribe(
       (response) => {
-        this.projects = response.data;
-        this.table.totalRecords = response.total;
-        this.loading = false;
-        this.changeDetectorRef.detectChanges();
+        if (response !== null && response !== "") {
+          this.projects = response.data;
+          this.table.totalRecords = response.total;
+          this.loading = false;
+          this.changeDetectorRef.detectChanges();
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'loadPaginatedProjects unsuccessfully' });
+          setTimeout(() => {
+          }, 1500);
+        }
       },
       (error) => {
         this.loading = false;
@@ -211,15 +226,22 @@ export class ProjectTableComponent {
         } else {
           this.projectService.softDeleteProject(id, headers).subscribe(
             (response) => {
-              this.projects = this.projects.filter((project) => project.id !== id);
-              this.loading = false;
-              this.changeDetectorRef.detectChanges();
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: 'Project is soft deleted',
-              });
-              setTimeout(() => { }, 1500);
+              if (response !== null && response !== "") {
+                this.projects = this.projects.filter((project) => project.id !== id);
+                this.loading = false;
+                this.changeDetectorRef.detectChanges();
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Success',
+                  detail: 'Project is soft deleted',
+                });
+                setTimeout(() => { }, 1500);
+              }
+              else {
+                this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'softDeleteProject unsuccessfully' });
+                setTimeout(() => {
+                }, 1500);
+              }
             },
             (error) => {
               this.loading = false;
@@ -255,8 +277,15 @@ export class ProjectTableComponent {
     this.projectService.getProjects().subscribe(
       (response) => {
         this.projects = response;
-        this.loading = false;
-        this.changeDetectorRef.detectChanges();
+        if (response !== null && response !== "") {
+          this.loading = false;
+          this.changeDetectorRef.detectChanges();
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'getProjects unsuccessfully' });
+          setTimeout(() => {
+          }, 1500);
+        }
       },
       (error) => {
         this.loading = false;
@@ -285,8 +314,15 @@ export class ProjectTableComponent {
     });
     this.projectService.searchProjects(this.searchQuery, headers).subscribe(
       (response) => {
-        this.projects = response.data;
-        this.changeDetectorRef.detectChanges();
+        if (response !== null && response !== "") {
+          this.projects = response.data;
+          this.changeDetectorRef.detectChanges();
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'onSearch unsuccessfully' });
+          setTimeout(() => {
+          }, 1500);
+        }
       },
       (error) => {
         this.loading = false;

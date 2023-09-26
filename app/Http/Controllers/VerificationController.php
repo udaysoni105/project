@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 
@@ -13,7 +12,14 @@ class VerificationController extends Controller
     public function verifyEmail(Request $request)
     {
         Log::info("Controller::VerificationController::verifyEmail::START");
+        $input = $request->all();
+        if ($input == null || $input == '') {
+            Log::info("Controller::VerificationController::verifyEmail::");
+            return response()->json(['error' => 'verifyEmail'], 500);
+        }
+
         $encryptedEmail = $request->query('key');
+
         $email = hex2bin($encryptedEmail);
 
         $user = User::where('email', $email)->first();

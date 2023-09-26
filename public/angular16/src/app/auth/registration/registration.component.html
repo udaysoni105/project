@@ -53,7 +53,7 @@
               <div
                 *ngIf="registrationForm.controls['password_confirmation'].invalid && registrationForm.controls['password_confirmation'].touched"
                 class="error-message">
-                The password_confirmation field is required.
+                The password confirmation field is required.
               </div>
             </div>
           </div>
@@ -82,7 +82,11 @@
           </div>
 
         </div>
-        <p-button type="submit" [disabled]="registrationForm.invalid">Register</p-button>
+        <div>
+          <p-button type="submit" [disabled]="registrationForm.invalid">Register</p-button>
+          <p-button class="backtologin" label="BackToLogin" (click)="backtologin()"></p-button>
+        </div>
+
       </form>
     </div>
   </div>

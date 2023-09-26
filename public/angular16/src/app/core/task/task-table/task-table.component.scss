@@ -41,28 +41,13 @@ a:hover {
 h2 {
   margin-top: 0;
 }
-// button.btn {
-//   &.btn-primary {
-//     // Primary button styles
-//     background-color: rgb(51, 51, 215);
-//     color: white;
 
-//     // Button padding and margin
-//     padding: 10px 20px;
-//     margin-bottom: 3px;
-//     margin-right: 20px;
-
-//     // Button hover effect
-//     &:hover {
-//       background-color: rgb(23, 23, 204);
-//     }
-//   }
-// }
 .container {
   display: flex;
   justify-content: flex-end;
   margin-right: 24px;
 }
+
 .search-container {
   display: flex;
   align-items: center;
@@ -83,8 +68,19 @@ h2 {
 .search-container input[type="text"] {
   padding-right: 24px;
 }
+
 .inline-components {
-  display: inline-flex; /* Display the child elements inline with flexbox */
-  align-items: center; /* Center the items vertically */
-  gap: 10px; /* Add some space between the dropdown and paginator */
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.cancel-button {
+  margin-left: 5px;
 }

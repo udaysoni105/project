@@ -6,6 +6,25 @@
   background-color: #f4f4f4;
 }
 
+.pbutton {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pbutton p-button {
+  margin: 0 10px;
+}
+
+.cancel-button {
+  margin-left: 50px;
+}
+
+.submit-button {
+  margin-left: 150px;
+  margin-right: 10px;
+}
+
 .task-Create-box {
   background-color: white;
   border: 1px solid #ccc;
@@ -57,6 +76,11 @@
 
         .cancel-button {
           margin-left: 50px;
+        }
+
+        .submit-button {
+          margin-left: 150px;
+          margin-right: 10px;
         }
 
         input,

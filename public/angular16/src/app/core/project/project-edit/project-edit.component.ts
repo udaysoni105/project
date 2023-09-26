@@ -65,12 +65,10 @@ export class ProjectEditComponent implements OnInit {
 
     this.projectService.getProjectById(this.projectId, headers).subscribe(
       (response) => {
-        if (this.projectId!== null && this.projectId !== null) {
+        if (response !== null && response !== null) {
           this.projects = response;
           this.projectForm.patchValue(response);
           this.loading = false;
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project edit data show' });
-          setTimeout(() => { }, 1500);
         }
         else {
           this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'edit unsuccessfully' });
@@ -125,28 +123,27 @@ export class ProjectEditComponent implements OnInit {
       });
       this.projectService.updateProject(this.projectId, projectData, headers).subscribe(
         (response) => {
-          if (this.projectId!== null && this.projectId !== null) {
-          this.loading = false;
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is updated' });
-          setTimeout(() => {
-            this.router.navigate(['/projects']);
-          }, 1500);
-        }
-        else {
-          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'savechanges unsuccessfully' });
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 1500);
-        }
-      },
+          if (response !== null && response !== null) {
+            this.loading = false;
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is updated' });
+            setTimeout(() => {
+              this.router.navigate(['/projects']);
+            }, 1500);
+          }
+          else {
+            this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'savechanges unsuccessfully' });
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 1500);
+          }
+        },
         (error) => {
-          console.error('Failed to update project', error);
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'Failed to update project',
+            detail: 'Unauthorized (401)',
           });
-          setTimeout(() => { }, 1500);
+          this.router.navigate(['/401']);
         }
       );
     } else {

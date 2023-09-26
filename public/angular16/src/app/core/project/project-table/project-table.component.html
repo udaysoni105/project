@@ -30,14 +30,22 @@
 
   <div *ngIf="!projects" class="horizontal-loader"></div>
   <div *ngIf="projects">
-
-    <mat-paginator #paginator [length]="table.totalRecords" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 25, 100]"
-      aria-label="Select page" (page)="onPageChange($event)"></mat-paginator>
+    <mat-paginator #paginator [hidden]="noDateFound==1" [length]="table.totalRecords" [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions" aria-label="Select page" [showFirstLastButtons]="true" [pageIndex]="pageIndex"
+      (page)="onPageChange($event)"></mat-paginator>
+    <div [hidden]="noDateFound==0">
+      <h2>No data found.</h2>
+    </div>
 
     <div class="loading-container" *ngIf="loading">
       <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
     </div>
     <p-table #table [value]="projects" [tableStyle]="{ 'min-width': '50rem' }">
+      <ng-template pTemplate="header">
+        <div *ngIf="projects.length === 0">
+          <p>No projects found.</p>
+        </div>
+      </ng-template>
       <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="id" (click)="onSortChange('id', 'asc')">ID<p-sortIcon field="id"></p-sortIcon></th>
@@ -66,6 +74,11 @@
           <td>
             <p-button [routerLink]="['/project-edit', project.id]" class="btn btn-primary">Edit Project</p-button>
           </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="10" style="text-align: center; vertical-align: middle;">No projects found.</td>
         </tr>
       </ng-template>
     </p-table>

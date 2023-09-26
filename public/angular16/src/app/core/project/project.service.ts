@@ -44,7 +44,7 @@ export class ProjectService {
   getProjects(): Observable<any> {
     return this.http.get(`${this.baseUrl}`);
   }
-  
+
   getProjectById(projectId: string, headers: HttpHeaders): Observable<any> {
     const url = `${this.baseUrl}/${projectId}`;
     return this.http.get(url, { headers });

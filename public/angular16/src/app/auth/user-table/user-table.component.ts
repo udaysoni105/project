@@ -58,15 +58,15 @@ export class UserTableComponent implements OnInit {
 
     this.authService.getAllUsers(headers).subscribe(
       (response) => {
-        if (email !== null && email !== "") {
-        this.users = response;
-        this.loading = false;
-      }
-      else{
-        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'users data not show' });
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 1500);
+        if (response !== null && response !== undefined) {
+          this.users = response;
+          this.loading = false;
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'users data not show' });
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1500);
         }
       },
       (error) => {
@@ -108,7 +108,14 @@ export class UserTableComponent implements OnInit {
     });
     this.authService.searchTasks(this.searchQuery, headers).subscribe(
       (response) => {
-        this.users = response.data;
+        if (response !== null && response !== "") {
+          this.users = response.data;
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'unsuccessfully' });
+          setTimeout(() => {
+          }, 1500);
+        }
       },
       (error) => {
       }

@@ -3,17 +3,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\UserRole;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Task;
 
 /** @author UDAY SONI
@@ -34,18 +31,16 @@ class ProjectsController extends Controller
      */
     public function index(Request $request)
     {
+        Log::info("Controller::ProjectsController::index::START");
         $result = DB::transaction(function () use ($request) {
             try {
-                Log::info("Controller::ProjectsController::index::START");
                 $permission = $request->header('permission');
-
                 if ($permission == null || $permission == '') {
                     Log::info("Controller::ProjectsController::index::");
                     return response()->json(['error' => 'permission Unauthorized'], 401);
                 }
 
                 $user = auth()->user();
-
                 if ($user == null || $user == '') {
                     Log::info("Controller::ProjectsController::index::");
                     return response()->json(['error' => 'Unauthorized'], 401);
@@ -90,18 +85,22 @@ class ProjectsController extends Controller
      */
     public function store(Request $request)
     {
+        Log::info("Controller::ProjectsController::store::START");
         $result = DB::transaction(function () use ($request) {
             try {
-                Log::info("Controller::ProjectsController::store::START");
-                $permission = $request->header('permission');
+                $input = $request->all();
+                if ($input == null || $input == '') {
+                    Log::info("Controller::ProjectsController::store::");
+                    return response()->json(['error' => 'store Unsuccessfully'], 500);
+                }
 
+                $permission = $request->header('permission');
                 if ($permission == null || $permission == '') {
                     Log::info("Controller::ProjectsController::store::");
                     return response()->json(['error' => 'permission Unauthorized'], 401);
                 }
 
                 $user = auth()->user();
-
                 if ($user == null || $user == '') {
                     Log::info("Controller::ProjectsController::store::");
                     return response()->json(['error' => 'Unauthorized'], 401);
@@ -126,7 +125,7 @@ class ProjectsController extends Controller
 
                 $validator = Validator::make($request->all(), [
                     'name' => 'required',
-                    'description' => '',
+                    // 'description' => '',
                     'start_date' => 'required|date',
                     'end_date' => 'required|date|after:start_date',
                 ]);
@@ -134,9 +133,9 @@ class ProjectsController extends Controller
                     return response()->json(['errors' => $validator->errors()], 400);
                 }
 
-                $project = Project::insert([
+                $project = Project::create([
                     'name' => $request->name,
-                    // 'description' => $request->description,
+                    'description' => $request->description,
                     'start_date' => $request->start_date,
                     'end_date' => $request->end_date,
                 ]);
@@ -176,11 +175,11 @@ class ProjectsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
+        Log::info("Controller::ProjectsController::show::START");
         $result = DB::transaction(function () use ($id) {
             try {
-                Log::info("Controller::ProjectsController::show::START");
                 $project = Project::findOrFail($id);
                 Log::info("Controller::ProjectsController::show::END");
                 return response()->json($project);
@@ -204,25 +203,28 @@ class ProjectsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        Log::info("Controller::ProjectsController::update::START");
         $result = DB::transaction(function () use ($request, $id) {
             try {
-                Log::info("Controller::ProjectsController::update::START");
-                $permission = $request->header('permission');
+                $input = $request->all();
+                if ($input == null || $input == '') {
+                    Log::info("Controller::ProjectsController::update::");
+                    return response()->json(['error' => 'update unsuccessfully'], 500);
+                }
 
+                $permission = $request->header('permission');
                 if ($permission == null || $permission == '') {
                     Log::info("Controller::ProjectsController::update::");
                     return response()->json(['error' => 'permission Unauthorized'], 500);
                 }
 
                 $user = auth()->user();
-
                 if ($user == null || $user == '') {
                     Log::info("Controller::ProjectsController::update::");
                     return response()->json(['error' => 'Unauthorized'], 401);
                 }
 
                 $userRole = UserRole::where('user_id', $user->id)->first();
-
 
                 $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
                     $query->select('permission_id')
@@ -279,9 +281,15 @@ class ProjectsController extends Controller
      */
     public function searchProjects(Request $request)
     {
+        Log::info("Controller::ProjectsController::searchProjects::START");
         $result = DB::transaction(function () use ($request) {
             try {
-                Log::info("Controller::ProjectsController::searchProjects::START");
+                $input = $request->all();
+                if ($input == null || $input == '') {
+                    Log::info("Controller::ProjectsController::searchProjects::");
+                    return response()->json(['error' => 'permission Unauthorized'], 500);
+                }
+
                 $searchQuery = $request->input('searchQuery');
 
                 $projects = Project::where('name', 'LIKE', "%$searchQuery%")
@@ -308,9 +316,15 @@ class ProjectsController extends Controller
      */
     public function paginationProjects(Request $request)
     {
+        Log::info("Controller::ProjectsController::paginationProjects::START");
         $result = DB::transaction(function () use ($request) {
             try {
-                Log::info("Controller::ProjectsController::paginationProjects::START");
+                $input = $request->all();
+                if ($input == null || $input == '') {
+                    Log::info("Controller::ProjectsController::paginationProjects::");
+                    return response()->json(['error' => 'permission Unauthorized'], 500);
+                }
+
                 $perPage = $request->input('perPage', 5);
                 $page = $request->input('page', 1);
 
@@ -337,9 +351,15 @@ class ProjectsController extends Controller
      */
     public function SortedProjects(Request $request)
     {
+        Log::info("Controller::ProjectsController::SortedProjects::START");
         $result = DB::transaction(function () use ($request) {
             try {
-                Log::info("Controller::ProjectsController::SortedProjects::START");
+                $input = $request->all();
+                if ($input == null || $input == '') {
+                    Log::info("Controller::ProjectsController::SortedProjects::");
+                    return response()->json(['error' => 'permission Unauthorized'], 500);
+                }
+
                 $perPage = $request->input('perPage', 5);
                 $page = $request->input('page', 1);
                 $column = $request->input('column', 'id');
@@ -367,11 +387,10 @@ class ProjectsController extends Controller
      */
     public function softDelete(Request $request, $id)
     {
+        Log::info("Controller::ProjectsController::softDelete::START");
         $result = DB::transaction(function () use ($request, $id) {
             try {
-                Log::info("Controller::ProjectsController::softDelete::START");
                 $permission = $request->header('permission');
-
                 if ($permission == null || $permission == '') {
                     Log::info("Controller::ProjectsController::softDelete::");
                     return response()->json(['error' => 'permission Unauthorized'], 500);
@@ -386,14 +405,11 @@ class ProjectsController extends Controller
                 //$userRole = UserRole::where('user_id', $user['id'])->first();
                 $userRole = UserRole::where('user_id', $user->id)->first();
 
-
-
                 $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
                     $query->select('permission_id')
                         ->from('role_has_permissions')
                         ->where('role_id', $userRole->role_id);
                 })->get();
-
 
                 $hasPermission = $rolePermissions->contains('name', $permission);
 
@@ -426,9 +442,9 @@ class ProjectsController extends Controller
      */
     public function softDeletedProjects(Request $request)
     {
+        Log::info("Controller::ProjectsController::softDeletedProjects::START");
         $result = DB::transaction(function () use ($request) {
             try {
-                Log::info("Controller::ProjectsController::softDeletedProjects::START");
                 $projects = Project::onlyTrashed()->get();
                 Log::info("Controller::ProjectsController::softDeletedProjects::END");
                 return response()->json($projects);
@@ -473,9 +489,9 @@ class ProjectsController extends Controller
      */
     public function restore(Request $request, $id)
     {
+        Log::info("Controller::ProjectsController::restore::START");
         $result = DB::transaction(function () use ($id, $request) {
             try {
-                Log::info("Controller::ProjectsController::restore::START");
                 $project = Project::withTrashed()->find($id);
                 $project->restore();
                 if (!$project) {

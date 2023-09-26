@@ -47,26 +47,26 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(email, password).subscribe(
       (response: any) => {
-        if (email !== null && email !== "") {
-        const token = response.access_token;
-        const role = response.user.role;
-        localStorage.setItem('token', token);
-        localStorage.setItem('email', email);
-        localStorage.setItem('password', password);
-        localStorage.setItem('role', role);
-        this.users = { email: '', password: '' };
-        this.loading = false;
-        this.loginForm.reset();
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'login successfully' });
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 1500);
-      }
-      else{
-        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'unsuccessfully' });
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 1500);
+        if (response !== null && response !== "") {
+          const token = response.access_token;
+          const role = response.user.role;
+          localStorage.setItem('token', token);
+          localStorage.setItem('email', email);
+          localStorage.setItem('password', password);
+          localStorage.setItem('role', role);
+          this.users = { email: '', password: '' };
+          this.loading = false;
+          this.loginForm.reset();
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'login successfully' });
+          setTimeout(() => {
+            this.router.navigate(['/dashboard']);
+          }, 1500);
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'unsuccessfully' });
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1500);
         }
       },
       (error) => {
@@ -104,10 +104,17 @@ export class LoginComponent implements OnInit {
 
     this.http.post('/forgot-password', data).subscribe(
       (response) => {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'forgot password successfully' });
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 1500);
+        if (response !== null && response !== "") {
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'forgot password successfully' });
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1500);
+        } else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'unsuccessfully' });
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1500);
+        }
       },
       (error) => {
         console.error(error);

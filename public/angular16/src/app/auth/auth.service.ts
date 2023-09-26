@@ -7,9 +7,7 @@ import { MessageService } from 'primeng/api';
   providedIn: 'root'
 })
 export class AuthService {
-  getOldProfileImage() {
-    throw new Error('Method not implemented.');
-  }
+
   private apiUrl = 'http://127.0.0.1:8000/api';
 
   constructor(private http: HttpClient, private router: Router, private messageService: MessageService) { }

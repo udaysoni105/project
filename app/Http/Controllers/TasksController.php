@@ -5,15 +5,14 @@ namespace App\Http\Controllers;
 use PDF;
 use App\Models\Task;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\UserRole;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Project;
+use Carbon\Carbon;
 
 /** @author UDAY SONI
  *
@@ -32,12 +31,12 @@ class TasksController extends Controller
      */
     public function index(Request $request)
     {
+        Log::info("Controller::TasksController::index::START");
         $result = DB::transaction(function () use ($request) {
             try {
-                Log::info("Controller::TasksController::index::START");
                 $permission = $request->header('permission');
                 if ($permission == null || $permission == '') {
-                    Log::info("Controller::TasksController::index::");
+                    Log::info("Controller::TasksController::destroy::");
                     return response()->json(['error' => 'permission Unauthorized'], 500);
                 }
 
@@ -100,11 +99,16 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
+        Log::info("Controller::TasksController::store::START");
         $result = DB::transaction(function () use ($request) {
             try {
-                Log::info("Controller::TasksController::store::START");
-                $permission = $request->header('permission');
+                $input = $request->all();
+                if ($input == null || $input == '') {
+                    Log::info("Controller::TasksController::index::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
 
+                $permission = $request->header('permission');
                 if ($permission == null || $permission == '') {
                     Log::info("Controller::TasksController::store::");
                     return response()->json(['error' => 'permission Unauthorized'], 500);
@@ -182,7 +186,8 @@ class TasksController extends Controller
     public function getTasksByProjectId(Request $request, $projectId)
     {
         Log::info("Controller::TasksController::getTasksByProjectId::START");
-
+        $input = $request->all();
+        info($input);
         // Fetch the project with associated tasks
         $project = Project::with('tasks')->find($projectId);
 
@@ -209,9 +214,9 @@ class TasksController extends Controller
      */
     public function show(Request $request, string $id)
     {
+        Log::info("Controller::TasksController::show::START");
         $result = DB::transaction(function () use ($request, $id) {
             try {
-                Log::info("Controller::TasksController::show::START");
                 $permission = $request->header('permission');
                 if ($permission == null || $permission == '') {
                     Log::info("Controller::TasksController::show::");
@@ -265,16 +270,21 @@ class TasksController extends Controller
      */
     public function update(Request $request, string $id, Task $task)
     {
+        Log::info("Controller::TasksController::update::START");
         $result = DB::transaction(function () use ($request, $id, $task) {
             try {
-                Log::info("Controller::TasksController::update::START");
+                $input = $request->all();
+                if ($input == null || $input == '') {
+                    Log::info("Controller::TasksController::index::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
 
                 $permission = $request->header('permission');
-
                 if ($permission == null || $permission == '') {
                     Log::info("Controller::TasksController::update::");
                     return response()->json(['error' => 'permission Unauthorized'], 500);
                 }
+
                 $user = auth()->user();
                 if ($user == null || $user == '') {
                     Log::info("Controller::TasksController::update::");
@@ -346,9 +356,14 @@ class TasksController extends Controller
      */
     public function updatetask($id, Request $request)
     {
+        Log::info("Controller::TasksController::updatetask::START");
         $result = DB::transaction(function () use ($request, $id) {
             try {
-                Log::info("Controller::TasksController::updatetask::START");
+                $input = $request->all();
+                if ($input == null || $input == '') {
+                    Log::info("Controller::TasksController::index::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
                 // Fetch the task by its ID
                 $permission = $request->header('permission');
                 if ($permission == null || $permission == '') {
@@ -408,9 +423,9 @@ class TasksController extends Controller
      */
     public function destroy(Request $request, $id)
     {
+        Log::info("Controller::TasksController::destroy::START");
         $result = DB::transaction(function () use ($request, $id) {
             try {
-                Log::info("Controller::TasksController::destroy::START");
                 $permission = $request->header('permission');
                 if ($permission == null || $permission == '') {
                     Log::info("Controller::TasksController::destroy::");
@@ -482,9 +497,14 @@ class TasksController extends Controller
      */
     public function search(Request $request)
     {
+        Log::info("Controller::TasksController::search::START");
         $result = DB::transaction(function () use ($request) {
             try {
-                Log::info("Controller::TasksController::search::START");
+                $input = $request->all();
+                if ($input == null || $input == '') {
+                    Log::info("Controller::TasksController::index::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
                 $searchQuery = $request->input('searchQuery');
 
                 $tasks = Task::where('id', 'LIKE', "%$searchQuery%")
@@ -517,10 +537,14 @@ class TasksController extends Controller
      */
     public function sorted(Request $request)
     {
+        Log::info("Controller::TasksController::sorted::START");
         $result = DB::transaction(function () use ($request) {
             try {
-                Log::info("Controller::TasksController::sorted::START");
-
+                $input = $request->all();
+                if ($input == null || $input == '') {
+                    Log::info("Controller::TasksController::index::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
                 $perPage = $request->input('perPage', 5);
                 $page = $request->input('page', 1);
                 $column = $request->input('column', 'id');
@@ -550,9 +574,14 @@ class TasksController extends Controller
      */
     public function pagination(Request $request)
     {
+        Log::info("Controller::TasksController::pagination::START");
         $result = DB::transaction(function () use ($request) {
             try {
-                Log::info("Controller::TasksController::pagination::START");
+                $input = $request->all();
+                if ($input == null || $input == '') {
+                    Log::info("Controller::TasksController::index::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
                 $perPage = $request->input('perPage', 5);
                 $page = $request->input('page', 1);
 
@@ -571,6 +600,44 @@ class TasksController extends Controller
         return $result;
     }
 
+    public function filterdate(Request $request)
+    {
+        Log::info("Controller::TasksController::filterdate::START");
+
+        $input = $request->all();
+        if ($input == null || $input == '') {
+            Log::info("Controller::TasksController::index::");
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $start_dt = Carbon::parse($request->input('start_date'))->timezone('Asia/Kolkata');
+        $toDay = $start_dt->format('d');
+        $toMonth = $start_dt->format('m');
+        $toYear = $start_dt->format('Y');
+
+        $start_date = Carbon::createFromDate($toYear, $toMonth, $toDay, 'Asia/Kolkata')->startOfDay();
+
+        $end_dt = Carbon::parse($request->input('end_date'))->timezone('Asia/Kolkata');
+        $toDay = $end_dt->format('d');
+        $toMonth = $end_dt->format('m');
+        $toYear = $end_dt->format('Y');
+
+        $end_date = Carbon::createFromDate($toYear, $toMonth, $toDay, 'Asia/Kolkata')->endOfDay();
+
+        // Validate if both start_date and end_date are provided and in a valid date format
+        if (!empty($start_date) && !empty($end_date) && strtotime($start_date) !== false && strtotime($end_date) !== false) {
+            $tasks = Task::where(function ($query) use ($start_date, $end_date) {
+                $query->whereBetween('start_date', [$start_date, $end_date]);
+            })->get();
+            Log::info("Controller::TasksController::filterdate::END");
+            return response()->json($tasks);
+        } else {
+            return response()->json(['message' => 'Invalid date format or missing dates'], 400);
+        }
+    }
+
+
+
     /** 
      * @author : UDAY SONI
      * Method name: generatePDF
@@ -580,12 +647,9 @@ class TasksController extends Controller
      */
     public function generatePDF(Request $request, $id)
     {
+        Log::info("Controller::TasksController::generatePDF::START");
         $result = DB::transaction(function () use ($id, $request) {
             try {
-
-                Log::info("Controller::TasksController::generatePDF::START");
-                $input = $request->all();
-
                 $permission = $request->header('permission');
                 if ($permission == null || $permission == '') {
                     Log::info("Controller::TasksController::generatePDF::");
@@ -622,11 +686,20 @@ class TasksController extends Controller
 
                 // Load the view and generate the PDF
                 $pdf = PDF::loadView('invoice', compact('task'));
+                return $pdf->download($task['name'] . '.pdf');
+                // return Response()->json($file);
 
-                // Log the successful PDF generation
+                // $path = public_path('upload/'.$task['name'].'.pdf');
+                // info($path);
+                // $pdf = PDF::loadView('invoice', compact('task'))->setPaper('a4', 'portrait')->save($path);
+                // // $serverUrl = config('env_data.SERVER_URL');
+                // $file = 'upload/'.$task['name'].'.pdf';
+                // $data['fileName'] = $file;
+                // info($file);
                 Log::info("Controller::TasksController::generatePDF::END");
-                // Download the PDF with a custom filename
-                return $pdf->download('task_' . $id . '.pdf');
+                // // Download the PDF with a custom filename
+                // // return $pdf->download($task['name'] . '.pdf');
+                // return Response()->json($data);
             } catch (\Exception $ex) {
                 // Log the exception if needed
                 Log::error("Error in generating PDF for task $id: " . $ex->getMessage());

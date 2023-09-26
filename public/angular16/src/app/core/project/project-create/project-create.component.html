@@ -12,7 +12,7 @@
     </div>
     <form (ngSubmit)="createProject()" [formGroup]="projectForm">
       <div>
-        <label for="name" placeholder="Name">Name* </label>
+        <label for="name" placeholder="Name">* Name </label>
         <div class="input-container">
           <input type="text" id="name" formControlName="name" pInputText required>
           <div *ngIf="projectForm.controls['name'].invalid && projectForm.controls['name'].touched"
@@ -26,22 +26,22 @@
         <textarea type="text" id="description" formControlName="description" pInputTextarea></textarea>
       </div>
       <div>
-        <label for="start_date">Start Date* </label>
+        <label for="start_date">* Start Date </label>
         <div class="input-container">
           <input type="date" id="start_date" formControlName="start_date" [min]="today" pCalendar required>
           <div *ngIf="projectForm.controls['start_date'].invalid && projectForm.controls['start_date'].touched"
             class="error-message">
-            The start_date field is required.
+            The start date field is required.
           </div>
         </div>
       </div>
       <div>
-        <label for="end_date">End Date* </label>
+        <label for="end_date">* End Date </label>
         <div class="input-container">
           <input type="date" id="end_date" formControlName="end_date" [min]="today" pCalendar required>
           <div *ngIf="projectForm.controls['end_date'].invalid && projectForm.controls['end_date'].touched"
             class="error-message">
-            The end_date field is required.
+            The end date field is required.
           </div>
         </div>
       </div>

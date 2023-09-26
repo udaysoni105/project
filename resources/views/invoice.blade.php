@@ -26,8 +26,8 @@
             <th>Start Date</th>
             <th>End Date</th>
             <th>Status</th>
-            <th>Project ID</th>
-            <th>User ID</th>
+            <th>Project Name</th>
+            <th>User Name</th>
         </tr>
         <tr>
             <td>{{ $task->id }}</td>

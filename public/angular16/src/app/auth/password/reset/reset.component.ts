@@ -45,17 +45,17 @@ export class ResetComponent implements OnInit {
       const { password, confirmPassword } = this.resetForm.value;
       this.authService.resetPassword(this.email, this.token, password, confirmPassword).subscribe(
         (response) => {
-          if (this.email !== null && this.email !== "") {
-          // this.users = { email: '', password: '' };
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'reset successfully password' });
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 1500);
-        }
-        else{
-          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'unsuccessfully reset password' });
-          setTimeout(() => {
-          }, 1500);
+          if (response !== null && response !== "") {
+            // this.users = { email: '', password: '' };
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'reset successfully password' });
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 1500);
+          }
+          else {
+            this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'unsuccessfully reset password' });
+            setTimeout(() => {
+            }, 1500);
           }
         },
         error => {
@@ -70,5 +70,8 @@ export class ResetComponent implements OnInit {
         }
       );
     }
+  }
+  backtologin() {
+    this.router.navigate(['/login']);
   }
 }

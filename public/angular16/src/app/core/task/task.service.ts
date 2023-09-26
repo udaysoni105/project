@@ -131,6 +131,22 @@ export class TaskService {
     return this.http.post<any>(this.baseUrl, task);
   }
 
+  getFilteredTasks(url: string, options: { headers: HttpHeaders, params: { [param: string]: string } }): Observable<any[]> {
+    // Create an instance of HttpParams
+    let httpParams = new HttpParams();
+
+    // Append the parameters to the HttpParams instance
+    for (const key in options.params) {
+      if (options.params.hasOwnProperty(key)) {
+        httpParams = httpParams.set(key, options.params[key]);
+      }
+    }
+
+    // Use the HttpParams instance in the request options
+    return this.http.get<any[]>(url, { headers: options.headers, params: httpParams });
+  }
+
+
   generatePDF(taskId: string, token: string, email: string): Observable<any> {
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');

@@ -11,17 +11,21 @@
         <div class="loading-container" *ngIf="loading">
           <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
         </div>
-        <!-- <ng-container>
-          <img alt="User Photo" width="100" *ngIf="imageUploaded">
-        </ng-container> -->
-        <ng-container *ngIf="!imageUploaded">
+
+        <ng-container *ngIf="!user.image_filename">
           <input type="file" name="image" (change)="onFileSelected($event)">
           <p-button type="submit" label="Upload Image" (click)="uploadImage()"></p-button>
         </ng-container>
-        <p-button type="button" label="Update Profile" (click)="updateProfile()"
-          *ngIf="user && user.image && imageUploaded"></p-button>
-        <p-button type="button" label="Delete Profile" (click)="deleteProfile()"
-          *ngIf="user && user.image && imageUploaded"></p-button>
+        <ng-container>
+          <!-- <ng-container *ngIf="user.image_filename">
+          <img alt="User Photo" width="100" [src]="user.image_filename"></ng-container> -->
+
+          <p-button type="button" class="update" label="Update Profile" *ngIf="user && user.image_filename"
+            (click)="updateProfile()"></p-button>
+          <p-button type="button" label="Delete Profile" *ngIf="user && user.image_filename"
+            (click)="deleteProfile()"></p-button>
+        </ng-container>
+
         <ng-container *ngIf="user">
           <p>Name: {{ user.name }}</p>
           <p>Email: {{ user.email }}</p>

@@ -72,6 +72,13 @@
         box-sizing: border-box;
       }
 
+      .input-container {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 5px;
+        width: 100%;
+      }
+
       mat-form-field {
         width: 100%;
 

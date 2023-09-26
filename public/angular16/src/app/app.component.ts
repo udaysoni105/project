@@ -52,7 +52,8 @@ export class AppComponent implements OnInit {
         window.location.reload()
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'logout successfully' });
         setTimeout(() => {
-        }, 5000);
+          this.router.navigate(['/login']);
+        }, 1500);
       },
       (error: any) => {
         console.error('Logout error:', error);

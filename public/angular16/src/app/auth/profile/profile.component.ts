@@ -15,7 +15,7 @@ export class ProfileComponent implements OnInit {
   user: any;
   loading: boolean = false;
   userId!: number;
-  imageUploaded = false;
+  image_filename = false;
   selectedFile: File | null = null;
   selectedFileName: string | null = null;
   payload: any;
@@ -45,15 +45,32 @@ export class ProfileComponent implements OnInit {
     if (jwtToken) {
       this.authService.getUserProfile(headers).subscribe(
         (response) => {
-          const user = response as User;
-          this.user = user;
-          this.userId = user.id;
-          this.loading = false;
+          console.log(response);
+          if (response !== null && response !== "") {
+            const user = response as User;
+            this.user = user;
+            this.userId = user.id;
+            this.loading = false;
+          } else {
+            this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'unsuccessfully' });
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 1500);
+          }
         },
         (error) => {
           this.loading = false;
         }
       );
+    }
+
+    // Check if the user has uploaded an image (user.image_filename will be truthy)
+    if (this.user && this.user.image_filename) {
+      // User has uploaded an image, no need to show the upload button
+      this.user.image_filename = true;
+    } else {
+      // User has not uploaded an image, show the upload button
+      this.user.image_filename = false;
     }
   }
 
@@ -79,6 +96,7 @@ export class ProfileComponent implements OnInit {
 *
 */
   uploadImage() {
+    this.loading = true;
     if (!this.selectedFile) {
       console.error('No image file selected.');
       return;
@@ -111,24 +129,33 @@ export class ProfileComponent implements OnInit {
           filename: this.files,
         };
 
-        this.imageUploaded = true;
+        this.user.image_filename = true;
 
         this.authService.createimage(this.payload, headers).subscribe(
           (response: any) => {
-            if (this.payload !== null && this.payload !== "") {
-              // this.user.image = response.imageURL; 
-              this.user.image = 'https://s3-us-west-1.amazonaws.com/snapstics-staging-file-storage/images/user_logo/';
-              this.messageService.add({ severity: 'success', summary: 'Success', detail: 'profile image sent successfully' });
-              setTimeout(() => {
-              }, 1500);
-            }
-            else {
-              this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'image not upload' });
+            if (response !== null && response !== "") {
+              this.loading = false;
+              window.location.reload()
+              if (this.payload !== null && this.payload !== "") {
+                // this.user.image = response.imageURL; 
+                this.user.image = 'https://s3-us-west-1.amazonaws.com/snapstics-staging-file-storage/images/user_logo/';
+                this.messageService.add({ severity: 'success', summary: 'Success', detail: 'profile image sent successfully' });
+                setTimeout(() => {
+                }, 1500);
+              }
+              else {
+                this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'image not upload' });
+                setTimeout(() => {
+                }, 1500);
+              }
+            } else {
+              this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'unsuccessfully' });
               setTimeout(() => {
               }, 1500);
             }
           },
           (error) => {
+            this.loading = false;
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
@@ -148,7 +175,7 @@ export class ProfileComponent implements OnInit {
 * Method name: updateProfile
 */
   updateProfile() {
-    this.imageUploaded = false;
+    this.user.image_filename = false;
   }
 
   /** 
@@ -156,6 +183,7 @@ export class ProfileComponent implements OnInit {
 * Method name: deleteProfile
 */
   deleteProfile() {
+    this.user.image_filename = true;
     if (!this.user) {
       console.error('No user selected.');
       return;
@@ -180,13 +208,19 @@ export class ProfileComponent implements OnInit {
       oldprofilepic: this.user.image_filename,
     };
 
-    // console.log(deleteProfilePic);
 
     this.authService.deleteUserProfile(this.user.id, deleteProfilePic, headers).subscribe(
       (response) => {
-        this.user.image = '';
-        this.imageUploaded = false;
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Profile image deleted successfully' });
+        if (response !== null && response !== "") {
+          this.user.image = '';
+          window.location.reload()
+          this.user.image_filename = false;
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Profile image deleted successfully' });
+        } else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'unsuccessfully' });
+          setTimeout(() => {
+          }, 1500);
+        }
       },
       (error) => {
         this.messageService.add({
@@ -197,5 +231,4 @@ export class ProfileComponent implements OnInit {
       }
     );
   }
-
 }

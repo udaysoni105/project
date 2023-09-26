@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ProjectService } from '../project.service';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
@@ -19,10 +19,12 @@ export class ReactiveComponent implements OnInit {
   ];
   constructor(private router: Router,
     private messageService: MessageService,
+    private cdr: ChangeDetectorRef,
     private projectService: ProjectService) { }
 
   ngOnInit(): void {
     this.loadSoftDeletedProjects(150);
+    this.cdr.detectChanges();
   }
 
 
@@ -43,16 +45,16 @@ export class ReactiveComponent implements OnInit {
     this.softDeletedProjects = [];
     this.projectService.getSoftDeletedProjects(projectId).subscribe(
       (response) => {
-        if (projectId !== null && projectId !== null) {
-        this.softDeletedProjects = response;
-        this.loading = false;
-      }
-      else {
-        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'loadsoftdeletedproject unsuccessfully' });
-        setTimeout(() => {
-        }, 1500);
-      }
-    },
+        if (response !== null && response !== null) {
+          this.softDeletedProjects = response;
+          this.loading = false;
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'loadsoftdeletedproject unsuccessfully' });
+          setTimeout(() => {
+          }, 1500);
+        }
+      },
       (error) => {
         this.loading = false;
       }
@@ -68,24 +70,24 @@ export class ReactiveComponent implements OnInit {
     this.loading = true;
     this.projectService.restoreProject(id).subscribe(
       (response) => {
-        if (id !== null && id !== null) {
-        const restoredProject = this.softDeletedProjects.find(project => project.id === id);
+        if (response !== null && response !== "") {
+          const restoredProject = this.softDeletedProjects.find(project => project.id === id);
 
-        if (restoredProject) {
-          this.loadSoftDeletedProjects(100);
-          restoredProject.isRestored = true;
+          if (restoredProject) {
+            this.loadSoftDeletedProjects(100);
+            restoredProject.isRestored = true;
+          }
+          this.loading = false;
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is restored' });
+          setTimeout(() => {
+          }, 1500);
         }
-        this.loading = false;
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project is restored' });
-        setTimeout(() => {
-        }, 1500);
-      }
-      else {
-        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'restoreProject unsuccessfully' });
-        setTimeout(() => {
-        }, 1500);
-      }
-    },
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'restoreProject unsuccessfully' });
+          setTimeout(() => {
+          }, 1500);
+        }
+      },
       (error) => {
         this.loading = false;
         this.messageService.add({

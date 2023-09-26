@@ -47,6 +47,17 @@ export class TaskCreateComponent implements OnInit {
         this.loading = false;
       }
     });
+
+    // Add a listener for changes in the end_date field
+    this.taskForm.get('end_date')?.valueChanges.subscribe((endDate) => {
+      const startDate = this.taskForm.get('start_date')?.value;
+
+      // Check if end_date is smaller than start_date
+      if (endDate < startDate) {
+        // Clear the start_date field
+        this.taskForm.get('start_date')?.setValue('');
+      }
+    });
     this.fetchProject();
     this.fetchUser();
   }
@@ -60,16 +71,23 @@ export class TaskCreateComponent implements OnInit {
     const selectedProjectId = event.value;
     this.taskService.getProjectById(selectedProjectId).subscribe(
       (selectedProject) => {
-
         if (selectedProject) {
           this.selectedProjectStartDate = selectedProject.start_date;
           this.selectedProjectEndDate = selectedProject.end_date;
+        } else {
+          this.selectedProjectStartDate = selectedProject.start_date;
+          this.selectedProjectEndDate = selectedProject.end_date;
         }
+        // Reset the start_date and end_date form controls
+        this.taskForm.get('start_date')?.reset();
+        this.taskForm.get('end_date')?.reset();
       },
       (error) => {
+        // Handle error
       }
     );
   }
+
 
   /** 
 * @author : UDAY SONI
@@ -79,19 +97,19 @@ export class TaskCreateComponent implements OnInit {
     this.taskService.getProject().subscribe(
       (projects) => {
         if (projects !== null && projects !== null) {
-        this.projectOptions = projects.map((project) => ({
-          label: project.name,
-          value: project.id,
-        }));
-      }
-      else {
-        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'project not found' });
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 1500);
-      }
-    },
-     (error) => {
+          this.projectOptions = projects.map((project) => ({
+            label: project.name,
+            value: project.id,
+          }));
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'project not found' });
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1500);
+        }
+      },
+      (error) => {
         this.loading = false;
 
         if (error.status === 404) {
@@ -119,18 +137,18 @@ export class TaskCreateComponent implements OnInit {
     this.taskService.getUser().subscribe(
       (users) => {
         if (users !== null && users !== null) {
-        this.users = users.map((user: any) => ({
-          label: user.name,
-          value: user.id,
-        }));
-      }
-      else {
-        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'user not found' });
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 1500);
-      }
-    },
+          this.users = users.map((user: any) => ({
+            label: user.name,
+            value: user.id,
+          }));
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'user not found' });
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1500);
+        }
+      },
       (error) => {
         this.loading = false;
 
@@ -144,10 +162,6 @@ export class TaskCreateComponent implements OnInit {
           });
           this.router.navigate(['Not Found']);
         }
-
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 5000);
       }
     );
   }
@@ -168,12 +182,19 @@ export class TaskCreateComponent implements OnInit {
 
       this.taskService.createTask(task, token, email).subscribe(
         (response) => {
-          this.taskForm.reset();
-          this.loading = false;
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is created' });
-          setTimeout(() => {
-            this.router.navigate(['/tasks']);
-          }, 1500);
+          if (response !== null && response !== "") {
+            this.taskForm.reset();
+            this.loading = false;
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is created' });
+            setTimeout(() => {
+              this.router.navigate(['/tasks']);
+            }, 1500);
+          }
+          else {
+            this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'task create unsuccessfully' });
+            setTimeout(() => {
+            }, 1500);
+          }
         },
         (error) => {
           console.error('Failed to create task', error);
@@ -185,7 +206,7 @@ export class TaskCreateComponent implements OnInit {
           });
         }
       );
-    }      else {
+    } else {
       this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'task not create' });
       setTimeout(() => {
         this.router.navigate(['/login']);

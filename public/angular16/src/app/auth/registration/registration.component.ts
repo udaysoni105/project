@@ -51,7 +51,6 @@ export class RegistrationComponent implements OnInit {
   onCountryChange(): void {
     if (this.selectedCountryCode) {
       this.authService.getStates(this.selectedCountryCode).subscribe((data: any) => {
-
         this.states = Object.keys(data).map(key => ({ alpha2Code: key, name: data[key] }));
       });
     } else {
@@ -66,17 +65,17 @@ export class RegistrationComponent implements OnInit {
   register() {
     this.authService.register(this.registrationForm.value).subscribe(
       response => {
-        if (this.registrationForm !== null && this.registrationForm.value !== "") {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'register successfully' });
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 1500);
-      }
-      else{
-        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'unsuccessfully' });
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 1500);
+        if (response !== null && response !== "") {
+          // if (this.registrationForm !== null && this.registrationForm.value !== "") {
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'register successfully' });
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1500);
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'unsuccessfully' });
+          setTimeout(() => {
+          }, 1500);
         }
       },
       error => {
@@ -91,5 +90,9 @@ export class RegistrationComponent implements OnInit {
         }
       }
     );
+  }
+
+  backtologin() {
+    this.router.navigate(['/login']);
   }
 }

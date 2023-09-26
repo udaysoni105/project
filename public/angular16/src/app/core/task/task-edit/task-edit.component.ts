@@ -25,6 +25,8 @@ export class TaskEditComponent implements OnInit {
   end_date: any;
   projectStartDate: any;
   projectEndDate: any;
+  selectedProjectStartDate: Date | string | undefined;
+  selectedProjectEndDate: Date | string | undefined;
 
   constructor(
     private fb: FormBuilder,
@@ -108,25 +110,21 @@ export class TaskEditComponent implements OnInit {
 
     this.taskService.gettaskById(this.taskId, headers).subscribe(
       (response) => {
-        if (jwtToken !== null && email !== null) {
-        if (response) {
+        if (response !== null && response !== null) {
           if (response) {
-            this.projectStartDate = response.start_date;
-            this.projectEndDate = response.end_date;
+            this.taskForm.patchValue(response);
+            this.assignedUsers = response.users;
+            this.taskForm.get('user_id')?.setValue(this.assignedUsers.map((user: any) => user.id));
           }
-          this.taskForm.patchValue(response);
-          this.assignedUsers = response.users;
-          this.taskForm.get('user_id')?.setValue(this.assignedUsers.map((user: any) => user.id));
+          this.loading = false;
         }
-        this.loading = false;
-      }
-      else {
-        this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'project data not show' });
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 1500);
-      }
-    },
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'project data not show' });
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1500);
+        }
+      },
       (error) => {
         this.loading = false;
         if (error.status === 404) {
@@ -146,6 +144,27 @@ export class TaskEditComponent implements OnInit {
     );
   }
 
+  onProjectSelect(event: any): void {
+    const selectedProjectId = event.value;
+    this.taskService.getProjectById(selectedProjectId).subscribe(
+      (selectedProject) => {
+        if (selectedProject) {
+          this.selectedProjectStartDate = selectedProject.start_date;
+          this.selectedProjectEndDate = selectedProject.end_date;
+        } else {
+          this.selectedProjectStartDate = selectedProject.start_date;
+          this.selectedProjectEndDate = selectedProject.end_date;
+        }
+        // Reset the start_date and end_date form controls
+        this.taskForm.get('start_date')?.reset();
+        this.taskForm.get('end_date')?.reset();
+      },
+      (error) => {
+        // Handle error
+      }
+    );
+  }
+
   /** 
 * @author : UDAY SONI
 * Method name: fetchProjects
@@ -153,7 +172,6 @@ export class TaskEditComponent implements OnInit {
   fetchProjects(): void {
     this.taskService.getProjects().subscribe(
       (projects) => {
-
         this.projectOptions = projects.map((project) => ({
           label: project.name,
           value: project.id,
@@ -238,18 +256,19 @@ export class TaskEditComponent implements OnInit {
       task.user_id = Array.isArray(task.user_id) ? task.user_id : [task.user_id];
       this.taskService.updateTask(this.taskId, taskData, headers).subscribe(
         (response) => {
-          if (taskData !== null && taskData !== null) {
-          this.loading = false;
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is updated' });
-          setTimeout(() => {
-            this.router.navigate(['/tasks']);
-          }, 1500);
-        }      else {
-          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'task not edit' });
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 1500);
-        }},
+          if (response !== null && response !== "") {
+            this.loading = false;
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Task is updated' });
+            setTimeout(() => {
+              this.router.navigate(['/tasks']);
+            }, 1500);
+          } else {
+            this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'task not edit' });
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 1500);
+          }
+        },
         (error) => {
           console.error('Failed to update task', error);
           this.messageService.add({

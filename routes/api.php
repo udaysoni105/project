@@ -78,6 +78,8 @@ Route::group(['middleware' => 'auth'], function ($router) {
     Route::post('/projects', [ProjectsController::class, 'store'])->name('projects.store');
 });
 //find project start and end date
+Route::get('/tasks/filter', [TasksController::class, 'filterdate'])->name('tasks.filterdate');
+
 Route::get('projects/task/{id}', [TasksController::class, 'getTasksByProjectId'])->name('tasks.getTasksByProjectId');
 //project assisgn task not delete project
 Route::get('projects/tasks/{id}', [ProjectsController::class, 'getTasksByProjectdate'])->name('tasks.getTasksByProjectdate');

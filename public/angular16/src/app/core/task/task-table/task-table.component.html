@@ -13,6 +13,20 @@
   <h1> TASKS TABLE</h1>
 
   <p-toast [baseZIndex]="10000" [style]="{ marginTop: '100px' }"></p-toast>
+  <div class="filter">
+    <div class="card flex justify-content-center">
+      <p-calendar [(ngModel)]="start_date" (ngModelChange)="isStartDateSelected = true"></p-calendar>
+    </div>
+
+    <div class="card flex justify-content-center">
+      <p-calendar [(ngModel)]="end_date" (ngModelChange)="isEndDateSelected = true"></p-calendar>
+    </div>
+
+    <div class="card flex justify-content-center">
+      <button pButton pRipple label="filter" class="p-button-success" (click)="applyDateFilter()"></button>
+      <p-button label="Cancel" class="cancel-button" (click)="cancel()"></p-button>
+    </div>
+  </div>
 
   <div class="container">
     <p-button routerLink="/task-Create" class="btn btn-primary">+Create New</p-button>
@@ -28,12 +42,22 @@
 
   <div *ngIf="!tasks" class="horizontal-loader"></div>
   <div *ngIf="tasks">
-    <mat-paginator [length]="table.totalRecords" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"
-      aria-label="Select page" (page)="onPageChange($event)"></mat-paginator>
+    <mat-paginator [hidden]="noDateFound==1" [length]="table.totalRecords" [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page" (page)="onPageChange($event)"></mat-paginator>
+
+    <div [hidden]="noDateFound==0">
+      <h2>No data found.</h2>
+    </div>
+
     <div class="loading-container" *ngIf="loading">
       <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
     </div>
     <p-table #table [value]="tasks" [tableStyle]="{ 'min-width': '50rem' }">
+      <ng-template pTemplate="header">
+        <div *ngIf="tasks.length === 0">
+          <p>No tasks found.</p>
+        </div>
+      </ng-template>
       <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="id" (click)="onSortChange('id', 'asc')">ID<p-sortIcon field="id"></p-sortIcon></th>
@@ -87,6 +111,11 @@
               </mat-form-field>
             </div>
           </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="10" style="text-align: center; vertical-align: middle;">No Tasks found.</td>
         </tr>
       </ng-template>
     </p-table>
