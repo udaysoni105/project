@@ -453,16 +453,93 @@ class AuthController extends Controller
                 if (!$user) {
                     return response()->json(['error' => 'Unauthenticated'], 401);
                 }
-                // Use the mapping to get the full country and state names
-                $countries = CountryState::getCountries($user->country);
-                // info($countries);
-                $states = CountryState::getStates('US', $user->state);
-                // info($states);
-                // Return the user's profile information with complete names
-                $user->country = $countries;
-                // info($user->country = $countries);
-                $user->state = $states;
-                // info($user->state = $states);
+                // Define a mapping between your database keys and package values
+                $countryMapping = ['CA' => 'Canada','MX' => 'Mexiko','US' => 'Vereinigte Staaten von Amerika',];
+                $stateMapping = ['AB' => 'Alberta','BC' => 'British Columbia','MB' => 'Manitoba','NB' => 'New Brunswick','NL' => 'Newfoundland and Labrador','NS' => 'Nova Scotia','NT' => 'Northwest Territories','NU' => 'Nunavut','ON' => 'Ontario','PE' => 'Prince Edward Island','QC' => 'Quebec','SK' => 'Saskatchewan','YT' => 'Yukon','AGU' => 'Aguascalientes','BCN' => 'Baja California','BCS' => 'Baja California Sur','CAM' => 'Campeche','CHH' => 'Chihuahua','CHP' => 'Chiapas','COA' => 'Coahuila','COL' => 'Colima','DIF' => 'Ciudad de México','DUR' => 'Durango','GRO' => 'Guerrero','GUA' => 'Guanajuato','HID' => 'Hidalgo','JAL' => 'Jalisco','MEX' => 'México','MIC' => 'Michoacán','MOR' => 'Morelos','NAY' => 'Nayarit','NLE' => 'Nuevo León','OAX' => 'Oaxaca','PUE' => 'Puebla','QUE' => 'Querétaro','ROO' => 'Quintana Roo','SIN' => 'Sinaloa','SLP' => 'San Luis Potosí','SON' => 'Sonora','TAB' => 'Tabasco','TAM' => 'Tamaulipas','TLA' => 'Tlaxcala','VER' => 'Veracruz','YUC' => 'Yucatán','ZAC' => 'Zacatecas','AA' => 'Armed Forces Americas','AE' => 'Armed Forces Europe','AK' => 'Alaska','AL' => 'Alabama','AP' => 'Armed Forces Pacific','AR' => 'Arkansas','AS' => 'American Samoa','AZ' => 'Arizona','CA' => 'California','CO' => 'Colorado','CT' => 'Connecticut','DC' => 'District of Columbia','DE' => 'Delaware','FL' => 'Florida','GA' => 'Georgia','GU' => 'Guam','HI' => 'Hawaii','IA' => 'Iowa','ID' => 'Idaho','IL' => 'Illinois','IN' => 'Indiana','KS' => 'Kansas','KY' => 'Kentucky','LA' => 'Louisiana','MA' => 'Massachusetts','MD' => 'Maryland','ME' => 'Maine','MI' => 'Michigan','MN' => 'Minnesota','MO' => 'Missouri','MP' => 'Northern Mariana Islands','MS' => 'Mississippi','MT' => 'Montana','NC' => 'North Carolina','ND' => 'North Dakota','NE' => 'Nebraska','NH' => 'New Hampshire','NJ' => 'New Jersey','NM' => 'New Mexico','NV' => 'Nevada','NY' => 'New York','OH' => 'Ohio','OK' => 'Oklahoma','OR' => 'Oregon','PA' => 'Pennsylvania','PR' => 'Puerto Rico','RI' => 'Rhode Island','SC' => 'South Carolina','SD' => 'South Dakota','TN' => 'Tennessee','TX' => 'Texas','UM' => 'United States Minor Outlying Islands','UT' => 'Utah','VA' => 'Virginia','VI' => 'Virgin Islands, U.S.','VT' => 'Vermont','WA' => 'Washington','WI' => 'Wisconsin','WV' => 'West Virginia','WY' => 'Wyoming',];
+
+                // Retrieve country and state short forms from the database
+                $countryShortForm = $user->country;
+                $stateShortForm = $user->state;
+
+                // Debugging: Print out the short forms
+                Log::info("Country Short Form: " . $countryShortForm);
+                Log::info("State Short Form: " . $stateShortForm);
+
+                // Map the database keys to package values
+                $countryPackageValue = $countryMapping[$countryShortForm] ?? $countryShortForm;
+                $statePackageValue = $stateMapping[$stateShortForm] ?? $stateShortForm;
+
+                // Debugging: Print out the mapped values
+                Log::info("Mapped Country Value: " . $countryPackageValue);
+                Log::info("Mapped State Value: " . $statePackageValue);
+
+                // Check if the short forms match the mapped values
+                if ($countryShortForm === array_search($countryPackageValue, $countryMapping)) {
+                    // If they match, assign the full name to the 'country' property
+                    $user->country = $countryPackageValue;
+                }
+
+                if ($stateShortForm === array_search($statePackageValue, $stateMapping)) {
+                    // If they match, assign the full name to the 'state' property
+                    $user->state = $statePackageValue;
+                }
+
+                // Debugging: Print out the updated user object
+                Log::info("Updated User Object: " . json_encode($user));
+
+                ////////////////////////////////////////////////
+
+                // // Retrieve country and state short forms from the database
+                // $countryShortForm = $user->country;
+                // $stateShortForm = $user->state;
+
+                // // Debugging: Print out the short forms
+                // Log::info("Country Short Form: " . $countryShortForm);
+                // Log::info("State Short Form: " . $stateShortForm);
+
+                // // Use the package to get the full country and state names
+                // $countries = \CountryState::getCountries($countryShortForm); // Note the method call ()
+                // $states = \CountryState::getStates('US', $stateShortForm);    // Note the method call ()
+
+                // // Debugging: Print out the full names from the package
+                // Log::info("Full Country Name: " . implode(', ', $countries));
+                // Log::info("Full State Name: " . implode(', ', $states));
+
+                // // Check if the short forms match the full names from the package
+                // if (in_array($countryShortForm, $countries)) {
+                //     // If they match, assign the full name to the 'country' property
+                //     $user->country = $countryShortForm;
+                // }
+
+                // if (in_array($stateShortForm, $states)) {
+                //     // If they match, assign the full name to the 'state' property
+                //     $user->state = $stateShortForm;
+                // }
+
+                // // Debugging: Print out the updated user object
+                // Log::info("Updated User Object: " . json_encode($user));
+
+                //////////////////////////////////////////////////////
+
+                // $countryShortForm = $user->country;
+                // $stateShortForm = $user->state;
+
+                // // Debugging: Print out the short forms
+                // Log::info("Country Short Form: " . $countryShortForm);
+                // Log::info("State Short Form: " . $stateShortForm);
+
+                // // Use the package to get the full country and state names
+                // $countryFullForm = \CountryState::getCountries($countryShortForm);
+                // $stateFullForm = \CountryState::getStates('US', $stateShortForm);
+
+                // // Debugging: Print out the full names from the package
+                // Log::info("Full Country Name: " . implode(', ', $countryFullForm));
+                // Log::info("Full State Name: " . implode(', ', $stateFullForm));
+
+                // // Assign the full names to the user object
+                // $user->country = implode('$countryShortForm ', $countryFullForm);
+                // $user->state = implode('$stateShortForm', $stateFullForm);
+
                 Log::info("Controller::AuthController::profile::END");
                 // Return the user's profile information
                 return response()->json(auth()->user());

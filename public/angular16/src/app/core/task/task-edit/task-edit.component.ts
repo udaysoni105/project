@@ -121,7 +121,6 @@ export class TaskEditComponent implements OnInit {
         else {
           this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'project data not show' });
           setTimeout(() => {
-            this.router.navigate(['/login']);
           }, 1500);
         }
       },
@@ -138,7 +137,6 @@ export class TaskEditComponent implements OnInit {
           this.router.navigate(['temporary-error']);
         }
         setTimeout(() => {
-          this.router.navigate(['/dashboard']);
         }, 5000);
       }
     );
@@ -189,7 +187,6 @@ export class TaskEditComponent implements OnInit {
           this.router.navigate(['temporary-error']);
         }
         setTimeout(() => {
-          this.router.navigate(['/dashboard']);
         }, 5000);
       }
     );
@@ -224,7 +221,6 @@ export class TaskEditComponent implements OnInit {
         }
 
         setTimeout(() => {
-          this.router.navigate(['/dashboard']);
         }, 5000);
       }
     );

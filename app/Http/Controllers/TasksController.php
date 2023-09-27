@@ -578,6 +578,7 @@ class TasksController extends Controller
         $result = DB::transaction(function () use ($request) {
             try {
                 $input = $request->all();
+                info($input);
                 if ($input == null || $input == '') {
                     Log::info("Controller::TasksController::index::");
                     return response()->json(['error' => 'Unauthorized'], 401);

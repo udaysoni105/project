@@ -40,6 +40,7 @@ export class RegistrationComponent implements OnInit {
       // Transform the object into an array of objects
       this.countries = Object.keys(data).map(key => ({ alpha2Code: key, name: data[key] }));
     });
+
   }
 
   /** 

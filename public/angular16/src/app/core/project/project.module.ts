@@ -28,6 +28,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ErrorModule } from 'src/app/auth/error/error.module';
+import { MatPaginatorModule } from '@angular/material/paginator';
+
 @NgModule({
   declarations: [
     ProjectCreateComponent,
@@ -58,7 +60,8 @@ import { ErrorModule } from 'src/app/auth/error/error.module';
     ReactiveFormsModule,
     RouterModule,
     BrowserModule,
-    MessageService
+    MessageService,
+    MatPaginatorModule
   ],
   providers: [ProjectService],
   exports: [

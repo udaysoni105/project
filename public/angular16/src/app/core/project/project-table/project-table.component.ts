@@ -2,27 +2,37 @@ import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ProjectService } from '../project.service';
 import { Table } from 'primeng/table';
 import { HttpHeaders } from '@angular/common/http';
-import { MessageService } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
-import { PageEvent } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-project-table',
   templateUrl: './project-table.component.html',
   styleUrls: ['./project-table.component.scss'],
 })
 export class ProjectTableComponent {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   projects: any[] = [];
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
   loading: boolean = false;
   pageSizeOptions = [5, 10, 25, 100];
-  pageSize: any;
+  pageSize:  number = 5;
   sortDirection: string = 'asc';
   sortColumn: string = 'id';
-  paginator: any;
+  // paginator: any;
   noDateFound=0;
-  length = 0;
+  // length = 0;
   pageIndex = 0;
+  filterControl = new FormControl();
+  filter: any = {
+    filter: '',
+  };
+  public filterValue: any = null;
+  public page = (1 + this.pageIndex);
+  menuList!: MenuItem[];
+
   constructor(
     private projectService: ProjectService,
     private messageService: MessageService,
@@ -31,7 +41,9 @@ export class ProjectTableComponent {
   ) { }
 
   ngOnInit() {
+
     this.loadProjects();
+    this.loadPaginatedProjects();
   }
 
   /** 
@@ -145,7 +157,7 @@ export class ProjectTableComponent {
   * Update the paginator's length based on the total count from the API
   * Trigger change detection manually
   */
-  loadPaginatedProjects(page: number = 1, perPage: number = 10) {
+  loadPaginatedProjects(page: number = 1, perPage: number = 5) {
     this.loading = true;
     const jwtToken = localStorage.getItem('token');
     const email = localStorage.getItem('email');
@@ -162,7 +174,7 @@ export class ProjectTableComponent {
       (response) => {
         if (response !== null && response !== "") {
           this.projects = response.data;
-          this.table.totalRecords = response.total;
+          this.paginator.length = response.total;
           this.loading = false;
           this.changeDetectorRef.detectChanges();
         }
@@ -183,10 +195,35 @@ export class ProjectTableComponent {
   * Method name: onPageChange
   * Page index is 0-based, so add 1
   */
+  ngAfterViewInit(): void {
+    this.loadPaginatedProjects(1, this.pageSize);
+  }
+  
   onPageChange(event: PageEvent): void {
     const page = event.pageIndex + 1;
     const perPage = event.pageSize;
     this.loadPaginatedProjects(page, perPage);
+  }
+
+  getFirstPage() {
+    this.loadPaginatedProjects(1, this.pageSize);
+  }
+  
+  getNextPage() {
+    if (this.pageIndex < this.paginator.getNumberOfPages()) {
+      this.loadPaginatedProjects(this.pageIndex + 1, this.pageSize);
+    }
+  }
+  
+  getPreviousPage() {
+    if (this.pageIndex > 1) {
+      this.loadPaginatedProjects(this.pageIndex - 1, this.pageSize);
+    }
+  }
+  
+  getLastPage() {
+    const lastPage = this.paginator.getNumberOfPages();
+    this.loadPaginatedProjects(lastPage, this.pageSize);
   }
 
   /** 

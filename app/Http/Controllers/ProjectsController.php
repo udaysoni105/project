@@ -320,6 +320,7 @@ class ProjectsController extends Controller
         $result = DB::transaction(function () use ($request) {
             try {
                 $input = $request->all();
+                info($input);
                 if ($input == null || $input == '') {
                     Log::info("Controller::ProjectsController::paginationProjects::");
                     return response()->json(['error' => 'permission Unauthorized'], 500);

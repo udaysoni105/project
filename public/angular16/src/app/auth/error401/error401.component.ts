@@ -9,8 +9,12 @@ import { Router } from '@angular/router';
 export class Error401Component {
 
   constructor(private router: Router) { }
+  ngOnInit(): void {
+
+  }
 
   cancel() {
+    
     this.router.navigate(['/dashboard']);
   }
 }
