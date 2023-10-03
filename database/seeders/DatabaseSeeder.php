@@ -213,9 +213,9 @@ class DatabaseSeeder extends Seeder
         if ($developerRole && $viewTasksPermission && !$developerRole->hasPermissionTo($viewTasksPermission)) {
             $developerRole->givePermissionTo($viewTasksPermission);
         }
-        if ($projectManagerRole && $viewProjectPermission && !$projectManagerRole->hasPermissionTo($viewProjectPermission)) {
-            $projectManagerRole->givePermissionTo($viewProjectPermission);
-        }
+        // if ($projectManagerRole && $viewProjectPermission && !$projectManagerRole->hasPermissionTo($viewProjectPermission)) {
+        //     $projectManagerRole->givePermissionTo($viewProjectPermission);
+        // }
         if ($projectManagerRole && $updateTasksPermission && !$projectManagerRole->hasPermissionTo($updateTasksPermission)) {
             $projectManagerRole->givePermissionTo($updateTasksPermission);
         }

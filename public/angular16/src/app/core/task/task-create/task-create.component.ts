@@ -96,7 +96,7 @@ export class TaskCreateComponent implements OnInit {
   fetchProject(): void {
     this.taskService.getProject().subscribe(
       (projects) => {
-        if (projects !== null && projects !== null) {
+        if (projects !== null && projects !== undefined) {
           this.projectOptions = projects.map((project) => ({
             label: project.name,
             value: project.id,
@@ -105,7 +105,6 @@ export class TaskCreateComponent implements OnInit {
         else {
           this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'project not found' });
           setTimeout(() => {
-            this.router.navigate(['/login']);
           }, 1500);
         }
       },
@@ -136,7 +135,7 @@ export class TaskCreateComponent implements OnInit {
   fetchUser(): void {
     this.taskService.getUser().subscribe(
       (users) => {
-        if (users !== null && users !== null) {
+        if (users !== null && users !== undefined) {
           this.users = users.map((user: any) => ({
             label: user.name,
             value: user.id,
@@ -145,7 +144,6 @@ export class TaskCreateComponent implements OnInit {
         else {
           this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'user not found' });
           setTimeout(() => {
-            this.router.navigate(['/login']);
           }, 1500);
         }
       },
@@ -153,7 +151,9 @@ export class TaskCreateComponent implements OnInit {
         this.loading = false;
 
         if (error.status === 404) {
-          this.router.navigate(['Not Found']);
+          this.router.navigate(['/404']);
+        } else if (error.status === 401) {
+          this.router.navigate(['/401']);
         } else {
           this.messageService.add({
             severity: 'error',
@@ -209,7 +209,6 @@ export class TaskCreateComponent implements OnInit {
     } else {
       this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'task not create' });
       setTimeout(() => {
-        this.router.navigate(['/login']);
       }, 1500);
     }
   }

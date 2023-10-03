@@ -21,6 +21,12 @@ export class ProjectService {
     return this.http.get<any>(`${this.baseUrl}/pagination`, { headers, params });
   }
 
+  hasPermission(permission: string): boolean {
+    // Example: Check if the user has the given permission
+    // Replace this with your actual logic
+    return true; // or false
+  }
+
   createProject(projectData: any, token: string, email: string): Observable<any> {
     let headers = new HttpHeaders()
     headers = headers.append('Content-Type', 'application/json');

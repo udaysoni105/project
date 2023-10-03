@@ -9,6 +9,7 @@ import { MessageService } from 'primeng/api';
   providedIn: 'root'
 })
 export class projectEditResolver implements Resolve<any> {
+  router: any;
 
   constructor(private projectService: ProjectService, private messageService: MessageService) { }
 
@@ -41,7 +42,7 @@ export class projectEditResolver implements Resolve<any> {
             summary: 'Error',
             detail: 'project data not found',
           });
-          setTimeout(() => { }, 1500);
+          this.router.navigate(['/401']);
           return of(null);
         })
       );
@@ -51,7 +52,7 @@ export class projectEditResolver implements Resolve<any> {
         summary: 'Error',
         detail: 'project data not found',
       });
-      setTimeout(() => { }, 1500);
+      this.router.navigate(['/401']);
       return of(null);
     }
   }

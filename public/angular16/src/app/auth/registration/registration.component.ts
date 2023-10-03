@@ -66,7 +66,7 @@ export class RegistrationComponent implements OnInit {
   register() {
     this.authService.register(this.registrationForm.value).subscribe(
       response => {
-        if (response !== null && response !== "") {
+        if (response !== null && response !== "" && response !== undefined) {
           // if (this.registrationForm !== null && this.registrationForm.value !== "") {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'register successfully' });
           setTimeout(() => {

@@ -110,7 +110,6 @@ export class ProjectCreateComponent implements OnInit {
     else {
       this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'user not found' });
       setTimeout(() => {
-        this.router.navigate(['/login']);
       }, 1500);
     }
     (error: any) => {

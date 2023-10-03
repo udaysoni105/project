@@ -127,7 +127,9 @@ export class TaskEditComponent implements OnInit {
       (error) => {
         this.loading = false;
         if (error.status === 404) {
-          this.router.navigate(['temporary-error']);
+          this.router.navigate(['/404']);
+        } else if (error.status === 401) {
+          this.router.navigate(['/401']);
         } else {
           this.messageService.add({
             severity: 'error',
@@ -177,7 +179,9 @@ export class TaskEditComponent implements OnInit {
       }, (error) => {
         this.loading = false;
         if (error.status === 404) {
-          this.router.navigate(['temporary-error']);
+          this.router.navigate(['/404']);
+        } else if (error.status === 401) {
+          this.router.navigate(['/401']);
         } else {
           this.messageService.add({
             severity: 'error',
@@ -210,7 +214,9 @@ export class TaskEditComponent implements OnInit {
         this.loading = false;
 
         if (error.status === 404) {
-          this.router.navigate(['Not Found']);
+          this.router.navigate(['/404']);
+        } else if (error.status === 401) {
+          this.router.navigate(['/401']);
         } else {
           this.messageService.add({
             severity: 'error',
@@ -261,7 +267,6 @@ export class TaskEditComponent implements OnInit {
           } else {
             this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'task not edit' });
             setTimeout(() => {
-              this.router.navigate(['/login']);
             }, 1500);
           }
         },

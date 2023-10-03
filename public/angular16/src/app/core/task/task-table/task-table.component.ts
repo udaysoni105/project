@@ -18,8 +18,11 @@ export class TaskTableComponent implements OnInit {
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
   selectedValue: string = '';
-  task: any = { status: 'pending' };
+  pageIndex = 0;
+  pageSize = 5;
   pageSizeOptions = [5, 10, 25, 100];
+  task: any = { status: 'pending' };
+  // pageSizeOptions = [5, 10, 25, 100];
   Status: any[] = [
     { name: 'Pending' },
     { name: 'completed' }
@@ -33,11 +36,11 @@ export class TaskTableComponent implements OnInit {
   isEndDateSelected: boolean = false;
   originalTasks: any[] = [];
   noDateFound = 0;
-  pageSize: number = 5;
+  // pageSize: number = 5;
   sortDirection: string = 'asc';
   sortColumn: string = 'id';
   // length = 0;
-  pageIndex = 0;
+  // pageIndex = 0;
   filterControl = new FormControl();
   filter: any = {
     filter: '',
@@ -101,7 +104,6 @@ export class TaskTableComponent implements OnInit {
         else {
           this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'task data not show' });
           setTimeout(() => {
-            this.router.navigate(['/login']);
           }, 1500);
         }
       },
@@ -126,7 +128,7 @@ export class TaskTableComponent implements OnInit {
     this.end_date = null;
     this.isStartDateSelected = false;
     this.isEndDateSelected = false;
-    this.tasks = this.originalTasks; // Reset the displayed tasks to the original data
+    this.tasks = this.originalTasks; 
   }
 
 
@@ -140,6 +142,7 @@ export class TaskTableComponent implements OnInit {
       const start_date = this.start_date?.toISOString();
       const end_date = this.end_date?.toISOString();
       this.loadFilteredTasks(start_date, end_date);
+      this.changeDetectorRef.detectChanges();
     } else {
     }
   }
@@ -341,6 +344,7 @@ export class TaskTableComponent implements OnInit {
       (response) => {
         if (response !== null && response !== "") {
           this.loading = false;
+          this.changeDetectorRef.detectChanges();
           this.loadTasks();
           this.tasks = this.tasks.filter((task) => task.id !== id);
           this.messageService.add({
@@ -351,7 +355,7 @@ export class TaskTableComponent implements OnInit {
           setTimeout(() => { }, 1500);
         }
         else {
-          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'loadPaginatedTasks not works' });
+          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'delete task not delete' });
           setTimeout(() => {
           }, 1500);
         }

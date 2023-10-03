@@ -56,8 +56,12 @@ class ProjectsController extends Controller
 
                 $hasPermission = $rolePermissions->contains('name', $permission);
 
-                if (!$hasPermission) {
-                    info('Unauthorized');
+                // if (!$hasPermission) {
+                //     info('Unauthorized');
+                // }
+                if ($hasPermission == null || $hasPermission == '') {
+                    Log::info("Controller::ProjectsController::index::");
+                    return response()->json(['error' => 'Unauthorized'], 401);
                 }
 
                 $matchedPermission = $rolePermissions->firstWhere('name', $permission);
@@ -320,7 +324,7 @@ class ProjectsController extends Controller
         $result = DB::transaction(function () use ($request) {
             try {
                 $input = $request->all();
-                info($input);
+                // info($input);
                 if ($input == null || $input == '') {
                     Log::info("Controller::ProjectsController::paginationProjects::");
                     return response()->json(['error' => 'permission Unauthorized'], 500);

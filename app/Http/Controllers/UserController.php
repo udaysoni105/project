@@ -64,7 +64,7 @@ class UserController extends Controller
                 $hasPermission = $rolePermissions->contains('name', $permission);
 
                 if (!$hasPermission) {
-                    return response()->json(['error' => 'Unauthorized'], 403);
+                    return response()->json(['error' => 'Unauthorized'], 401);
                 }
 
                 $matchedPermission = $rolePermissions->firstWhere('name', $permission);

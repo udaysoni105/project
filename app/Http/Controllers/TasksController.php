@@ -187,7 +187,7 @@ class TasksController extends Controller
     {
         Log::info("Controller::TasksController::getTasksByProjectId::START");
         $input = $request->all();
-        info($input);
+        // info($input);
         // Fetch the project with associated tasks
         $project = Project::with('tasks')->find($projectId);
 
@@ -463,14 +463,6 @@ class TasksController extends Controller
                     return response()->json(['message' => 'Task not found'], 404);
                 }
 
-                // Find the task with the given id
-                $task = Task::find($id);
-
-                // Check if the task exists
-                if (!$task) {
-                    return response()->json(['error' => 'Task not found'], 404);
-                }
-
                 // Perform the hard delete
                 $task->forceDelete();
 
@@ -578,7 +570,7 @@ class TasksController extends Controller
         $result = DB::transaction(function () use ($request) {
             try {
                 $input = $request->all();
-                info($input);
+                // info($input);
                 if ($input == null || $input == '') {
                     Log::info("Controller::TasksController::index::");
                     return response()->json(['error' => 'Unauthorized'], 401);

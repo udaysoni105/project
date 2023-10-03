@@ -724,9 +724,9 @@ class AuthController extends Controller
                     return response()->json(['error' => 'resetPassword not finding user'], 404);
                 }
 
-                if (!$user) {
-                    return response()->json(['error' => 'User not found'], 404);
-                }
+                // if (!$user) {
+                //     return response()->json(['error' => 'User not found'], 404);
+                // }
 
                 // Reset the user's password
                 $user->password = bcrypt($request->password);

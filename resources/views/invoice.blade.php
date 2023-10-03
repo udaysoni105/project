@@ -43,6 +43,9 @@
                 @if ($task->users->isNotEmpty())
                     @foreach ($task->users as $user)
                         {{ $user->name }}
+                        @unless ($loop->last)
+                        ,
+                    @endunless
                     @endforeach
                 @else
                     User not assigned

@@ -25,9 +25,10 @@ export class ProfileComponent implements OnInit {
   constructor(private http: HttpClient,
     private authService: AuthService,
     private messageService: MessageService,
-    private router: Router) {   this.user = {
-      image_filename: false, 
-    };
+    private router: Router) {
+      this.user = {
+        image_filename: false,
+      };
   }
 
   ngOnInit(): void {
@@ -64,7 +65,6 @@ export class ProfileComponent implements OnInit {
           } else {
             this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'unsuccessfully' });
             setTimeout(() => {
-              this.router.navigate(['/login']);
             }, 1500);
           }
         },
@@ -72,15 +72,6 @@ export class ProfileComponent implements OnInit {
           this.loading = false;
         }
       );
-    }
-
-    // Check if the user has uploaded an image (user.image_filename will be truthy)
-    if (this.user && this.user.image_filename) {
-      // User has uploaded an image, no need to show the upload button
-      this.user.image_filename = true;
-    } else {
-      // User has not uploaded an image, show the upload button
-      this.user.image_filename = false;
     }
   }
 

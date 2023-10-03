@@ -65,7 +65,7 @@ export class ProjectEditComponent implements OnInit {
 
     this.projectService.getProjectById(this.projectId, headers).subscribe(
       (response) => {
-        if (response !== null && response !== null) {
+        if (response !== null && response !== "") {
           this.projects = response;
           this.projectForm.patchValue(response);
           this.loading = false;
@@ -73,7 +73,6 @@ export class ProjectEditComponent implements OnInit {
         else {
           this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'edit unsuccessfully' });
           setTimeout(() => {
-            this.router.navigate(['/login']);
           }, 1500);
         }
       },
@@ -133,7 +132,6 @@ export class ProjectEditComponent implements OnInit {
           else {
             this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'savechanges unsuccessfully' });
             setTimeout(() => {
-              this.router.navigate(['/login']);
             }, 1500);
           }
         },
@@ -149,7 +147,6 @@ export class ProjectEditComponent implements OnInit {
     } else {
       this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'edit unsuccessfully' });
       setTimeout(() => {
-        this.router.navigate(['/login']);
       }, 1500);
     }
   }

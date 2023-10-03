@@ -33,10 +33,18 @@
     <!-- <mat-paginator #paginator [hidden]="noDateFound==1" [length]="table.totalRecords" [pageSize]="pageSize"
       [pageSizeOptions]="pageSizeOptions" [disabled]="pageIndex >= paginator.getNumberOfPages()" aria-label="Select page" [showFirstLastButtons]="true" [pageIndex]="pageIndex"
       (page)="onPageChange($event)" (click)="getLastPage()" (click)="getPreviousPage()" (click)="getFirstPage()" (click)="getNextPage()"></mat-paginator> -->
-      <mat-paginator #paginator [hidden]="noDateFound==1" [length]="table.totalRecords" [pageSize]="pageSize"
+      <!-- <mat-paginator #paginator [hidden]="noDateFound==1" [length]="table.totalRecords" [pageSize]="pageSize"
       [pageSizeOptions]="pageSizeOptions" [disabled]="pageIndex >= paginator.getNumberOfPages()"
       aria-label="Select page" [showFirstLastButtons]="true" [pageIndex]="pageIndex" (page)="onPageChange($event)">
-    </mat-paginator>
+    </mat-paginator> -->
+
+    <mat-paginator
+  [pageIndex]="pageIndex"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true"
+  (page)="onPageChange($event)">
+</mat-paginator>
+
     
     <div [hidden]="noDateFound==0">
       <h2>No data found.</h2>

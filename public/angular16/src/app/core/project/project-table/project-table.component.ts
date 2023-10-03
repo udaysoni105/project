@@ -17,14 +17,18 @@ export class ProjectTableComponent {
   searchQuery: string = '';
   @ViewChild('table') table!: Table;
   loading: boolean = false;
-  pageSizeOptions = [5, 10, 25, 100];
-  pageSize:  number = 5;
+  pageIndex = 0;
+pageSize = 5;
+pageSizeOptions = [5, 10, 25, 100];
+
+  // pageSizeOptions = [5, 10, 25, 100];
+  // pageSize:  number = 5;
   sortDirection: string = 'asc';
   sortColumn: string = 'id';
   // paginator: any;
   noDateFound=0;
   // length = 0;
-  pageIndex = 0;
+  // pageIndex = 0;
   filterControl = new FormControl();
   filter: any = {
     filter: '',
@@ -116,6 +120,76 @@ export class ProjectTableComponent {
     );
   }
 
+//   this.projectService.getAllProjects(headers).subscribe(
+//     (response) => {
+//       this.noDateFound=0;
+//       this.projects = response;
+//       if (response !== null && response !== undefined) {
+//         this.loading = false;
+//         this.noDateFound=0;
+//         this.changeDetectorRef.detectChanges();
+//       }
+//       else {
+//         this.noDateFound=1;
+//                 if (response === 404) {
+//         this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'Project data not found' });
+//       } else if (response === 401) {
+//         this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'Unauthorized' });
+//       } else if (response == 0) {
+//         this.noDateFound = 1;
+//       } else {
+//         this.noDateFound = 1;
+//       }
+//         // this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'project data not show' });
+//         // setTimeout(() => {
+//         //   this.router.navigate(['/login']);
+//         // }, 1500);
+//       }
+//     },
+//     (error) => {
+//       this.loading = false;
+//       if (error == 0) {
+//         this.messageService.add({severity:'error', summary:'Error', detail: 'project data not show'});
+//       } else {
+//         this.messageService.add({severity:'error', summary:'Error', detail: 'project data not show'});
+//       }
+//     }
+//   );
+// }
+
+//   this.projectService.getAllProjects(headers).subscribe(
+//     (response) => {
+//       this.loading = false;
+//       this.noDateFound = 0;
+
+//       if (response !== null && response !== undefined) {
+//         this.projects = response;
+//         this.changeDetectorRef.detectChanges();
+//       } else {
+//         if (response === 404) {
+//           this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'Project data not found' });
+//         } else if (response === 401) {
+//           this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'Unauthorized' });
+//         } else if (response == 0) {
+//           this.noDateFound = 1;
+//         } else {
+//           this.noDateFound = 1;
+//         }
+//       }
+//     },
+//     (error) => {
+//       this.loading = false;
+//       this.noDateFound = 1;
+//       this.messageService.add({
+//         severity: 'error',
+//         summary: 'Error',
+//         detail: 'Failed to load projects',
+//       });
+//       this.router.navigate(['/401']);
+//     }
+//   );
+// }
+
   /** 
   * @author : UDAY SONI
   * Method name: onSortChange
@@ -136,7 +210,7 @@ export class ProjectTableComponent {
     });
     this.projectService.getSortedProjects(column, direction, headers).subscribe(
       (response) => {
-        if (response !== null && response !== "") {
+        if (response !== null && response !== "" && response !== undefined) {
           this.changeDetectorRef.detectChanges();
         }
         else {
@@ -172,7 +246,7 @@ export class ProjectTableComponent {
     });
     this.projectService.getPaginatedProjects(page, perPage, headers).subscribe(
       (response) => {
-        if (response !== null && response !== "") {
+        if (response !== null && response !== "" && response !== undefined) {
           this.projects = response.data;
           this.paginator.length = response.total;
           this.loading = false;
@@ -199,12 +273,19 @@ export class ProjectTableComponent {
     this.loadPaginatedProjects(1, this.pageSize);
   }
   
+  // onPageChange(event: PageEvent): void {
+  //   const page = event.pageIndex + 1;
+  //   const perPage = event.pageSize;
+  //   this.loadPaginatedProjects(page, perPage);
+  // }
+
   onPageChange(event: PageEvent): void {
-    const page = event.pageIndex + 1;
-    const perPage = event.pageSize;
-    this.loadPaginatedProjects(page, perPage);
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadPaginatedProjects(this.pageIndex + 1, this.pageSize);
   }
 
+  
   getFirstPage() {
     this.loadPaginatedProjects(1, this.pageSize);
   }
@@ -314,7 +395,7 @@ export class ProjectTableComponent {
     this.projectService.getProjects().subscribe(
       (response) => {
         this.projects = response;
-        if (response !== null && response !== "") {
+        if (response !== null && response !== "" && response !== undefined) {
           this.loading = false;
           this.changeDetectorRef.detectChanges();
         }
@@ -351,7 +432,7 @@ export class ProjectTableComponent {
     });
     this.projectService.searchProjects(this.searchQuery, headers).subscribe(
       (response) => {
-        if (response !== null && response !== "") {
+        if (response !== null && response !== "" && response !== undefined) {
           this.projects = response.data;
           this.changeDetectorRef.detectChanges();
         }

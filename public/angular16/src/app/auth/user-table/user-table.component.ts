@@ -58,6 +58,8 @@ export class UserTableComponent implements OnInit {
 
     this.authService.getAllUsers(headers).subscribe(
       (response) => {
+        // console.log(response);
+
         if (response !== null && response !== undefined) {
           this.users = response;
           this.loading = false;
@@ -70,6 +72,7 @@ export class UserTableComponent implements OnInit {
         }
       },
       (error) => {
+        // console.log(error);
         this.loading = false;
         if (error.status === 404) {
           this.router.navigate(['/404']);
