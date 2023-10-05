@@ -1,18 +1,41 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpParams,HttpResponse } from '@angular/common/http';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectService {
   private baseUrl = 'http://localhost:8000/api/projects';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router, private messageService: MessageService,) { }
 
-  getAllProjects(headers: HttpHeaders) {
+  getAllProjects(headers: HttpHeaders): Observable<any> {
     const url = `${this.baseUrl}`;
-    return this.http.get<any[]>(url, { headers });
+    return this.http.get(url, { headers }).pipe(
+      map(res => {
+        console.log('Response:', res);
+        return res;
+      }),
+      catchError(error => {
+        console.error('Error:', error.status);
+        if (error.status == 404) {
+          return this.router.navigate(['/404']);
+        } else if (error.status == 401) {
+          console.log("401");
+          // Navigate to '/401' and then force a reload of the current route
+          return this.router.navigate(['/401']).then(() => {
+            location.reload();
+          });
+        } else {
+          return throwError(error.error || 'Server error');
+        }
+      })
+    );
   }
+  
 
   getPaginatedProjects(page: number, perPage: number, headers: HttpHeaders): Observable<any> {
     const params = new HttpParams()

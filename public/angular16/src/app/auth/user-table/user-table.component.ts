@@ -53,24 +53,37 @@ export class UserTableComponent implements OnInit {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
       'email': `${email}`,
-      Permission: 'view_project'
+      Permission: 'update_tasks'
     });
 
     this.authService.getAllUsers(headers).subscribe(
       (response) => {
-        // console.log(response);
+        console.log(response);
 
         if (response !== null && response !== undefined) {
           this.users = response;
           this.loading = false;
         }
         else {
-          this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'users data not show' });
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 1500);
+          if (response === 404) {
+            this.router.navigate(['/404']);
+          } else if (response === 401) {
+            // Handle 401 error - navigate to a 401 page
+            this.router.navigate(['/401']);
+          } else {{
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'user not found',
+            });
+            this.router.navigate(['401']);
+          }
+          // this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'users data not show' });
+          // setTimeout(() => {
+          //   this.router.navigate(['/login']);
+          // }, 1500);
         }
-      },
+      }},
       (error) => {
         // console.log(error);
         this.loading = false;

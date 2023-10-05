@@ -29,7 +29,7 @@ export class taskEditResolver implements Resolve<any> {
       });
       return forkJoin([
         this.taskService.gettaskById(taskId, headers),
-        this.taskService.getUser()
+        this.taskService.getUsers()
       ]).pipe(
         map(([taskDetails, users]: [any, any[]]) => {
           return { taskDetails, users };

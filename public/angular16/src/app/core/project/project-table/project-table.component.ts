@@ -84,11 +84,12 @@ pageSizeOptions = [5, 10, 25, 100];
       'email': `${email}`,
       Permission: 'view_project',
     });
-    this.projectService.getAllProjects(headers).subscribe(
-      (response) => {
+    this.projectService.getAllProjects(headers).subscribe({
+      next:(response) => {
         this.noDateFound=0;
         this.projects = response;
-        if (response !== null && response !== undefined) {
+        // console.log(response);
+        if (response !== null && response !== "") {
           this.loading = false;
           this.noDateFound=0;
           this.changeDetectorRef.detectChanges();
@@ -96,99 +97,30 @@ pageSizeOptions = [5, 10, 25, 100];
         else {
           this.noDateFound=1;
           this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'project data not show' });
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 1500);
         }
       },
-      (error) => {
+      error:(error) => {
+        // console.log(error);
         this.loading = false;
-        if (error.status === 404) {
-          this.router.navigate(['/404']);
-        } else if (error.status === 401) {
-          this.router.navigate(['/401']);
-        } else {
+        // if (error.status === 404) {
+          // this.router.navigate(['/404']);
+        // } else if (error.status === 401) {
+          // this.router.navigate(['/401']);
+        // } else {
           this.noDateFound=1;
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
             detail: 'Failed to load projects',
           });
-          this.router.navigate(['/401']);
-        }
-      }
-    );
+          // this.router.navigate(['/401']);
+        },
+        complete() {
+          console.log("is completed");
+        },
+      // }
+      });
   }
-
-//   this.projectService.getAllProjects(headers).subscribe(
-//     (response) => {
-//       this.noDateFound=0;
-//       this.projects = response;
-//       if (response !== null && response !== undefined) {
-//         this.loading = false;
-//         this.noDateFound=0;
-//         this.changeDetectorRef.detectChanges();
-//       }
-//       else {
-//         this.noDateFound=1;
-//                 if (response === 404) {
-//         this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'Project data not found' });
-//       } else if (response === 401) {
-//         this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'Unauthorized' });
-//       } else if (response == 0) {
-//         this.noDateFound = 1;
-//       } else {
-//         this.noDateFound = 1;
-//       }
-//         // this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'project data not show' });
-//         // setTimeout(() => {
-//         //   this.router.navigate(['/login']);
-//         // }, 1500);
-//       }
-//     },
-//     (error) => {
-//       this.loading = false;
-//       if (error == 0) {
-//         this.messageService.add({severity:'error', summary:'Error', detail: 'project data not show'});
-//       } else {
-//         this.messageService.add({severity:'error', summary:'Error', detail: 'project data not show'});
-//       }
-//     }
-//   );
-// }
-
-//   this.projectService.getAllProjects(headers).subscribe(
-//     (response) => {
-//       this.loading = false;
-//       this.noDateFound = 0;
-
-//       if (response !== null && response !== undefined) {
-//         this.projects = response;
-//         this.changeDetectorRef.detectChanges();
-//       } else {
-//         if (response === 404) {
-//           this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'Project data not found' });
-//         } else if (response === 401) {
-//           this.messageService.add({ severity: 'warn', summary: 'warning', detail: 'Unauthorized' });
-//         } else if (response == 0) {
-//           this.noDateFound = 1;
-//         } else {
-//           this.noDateFound = 1;
-//         }
-//       }
-//     },
-//     (error) => {
-//       this.loading = false;
-//       this.noDateFound = 1;
-//       this.messageService.add({
-//         severity: 'error',
-//         summary: 'Error',
-//         detail: 'Failed to load projects',
-//       });
-//       this.router.navigate(['/401']);
-//     }
-//   );
-// }
 
   /** 
   * @author : UDAY SONI
@@ -244,8 +176,8 @@ pageSizeOptions = [5, 10, 25, 100];
       email: `${email}`,
       Permission: 'view_project',
     });
-    this.projectService.getPaginatedProjects(page, perPage, headers).subscribe(
-      (response) => {
+    this.projectService.getPaginatedProjects(page, perPage, headers).subscribe({
+      next:(response) => {
         if (response !== null && response !== "" && response !== undefined) {
           this.projects = response.data;
           this.paginator.length = response.total;
@@ -258,10 +190,10 @@ pageSizeOptions = [5, 10, 25, 100];
           }, 1500);
         }
       },
-      (error) => {
+      error: (error) => {
         this.loading = false;
-      }
-    );
+      },       
+  });
   }
 
   /** 

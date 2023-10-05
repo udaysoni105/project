@@ -79,7 +79,58 @@ class ProjectsController extends Controller
 
         return $result;
     }
-
+    // public function index(Request $request)
+    // {
+    //     Log::info("Controller::ProjectsController::index::START");
+    //     $result = DB::transaction(function () use ($request) {
+    //         try {
+    //             $permission = $request->header('permission');
+    //             $errors = [];
+    
+    //             if ($permission == null || $permission == '') {
+    //                 $errors[] = 'Permission header missing';
+    //             }
+    
+    //             $user = auth()->user();
+    //             if ($user == null || $user == '') {
+    //                 $errors[] = 'User not authenticated';
+    //             } else {
+    //                 $userRole = UserRole::where('user_id', $user->id)->first();
+    
+    //                 $rolePermissions = Permission::whereIn('id', function ($query) use ($userRole) {
+    //                     $query->select('permission_id')
+    //                         ->from('role_has_permissions')
+    //                         ->where('role_id', $userRole->role_id);
+    //                 })->get();
+    
+    //                 $hasPermission = $rolePermissions->contains('name', $permission);
+    
+    //                 if (!$hasPermission) {
+    //                     $errors[] = 'Unauthorized access';
+    //                 } else {
+    //                     $matchedPermission = $rolePermissions->firstWhere('name', $permission);
+    //                     info('User has permission: ' . $matchedPermission->name);
+    //                 }
+    //             }
+    
+    //             if (!empty($errors)) {
+    //                 Log::info("Controller::ProjectsController::index::Unauthorized attempts");
+    //                 return response()->json(['errors' => $errors], 401);
+    //             }
+    
+    //             $projects = Project::all();
+    
+    //             Log::info("Controller::ProjectsController::index::END");
+    //             return response()->json($projects);
+    //         } catch (\Exception $ex) {
+    //             Log::error("Error in ProjectsController::index: " . $ex->getMessage());
+    //             return response()->json(['error' => 'An error occurred while fetching projects'], 500);
+    //         }
+    //     });
+    
+    //     return $result;
+    // }
+    
     /** 
      * @author : UDAY SONI
      * Method name: store

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ export class TaskService {
   private apiUrl = 'http://localhost:8000/api/projects';
   private userUrl = 'http://localhost:8000/api/users';
   private basUrl = 'http://localhost:8000/api/task';
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private router: Router) { }
 
   getAllTasks(headers: HttpHeaders) {
     const url = `${this.baseUrl}`;
@@ -47,8 +48,26 @@ export class TaskService {
     headers = headers.append('email', `${email}`);
 
     const options = { headers: headers };
-    return this.http.post<any>(this.baseUrl, taskData, options);
-
+    return this.http.post<any>(this.baseUrl, taskData, options).pipe(
+      map(res => {
+        console.log('Response:', res);
+        return res;
+      }),
+      catchError(error => {
+        console.error('Error:', error.status);
+        if (error.status == 404) {
+          return this.router.navigate(['/404']);
+        } else if (error.status == 401) {
+          console.log("401");
+          // Navigate to '/401' and then force a reload of the current route
+          return this.router.navigate(['/401']).then(() => {
+            location.reload();
+          });
+        } else {
+          return throwError(error.error || 'Server error');
+        }
+      })
+    );
   }
 
   getProjects(): Observable<any[]> {
@@ -60,7 +79,7 @@ export class TaskService {
   getUsers(): Observable<any[]> {
     const headers = this.getHeaders();
     const url = `${this.userUrl}`;
-    return this.http.get<any[]>(url, { headers });
+    return this.http.get<any[]>(url, { headers })
   }
 
   private getHeaders(): HttpHeaders {
@@ -86,7 +105,27 @@ export class TaskService {
   getProject(): Observable<any[]> {
     const headers = this.getHeader();
     const url = `${this.apiUrl}`;
-    return this.http.get<any[]>(url, { headers });
+    
+    return this.http.get<any[]>(url, { headers }).pipe(
+      map(res => {
+        console.log('Response:', res);
+        return res;
+      }),
+      catchError((error: any) => {
+        console.error('Error:', error.status);
+        if (error.status == 404) {
+          this.router.navigate(['/404']);
+          return of([]); // Return an empty array observable for 404
+        } else if (error.status == 401) {
+          console.log("401");
+          // Navigate to '/401' and then force a reload of the current route
+          this.router.navigate(['/401']).then(() => location.reload());
+          return of([]); // Return an empty array observable for 401
+        } else {
+          return throwError(error.error || 'Server error');
+        }
+      })
+    );
   }
 
   getUser(): Observable<any[]> {
@@ -108,7 +147,26 @@ export class TaskService {
   }
 
   gettaskById(taskId: string, headers: HttpHeaders): Observable<any> {
-    return this.http.get(`${this.baseUrl}/${taskId}`, { headers });
+    return this.http.get(`${this.baseUrl}/${taskId}`, { headers }).pipe(
+      map(res => {
+        console.log('Response:', res);
+        return res;
+      }),
+      catchError(error => {
+        console.error('Error:', error.status);
+        if (error.status == 404) {
+          return this.router.navigate(['/404']);
+        } else if (error.status == 401) {
+          console.log("401");
+          // Navigate to '/401' and then force a reload of the current route
+          return this.router.navigate(['/401']).then(() => {
+            location.reload();
+          });
+        } else {
+          return throwError(error.error || 'Server error');
+        }
+      })
+    );
   }
 
   getUserById(taskId: string, headers: HttpHeaders): Observable<any> {

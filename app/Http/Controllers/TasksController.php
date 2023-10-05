@@ -222,12 +222,12 @@ class TasksController extends Controller
                     Log::info("Controller::TasksController::show::");
                     return response()->json(['error' => 'permission Unauthorized'], 500);
                 }
-
                 $user = auth()->user();
-                if ($user == null || $user == '') {
+                if (!$user) {
                     Log::info("Controller::TasksController::show::");
                     return response()->json(['error' => 'Unauthorized'], 401);
                 }
+                
 
                 $userRole = UserRole::where('user_id', $user->id)->first();
 
@@ -240,11 +240,16 @@ class TasksController extends Controller
                 $hasPermission = $rolePermissions->contains('name', $permission);
 
                 if (!$hasPermission) {
-                    info('Unauthorized');
+                    Log::info('Unauthorized');
+                    return response()->json(['error' => 'Forbidden'], 401);
                 }
+                
 
                 $matchedPermission = $rolePermissions->firstWhere('name', $permission);
-                info('user has permission: ' . $matchedPermission->name);
+                if ($matchedPermission) {
+                    info('user has permission: ' . $matchedPermission->name);
+                }
+                
 
                 $task = Task::with('users')->findOrFail($id);
                 //info($task);                

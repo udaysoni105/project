@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -47,9 +47,33 @@ export class AuthService {
     return this.http.put(url, payload);
   }
 
-  getAllUsers(headers: HttpHeaders) {
+  // getAllUsers(headers: HttpHeaders) {
+  //   const url = `${this.apiUrl}/users`;
+  //   return this.http.get<any[]>(url, { headers });
+  // }
+
+  getAllUsers(headers: HttpHeaders): Observable<any> {
     const url = `${this.apiUrl}/users`;
-    return this.http.get<any[]>(url, { headers });
+    return this.http.get(url, { headers }).pipe(
+      map(res => {
+        console.log('Response:', res);
+        return res;
+      }),
+      catchError(error => {
+        console.error('Error:', error.status);
+        if (error.status == 404) {
+          return this.router.navigate(['/404']);
+        } else if (error.status == 401) {
+          console.log("401");
+          // Navigate to '/401' and then force a reload of the current route
+          return this.router.navigate(['/401']).then(() => {
+            location.reload();
+          });
+        } else {
+          return throwError(error.error || 'Server error');
+        }
+      })
+    );
   }
 
   createimage(payload: any, headers: HttpHeaders) {

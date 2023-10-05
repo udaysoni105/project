@@ -62,7 +62,14 @@ import { JsonPipe } from './pipename.pipe';
 import { PaginatorModule } from 'primeng/paginator';
 import { ErrorModule } from './auth/error/error.module';
 import { Error401Module } from './auth/error401/error401.module';
+import { ErrorHandler, Injectable, Injector } from '@angular/core';
 
+@Injectable()
+export class CustomErrorHandler implements ErrorHandler {
+  handleError(error: any): void {
+    console.error('Custom Error Handler:', error);
+  }
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -125,7 +132,7 @@ import { Error401Module } from './auth/error401/error401.module';
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ],
-  providers: [AuthService, ProjectService, TaskService, MessageService, DatePipe],
+  providers: [AuthService, ProjectService, TaskService, MessageService, DatePipe, ErrorHandler, CustomErrorHandler],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

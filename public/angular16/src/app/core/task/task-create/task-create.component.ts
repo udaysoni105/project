@@ -94,8 +94,8 @@ export class TaskCreateComponent implements OnInit {
 * Method name: fetchProject
 */
   fetchProject(): void {
-    this.taskService.getProject().subscribe(
-      (projects) => {
+    this.taskService.getProject().subscribe({
+      next:(projects) => {
         if (projects !== null && projects !== undefined) {
           this.projectOptions = projects.map((project) => ({
             label: project.name,
@@ -108,7 +108,7 @@ export class TaskCreateComponent implements OnInit {
           }, 1500);
         }
       },
-      (error) => {
+      error:(error) => {
         this.loading = false;
 
         if (error.status === 404) {
@@ -123,7 +123,10 @@ export class TaskCreateComponent implements OnInit {
           });
           this.router.navigate(['/401']);
         }
-      }
+      },
+      complete() {
+        console.log("is completed");
+      },}
     );
   }
 
